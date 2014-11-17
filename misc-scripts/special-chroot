@@ -1,0 +1,70 @@
+#! /bin/sh
+
+# Root path
+# Home path inside root path
+# User
+# '' or 'usr-only' : if empty, /lib, /sbin and /bin are also created
+# '' or path : use /var/run/current-system/sw or alternative package set
+
+mkdir -p "$1" "$1/$2"
+
+chown "$3" "$1/$2"
+
+cd "$1"
+
+mkdir -p sys proc dev nix usr bin sbin lib lib64 etc var/run/current-system/ etc/nixos
+
+for i in nix etc/nixos ; do
+  [ -d /$i ] && [ -d ./$i ] && {
+    mount --rbind /$i ./$i;
+    mountpoint ./$i && mount -o remount,bind,ro ./$i
+  }
+done
+
+for i in var/run/current-system ; do
+  if [ -z "$5" ]; then
+    [ -d /$i ] && [ -d ./$i ] && {
+      mount --rbind /$i ./$i;
+      mountpoint ./$i && mount -o remount,bind,ro ./$i
+    }
+  else
+    rm var/run/current-system/sw 
+    ln -sf "$(readlink "$5")" var/run/current-system/sw 
+    ls -l var/run/current-system/sw
+  fi
+done
+
+for i in sys proc dev ; do
+  [ -d /$i ] && [ -d ./$i ] && {
+    mount --rbind /$i ./$i;
+  }
+done
+
+cp -L -r /etc/{hosts,services,passwd,shadow,pam.d,resolv.conf,nsswitch.conf,shells,login.defs,fonts} ./etc
+
+mount --rbind ./var/run/current-system/sw/ ./usr
+[ -z "$4" ] && {
+rm ./bin/sh
+mount --rbind ./var/run/current-system/sw/bin ./bin
+mount --rbind ./var/run/current-system/sw/sbin ./sbin
+mount --rbind ./var/run/current-system/sw/lib ./lib
+mount --rbind ./var/run/current-system/sw/lib64 ./lib64
+}
+[ -n "$4" ] && {
+  ln -sf /usr/bin/sh ./bin/sh
+}
+
+for i in usr bin sbin lib lib64 ; do 
+  [ -d ./$i ] && {
+    mountpoint ./$i && mount -o remount,bind,ro ./$i
+  }
+done
+
+mkdir -p tmp
+chmod a+rwxt tmp
+
+chroot "." /bin/sh -c "/usr/bin/su -s /bin/sh - $3"
+
+for i in var/run/current-system/sw var/run/current-system dev/*/ proc/sys/fs/*/ proc/fs/*/ proc/bus/usb sys/fs/fuse/connections usr/*/ sys/*/*/*/ sys/*/*/ sys/*/ */ etc/nixos ; do mountpoint $i && umount $i; done  &> /dev/null
+
+tac /proc/mounts | grep "[^ ]* $1" | cut -f 2 -d ' ' | xargs umount

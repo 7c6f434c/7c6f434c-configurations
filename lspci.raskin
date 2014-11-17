@@ -1,0 +1,382 @@
+
+/*
+
+lspci -n :
+00:00.0 0600: 1002:5a31 (rev 01)
+00:01.0 0604: 1002:5a3f
+00:04.0 0604: 1002:5a36
+00:05.0 0604: 1002:5a37
+00:06.0 0604: 1002:5a38
+00:07.0 0604: 1002:5a39
+00:12.0 0106: 1002:4380
+00:13.0 0c03: 1002:4387
+00:13.1 0c03: 1002:4388
+00:13.2 0c03: 1002:4389
+00:13.3 0c03: 1002:438a
+00:13.4 0c03: 1002:438b
+00:13.5 0c03: 1002:4386
+00:14.0 0c05: 1002:4385 (rev 13)
+00:14.1 0101: 1002:438c
+00:14.2 0403: 1002:4383
+00:14.3 0601: 1002:438d
+00:14.4 0604: 1002:4384
+01:05.0 0300: 1002:5a62
+02:00.0 0200: 168c:001c (rev 01)
+08:01.0 0607: 1180:0476 (rev b3)
+08:01.1 0805: 1180:0822 (rev 17)
+08:01.2 0880: 1180:0592 (rev 08)
+08:07.0 0200: 10ec:8139 (rev 10)
+
+lspci -vv:
+00:00.0 Host bridge: ATI Technologies Inc Unknown device 5a31 (rev 01)
+	Subsystem: ASUSTeK Computer Inc. Unknown device 1627
+	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B-
+	Status: Cap- 66MHz+ UDF- FastB2B- ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort+ >SERR- <PERR-
+	Latency: 64
+
+00:01.0 PCI bridge: ATI Technologies Inc RS480 PCI Bridge (prog-if 00 [Normal decode])
+	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B-
+	Status: Cap+ 66MHz+ UDF- FastB2B- ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR-
+	Latency: 64
+	Bus: primary=00, secondary=01, subordinate=01, sec-latency=64
+	I/O behind bridge: 00007000-00007fff
+	Memory behind bridge: f8800000-f88fffff
+	Prefetchable memory behind bridge: 8ff00000-afefffff
+	Secondary status: 66MHz+ FastB2B- ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort+ <SERR- <PERR-
+	BridgeCtl: Parity- SERR+ NoISA- VGA+ MAbort- >Reset- FastB2B-
+	Capabilities: [b0] Subsystem: ATI Technologies Inc RS480 PCI Bridge
+
+00:04.0 PCI bridge: ATI Technologies Inc RS480 PCI Bridge (prog-if 00 [Normal decode])
+	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B-
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR-
+	Latency: 0, Cache Line Size: 64 bytes
+	Bus: primary=00, secondary=02, subordinate=02, sec-latency=0
+	Memory behind bridge: f8900000-f89fffff
+	Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort+ <SERR- <PERR-
+	BridgeCtl: Parity+ SERR+ NoISA- VGA- MAbort- >Reset- FastB2B-
+	Capabilities: [50] Power Management version 3
+		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
+		Status: D0 PME-Enable- DSel=0 DScale=0 PME-
+	Capabilities: [58] Express Root Port (Slot+) IRQ 0
+		Device: Supported: MaxPayload 128 bytes, PhantFunc 0, ExtTag+
+		Device: Latency L0s <64ns, L1 <1us
+		Device: Errors: Correctable+ Non-Fatal+ Fatal+ Unsupported+
+		Device: RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop+
+		Device: MaxPayload 128 bytes, MaxReadReq 128 bytes
+		Link: Supported Speed 2.5Gb/s, Width x1, ASPM L0s L1, Port 1
+		Link: Latency L0s <64ns, L1 <1us
+		Link: ASPM Disabled RCB 64 bytes CommClk- ExtSynch-
+		Link: Speed 2.5Gb/s, Width x1
+		Slot: AtnBtn- PwrCtrl- MRL- AtnInd- PwrInd- HotPlug- Surpise-
+		Slot: Number 1, PowerLimit 10.000000
+		Slot: Enabled AtnBtn- PwrFlt- MRL- PresDet- CmdCplt- HPIrq-
+		Slot: AttnInd Off, PwrInd Off, Power-
+		Root: Correctable- Non-Fatal- Fatal- PME-
+	Capabilities: [80] Message Signalled Interrupts: Mask- 64bit- Queue=0/0 Enable+
+		Address: fee0100c  Data: 41b1
+	Capabilities: [b0] Subsystem: ASUSTeK Computer Inc. Unknown device 1627
+	Capabilities: [b8] HyperTransport: MSI Mapping
+
+00:05.0 PCI bridge: ATI Technologies Inc RS480 PCI Bridge (prog-if 00 [Normal decode])
+	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B-
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR-
+	Latency: 0, Cache Line Size: 64 bytes
+	Bus: primary=00, secondary=03, subordinate=05, sec-latency=0
+	I/O behind bridge: 00008000-00009fff
+	Memory behind bridge: f8a00000-fc9fffff
+	Prefetchable memory behind bridge: 00000000aff00000-00000000cfefffff
+	Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- <SERR- <PERR-
+	BridgeCtl: Parity+ SERR+ NoISA- VGA- MAbort- >Reset- FastB2B-
+	Capabilities: [50] Power Management version 3
+		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
+		Status: D0 PME-Enable- DSel=0 DScale=0 PME-
+	Capabilities: [58] Express Root Port (Slot+) IRQ 0
+		Device: Supported: MaxPayload 128 bytes, PhantFunc 0, ExtTag+
+		Device: Latency L0s <64ns, L1 <1us
+		Device: Errors: Correctable+ Non-Fatal+ Fatal+ Unsupported+
+		Device: RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop+
+		Device: MaxPayload 128 bytes, MaxReadReq 128 bytes
+		Link: Supported Speed 2.5Gb/s, Width x1, ASPM L0s L1, Port 247
+		Link: Latency L0s <64ns, L1 <1us
+		Link: ASPM Disabled RCB 64 bytes CommClk- ExtSynch-
+		Link: Speed 2.5Gb/s, Width x16
+		Slot: AtnBtn- PwrCtrl- MRL- AtnInd- PwrInd- HotPlug+ Surpise-
+		Slot: Number 1, PowerLimit 75.000000
+		Slot: Enabled AtnBtn- PwrFlt- MRL- PresDet+ CmdCplt- HPIrq-
+		Slot: AttnInd Off, PwrInd Off, Power-
+		Root: Correctable- Non-Fatal- Fatal- PME-
+	Capabilities: [80] Message Signalled Interrupts: Mask- 64bit- Queue=0/0 Enable+
+		Address: fee0100c  Data: 41b9
+	Capabilities: [b0] Subsystem: ASUSTeK Computer Inc. Unknown device 1627
+	Capabilities: [b8] HyperTransport: MSI Mapping
+
+00:06.0 PCI bridge: ATI Technologies Inc RS480 PCI Bridge (prog-if 00 [Normal decode])
+	Control: I/O- Mem- BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B-
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR-
+	Latency: 0, Cache Line Size: 64 bytes
+	Bus: primary=00, secondary=06, subordinate=06, sec-latency=0
+	Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- <SERR- <PERR-
+	BridgeCtl: Parity+ SERR+ NoISA- VGA- MAbort- >Reset- FastB2B-
+	Capabilities: [50] Power Management version 3
+		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
+		Status: D0 PME-Enable- DSel=0 DScale=0 PME-
+	Capabilities: [58] Express Root Port (Slot+) IRQ 0
+		Device: Supported: MaxPayload 128 bytes, PhantFunc 0, ExtTag+
+		Device: Latency L0s <64ns, L1 <1us
+		Device: Errors: Correctable+ Non-Fatal+ Fatal+ Unsupported+
+		Device: RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop+
+		Device: MaxPayload 128 bytes, MaxReadReq 128 bytes
+		Link: Supported Speed 2.5Gb/s, Width x1, ASPM L0s L1, Port 247
+		Link: Latency L0s <64ns, L1 <1us
+		Link: ASPM Disabled RCB 64 bytes Disabled CommClk- ExtSynch-
+		Link: Speed 2.5Gb/s, Width x16
+		Slot: AtnBtn- PwrCtrl- MRL- AtnInd- PwrInd- HotPlug- Surpise-
+		Slot: Number 0, PowerLimit 0.000000
+		Slot: Enabled AtnBtn- PwrFlt- MRL- PresDet- CmdCplt- HPIrq-
+		Slot: AttnInd Off, PwrInd Off, Power-
+		Root: Correctable- Non-Fatal- Fatal- PME-
+	Capabilities: [80] Message Signalled Interrupts: Mask- 64bit- Queue=0/0 Enable+
+		Address: fee0100c  Data: 41c1
+	Capabilities: [b0] Subsystem: ASUSTeK Computer Inc. Unknown device 1627
+	Capabilities: [b8] HyperTransport: MSI Mapping
+
+00:07.0 PCI bridge: ATI Technologies Inc RS480 PCI Bridge (prog-if 00 [Normal decode])
+	Control: I/O- Mem- BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B-
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR-
+	Latency: 0, Cache Line Size: 64 bytes
+	Bus: primary=00, secondary=07, subordinate=07, sec-latency=0
+	Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- <SERR- <PERR-
+	BridgeCtl: Parity+ SERR+ NoISA- VGA- MAbort- >Reset- FastB2B-
+	Capabilities: [50] Power Management version 3
+		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
+		Status: D0 PME-Enable- DSel=0 DScale=0 PME-
+	Capabilities: [58] Express Root Port (Slot+) IRQ 0
+		Device: Supported: MaxPayload 128 bytes, PhantFunc 0, ExtTag+
+		Device: Latency L0s <64ns, L1 <1us
+		Device: Errors: Correctable+ Non-Fatal+ Fatal+ Unsupported+
+		Device: RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop+
+		Device: MaxPayload 128 bytes, MaxReadReq 128 bytes
+		Link: Supported Speed 2.5Gb/s, Width x1, ASPM L0s L1, Port 247
+		Link: Latency L0s <64ns, L1 <1us
+		Link: ASPM Disabled RCB 64 bytes Disabled CommClk- ExtSynch-
+		Link: Speed 2.5Gb/s, Width x16
+		Slot: AtnBtn- PwrCtrl- MRL- AtnInd- PwrInd- HotPlug- Surpise-
+		Slot: Number 0, PowerLimit 0.000000
+		Slot: Enabled AtnBtn- PwrFlt- MRL- PresDet- CmdCplt- HPIrq-
+		Slot: AttnInd Off, PwrInd Off, Power-
+		Root: Correctable- Non-Fatal- Fatal- PME-
+	Capabilities: [80] Message Signalled Interrupts: Mask- 64bit- Queue=0/0 Enable+
+		Address: fee0100c  Data: 41c9
+	Capabilities: [b0] Subsystem: ASUSTeK Computer Inc. Unknown device 1627
+	Capabilities: [b8] HyperTransport: MSI Mapping
+
+00:12.0 SATA controller: ATI Technologies Inc SB600 Non-Raid-5 SATA (prog-if 01 [AHCI 1.0])
+	Subsystem: ASUSTeK Computer Inc. Unknown device 1627
+	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B-
+	Status: Cap+ 66MHz+ UDF- FastB2B- ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR-
+	Latency: 64, Cache Line Size: 64 bytes
+	Interrupt: pin A routed to IRQ 17
+	Region 0: I/O ports at e800 [size=8]
+	Region 1: I/O ports at e400 [size=4]
+	Region 2: I/O ports at e000 [size=8]
+	Region 3: I/O ports at dc00 [size=4]
+	Region 4: I/O ports at d800 [size=16]
+	Region 5: Memory at febffc00 (32-bit, non-prefetchable) [size=1K]
+	Capabilities: [60] Power Management version 2
+		Flags: PMEClk- DSI+ D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
+		Status: D0 PME-Enable- DSel=0 DScale=0 PME-
+
+00:13.0 USB Controller: ATI Technologies Inc SB600 USB (OHCI0) (prog-if 10 [OHCI])
+	Subsystem: ASUSTeK Computer Inc. Unknown device 1627
+	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV+ VGASnoop- ParErr- Stepping- SERR+ FastB2B-
+	Status: Cap- 66MHz+ UDF- FastB2B+ ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR-
+	Latency: 64, Cache Line Size: 64 bytes
+	Interrupt: pin A routed to IRQ 19
+	Region 0: Memory at febfe000 (32-bit, non-prefetchable) [size=4K]
+
+00:13.1 USB Controller: ATI Technologies Inc SB600 USB (OHCI1) (prog-if 10 [OHCI])
+	Subsystem: ASUSTeK Computer Inc. Unknown device 1627
+	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV+ VGASnoop- ParErr- Stepping- SERR+ FastB2B-
+	Status: Cap- 66MHz+ UDF- FastB2B+ ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR-
+	Latency: 64, Cache Line Size: 64 bytes
+	Interrupt: pin B routed to IRQ 20
+	Region 0: Memory at febfd000 (32-bit, non-prefetchable) [size=4K]
+
+00:13.2 USB Controller: ATI Technologies Inc SB600 USB (OHCI2) (prog-if 10 [OHCI])
+	Subsystem: ASUSTeK Computer Inc. Unknown device 1627
+	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV+ VGASnoop- ParErr- Stepping- SERR+ FastB2B-
+	Status: Cap- 66MHz+ UDF- FastB2B+ ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR-
+	Latency: 64, Cache Line Size: 64 bytes
+	Interrupt: pin C routed to IRQ 21
+	Region 0: Memory at febfc000 (32-bit, non-prefetchable) [size=4K]
+
+00:13.3 USB Controller: ATI Technologies Inc SB600 USB (OHCI3) (prog-if 10 [OHCI])
+	Subsystem: ASUSTeK Computer Inc. Unknown device 1627
+	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV+ VGASnoop- ParErr- Stepping- SERR+ FastB2B-
+	Status: Cap- 66MHz+ UDF- FastB2B+ ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR-
+	Latency: 64, Cache Line Size: 64 bytes
+	Interrupt: pin B routed to IRQ 20
+	Region 0: Memory at febfb000 (32-bit, non-prefetchable) [size=4K]
+
+00:13.4 USB Controller: ATI Technologies Inc SB600 USB (OHCI4) (prog-if 10 [OHCI])
+	Subsystem: ASUSTeK Computer Inc. Unknown device 1627
+	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV+ VGASnoop- ParErr- Stepping- SERR+ FastB2B-
+	Status: Cap- 66MHz+ UDF- FastB2B+ ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR-
+	Latency: 64, Cache Line Size: 64 bytes
+	Interrupt: pin C routed to IRQ 21
+	Region 0: Memory at febfa000 (32-bit, non-prefetchable) [size=4K]
+
+00:13.5 USB Controller: ATI Technologies Inc SB600 USB Controller (EHCI) (prog-if 20 [EHCI])
+	Subsystem: ASUSTeK Computer Inc. Unknown device 1627
+	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV+ VGASnoop- ParErr- Stepping- SERR+ FastB2B-
+	Status: Cap+ 66MHz+ UDF- FastB2B+ ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR-
+	Latency: 64, Cache Line Size: 64 bytes
+	Interrupt: pin D routed to IRQ 18
+	Region 0: Memory at febff800 (32-bit, non-prefetchable) [size=256]
+	Capabilities: [c0] Power Management version 2
+		Flags: PMEClk- DSI- D1+ D2+ AuxCurrent=0mA PME(D0+,D1+,D2+,D3hot+,D3cold-)
+		Status: D0 PME-Enable- DSel=0 DScale=0 PME-
+		Bridge: PM- B3+
+	Capabilities: [e4] Debug port
+
+00:14.0 SMBus: ATI Technologies Inc SB600 SMBus (rev 13)
+	Subsystem: ASUSTeK Computer Inc. Unknown device 1627
+	Control: I/O+ Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B-
+	Status: Cap- 66MHz+ UDF- FastB2B- ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR-
+	Region 0: I/O ports at 0b00 [size=16]
+
+00:14.1 IDE interface: ATI Technologies Inc SB600 IDE (prog-if 82 [Master PriP])
+	Subsystem: ASUSTeK Computer Inc. Unknown device 1627
+	Control: I/O+ Mem- BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B-
+	Status: Cap- 66MHz+ UDF- FastB2B- ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR-
+	Latency: 0
+	Interrupt: pin A routed to IRQ 19
+	Region 0: I/O ports at 01f0 [size=8]
+	Region 1: I/O ports at 03f4 [size=1]
+	Region 2: I/O ports at 0170 [size=8]
+	Region 3: I/O ports at 0374 [size=1]
+	Region 4: I/O ports at ff00 [size=16]
+
+00:14.2 Audio device: ATI Technologies Inc SB600 Azalia
+	Subsystem: ASUSTeK Computer Inc. Unknown device 1339
+	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B-
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=slow >TAbort- <TAbort- <MAbort- >SERR- <PERR-
+	Latency: 64, Cache Line Size: 64 bytes
+	Interrupt: pin ? routed to IRQ 19
+	Region 0: Memory at febf4000 (64-bit, non-prefetchable) [size=16K]
+	Capabilities: [50] Power Management version 2
+		Flags: PMEClk- DSI- D1- D2- AuxCurrent=55mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
+		Status: D0 PME-Enable- DSel=0 DScale=0 PME-
+
+00:14.3 ISA bridge: ATI Technologies Inc SB600 PCI to LPC Bridge
+	Subsystem: ASUSTeK Computer Inc. Unknown device 1627
+	Control: I/O+ Mem+ BusMaster+ SpecCycle+ MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B-
+	Status: Cap- 66MHz+ UDF- FastB2B- ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR-
+	Latency: 0
+
+00:14.4 PCI bridge: ATI Technologies Inc SB600 PCI to PCI Bridge (prog-if 01 [Subtractive decode])
+	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B-
+	Status: Cap- 66MHz+ UDF- FastB2B+ ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR-
+	Latency: 64
+	Bus: primary=00, secondary=08, subordinate=0c, sec-latency=64
+	I/O behind bridge: 0000a000-0000bfff
+	Memory behind bridge: fca00000-feafffff
+	Prefetchable memory behind bridge: cff00000-dfefffff
+	Secondary status: 66MHz- FastB2B+ ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort+ <SERR- <PERR-
+	BridgeCtl: Parity+ SERR+ NoISA- VGA- MAbort- >Reset- FastB2B-
+
+01:05.0 VGA compatible controller: ATI Technologies Inc RC410 [Radeon Xpress 200M] (prog-if 00 [VGA])
+	Subsystem: ASUSTeK Computer Inc. Unknown device 1402
+	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B-
+	Status: Cap+ 66MHz+ UDF- FastB2B+ ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR-
+	Latency: 64 (2000ns min), Cache Line Size: 64 bytes
+	Interrupt: pin A routed to IRQ 5
+	Region 0: Memory at 90000000 (32-bit, prefetchable) [size=256M]
+	Region 1: I/O ports at 7800 [size=256]
+	Region 2: Memory at f88f0000 (32-bit, non-prefetchable) [size=64K]
+	Expansion ROM at f88c0000 [disabled] [size=128K]
+	Capabilities: [50] Power Management version 2
+		Flags: PMEClk- DSI- D1+ D2+ AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
+		Status: D0 PME-Enable- DSel=0 DScale=0 PME-
+	Capabilities: [80] Message Signalled Interrupts: Mask- 64bit- Queue=0/0 Enable-
+		Address: 00000000  Data: 0000
+
+02:00.0 Ethernet controller: Atheros Communications, Inc. AR5006EG 802.11 b/g Wireless PCI Express Adapter (rev 01)
+	Subsystem: Unknown device 1a3b:1026
+	Control: I/O+ Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B-
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR-
+	Interrupt: pin A routed to IRQ 19
+	Region 0: Memory at f89f0000 (64-bit, non-prefetchable) [size=64K]
+	Capabilities: [40] Power Management version 2
+		Flags: PMEClk- DSI- D1- D2- AuxCurrent=375mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
+		Status: D0 PME-Enable- DSel=0 DScale=0 PME-
+	Capabilities: [50] Message Signalled Interrupts: Mask- 64bit- Queue=0/0 Enable-
+		Address: 00000000  Data: 0000
+	Capabilities: [60] Express Legacy Endpoint IRQ 0
+		Device: Supported: MaxPayload 128 bytes, PhantFunc 0, ExtTag-
+		Device: Latency L0s <512ns, L1 <64us
+		Device: AtnBtn- AtnInd- PwrInd-
+		Device: Errors: Correctable- Non-Fatal- Fatal- Unsupported-
+		Device: RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop-
+		Device: MaxPayload 128 bytes, MaxReadReq 512 bytes
+		Link: Supported Speed 2.5Gb/s, Width x1, ASPM L0s L1, Port 0
+		Link: Latency L0s <512ns, L1 <64us
+		Link: ASPM Disabled RCB 128 bytes CommClk- ExtSynch-
+		Link: Speed 2.5Gb/s, Width x1
+	Capabilities: [90] MSI-X: Enable- Mask- TabSize=1
+		Vector table: BAR=0 offset=00000000
+		PBA: BAR=0 offset=00000000
+
+08:01.0 CardBus bridge: Ricoh Co Ltd RL5c476 II (rev b3)
+	Subsystem: ASUSTeK Computer Inc. Unknown device 1627
+	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B-
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR-
+	Latency: 168
+	Interrupt: pin A routed to IRQ 16
+	Region 0: Memory at fca00000 (32-bit, non-prefetchable) [size=4K]
+	Bus: primary=08, secondary=09, subordinate=0c, sec-latency=176
+	Memory window 0: d0000000-d3fff000 (prefetchable)
+	Memory window 1: 80000000-83fff000
+	I/O window 0: 0000a000-0000a0ff
+	I/O window 1: 0000a400-0000a4ff
+	BridgeCtl: Parity- SERR- ISA- VGA- MAbort- >Reset- 16bInt+ PostWrite+
+	16-bit legacy interface ports at 0001
+
+08:01.1 Generic system peripheral [0805]: Ricoh Co Ltd R5C822 SD/SDIO/MMC/MS/MSPro Host Adapter (rev 17)
+	Subsystem: ASUSTeK Computer Inc. Unknown device 1627
+	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B-
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR-
+	Latency: 64
+	Interrupt: pin C routed to IRQ 6
+	Region 0: Memory at feaffc00 (32-bit, non-prefetchable) [size=256]
+	Capabilities: [80] Power Management version 2
+		Flags: PMEClk- DSI- D1+ D2+ AuxCurrent=0mA PME(D0+,D1+,D2+,D3hot+,D3cold+)
+		Status: D0 PME-Enable- DSel=0 DScale=2 PME-
+
+08:01.2 System peripheral: Ricoh Co Ltd R5C592 Memory Stick Bus Host Adapter (rev 08)
+	Subsystem: ASUSTeK Computer Inc. Unknown device 1627
+	Control: I/O- Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B-
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR-
+	Interrupt: pin C routed to IRQ 6
+	Region 0: Memory at feaff800 (32-bit, non-prefetchable) [size=256]
+	Capabilities: [80] Power Management version 2
+		Flags: PMEClk- DSI- D1+ D2+ AuxCurrent=0mA PME(D0+,D1+,D2+,D3hot+,D3cold+)
+		Status: D0 PME-Enable- DSel=0 DScale=2 PME-
+
+08:07.0 Ethernet controller: Realtek Semiconductor Co., Ltd. RTL-8139/8139C/8139C+ (rev 10)
+	Subsystem: ASUSTeK Computer Inc. L8400B or L3C/S notebook
+	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B-
+	Status: Cap+ 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR-
+	Latency: 64 (8000ns min, 16000ns max)
+	Interrupt: pin A routed to IRQ 22
+	Region 0: I/O ports at b800 [size=256]
+	Region 1: Memory at feaff400 (32-bit, non-prefetchable) [size=256]
+	Capabilities: [50] Power Management version 2
+		Flags: PMEClk- DSI- D1+ D2+ AuxCurrent=375mA PME(D0-,D1+,D2+,D3hot+,D3cold+)
+		Status: D0 PME-Enable- DSel=0 DScale=0 PME-
+
+
+General: ASUS laptop, X51RL, FreeDOS-loaded at moment of purchase (Vista-loaded really cost 50$ more), 15.4" widescreen
+
+*/
+
