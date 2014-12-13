@@ -11,11 +11,11 @@
       zones = [
         {
 	  name = __substring 0 8 config.networking.hostName;
-	  file = "/root/nix-sysconfig/" + (__substring 0 8 config.networking.hostName);
+	  file = "/root/nix-sysconfig/" + (builtins.substring 0 8 config.networking.hostName);
 	}
 	{
 	  name = "root-servers.net";
-	  file = "/root/nix-sysconfig/root-servers";
+	  file = "" + ./root-servers;
 	}
       ];
     }

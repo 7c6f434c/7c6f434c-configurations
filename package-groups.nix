@@ -7,24 +7,32 @@ rec {
 
 	private = pp;
 
+  nixosDefault = [
+      acl attr bashInteractive bzip2 coreutils cpio curl diffutils eject
+      findutils gawk glibc gnugrep gnupatch gnused gnutar gzip xz less libcap
+      man nano ncurses netcat openssh pciutils perl procps rsync strace
+      sysvtools su time usbutils utillinux glibcLocales sudo
+  ];
+
 	bootstrap = {
 		extractors = [p7zip];
 		programmingLanguages = [
+                        bashInteractive
 			zsh bash sbcl ecl clisp gcc
 
 			pythonFull pythonPackages.pip
 		];
 		buildSupport = [
-			libtool automake autoconf gnumake patchelf
+			libtool automake autoconf gnumake patchelf nixUnstable
 		];
 		utilsX = [
 			xlaunch xterm rxvt_unicode xmacro
 			xsel xclip xorg.xmodmap xorg.xrandr
-			dmenu2 xdotool
+			dmenu2 xdotool xorg.xkbcomp xorg.setxkbmap
 		];
 		consoleTools = [
-			which sqlite bc psmisc file utillinuxCurses
-			rlwrap screen pv manpages
+			which sqlite bc psmisc file utillinuxCurses slmenu
+			rlwrap screen pv manpages kmod module_init_tools
 		];
 		debugTools = [
 			gdb lsof strace
@@ -35,18 +43,18 @@ rec {
 			lftp ntp
 		];
 		networkTools = [
-			mtr dhcp wpa_supplicant
-			ncat socat libidn iptables 
+			mtr dhcp wpa_supplicant iproute iputils
+			ncat socat libidn iptables nettools
 		];
 		textCrunchers = [
 			diffutils patch gnused 
 		];
 		hwControl = [
-			fbterm iw hdparm smartmontools
-			pmount wavemon
+			fbterm iw hdparm smartmontools kbd
+			pmount wavemon eudev xorg.xf86inputsynaptics
 		];
 		browsers = [
-			firefox-bin conkeror
+			firefox conkeror
 		];
 		editors = [
 			(import ./custom-vim.nix pkgs)
@@ -55,7 +63,7 @@ rec {
 			git mercurial monotone subversion darcs
 		];
 		filesystems = [
-			sshfsFuse
+			sshfsFuse fuse
 		];
 		partitionTools = [
 			gptfdisk
@@ -87,6 +95,7 @@ rec {
 			xorg.xdpyinfo xorg.xdriinfo glxinfo
 			xscreensaver xvidcap
 			xcalib xorg.xwd xdaliclock
+      xorg.xinput 
 		];
 		consoleTools = [
 			remind expect pinentry fdupes mc
@@ -119,7 +128,7 @@ rec {
 		];
 		networkTools = [
 			wireshark tcpdump
-			nmap badvpn
+			nmap badvpn tor
 		];
 		consoleBrowsers = [
 			elinks lynx links2
@@ -140,14 +149,14 @@ rec {
 		] ++ baseKernel.extraModulePackages;
 		graphicEdit = [
 			inkscape gimp imagemagick vue dmtx graphviz
-			pdftk gnuplot openscad xfig
+			pdftk gnuplot openscad xfig zbar qrencode zxing
 		];
 		graphicView = [
 			xpdf zathura evince djvulibre fbida ghostscript
 			geeqie gqview mupdf djview4
 		];
 		browsers = [
-			conkeror firefox-bin chromium 
+			conkeror firefox chromium 
 			slimerjs
 
 			nspluginwrapper 
@@ -166,7 +175,7 @@ rec {
 
 		filesystems = [
 
-			inotifyTools ncdu cdrkit
+			inotifyTools ncdu cdrkit smbnetfs genext2fs
 		];
 		
 		toys = [
@@ -174,7 +183,10 @@ rec {
 		];
 
 		im = [
-			gajim ii
+			gajim ii mcabber
+		];
+		sandboxing = [
+			lxc firejail
 		];
 
 

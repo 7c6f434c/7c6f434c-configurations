@@ -1,0 +1,37 @@
+#generated
+raskin ALL= NOPASSWD: /etc/sudo-scripts/setfreq,\
+		/etc/sudo-scripts/standby,\
+		/etc/sudo-scripts/xfs,\
+		/var/run/current-system/sw/bin/wodim,\
+		/var/run/current-system/sw/sbin/halt,\
+		/etc/sudo-scripts/dateupdate,\
+		/etc/sudo-scripts/eth,\
+		/etc/sudo-scripts/wifi,\
+		/etc/sudo-scripts/wvdial,\
+		/etc/sudo-scripts/nonet,\
+		/etc/sudo-scripts/up-ifs,\
+		/etc/sudo-scripts/brightness,\
+		/etc/sudo-scripts/renice0,\
+		/etc/sudo-scripts/glusterfs-start,\
+		/etc/sudo-scripts/gvpe-start,\
+		/etc/sudo-scripts/chmod,\
+		/etc/sudo-scripts/update-mesa-link,\
+		/etc/sudo-scripts/arpflush,\
+		/etc/sudo-scripts/wpa-status,\
+		/etc/sudo-scripts/nas-halt,\
+		/etc/sudo-scripts/wifi-scan,\
+		/etc/sudo-scripts/start-home-multiplexor,\
+		/etc/sudo-scripts/eth-for-nas,\
+		/etc/sudo-scripts/home-alt-net,\
+		/etc/sudo-scripts/nix-cleanup-tests
+raskin ALL= NOPASSWD: SETENV: /etc/sudo-scripts/checkGw6
+raskin ALL= /bin/sh
+Defaults!/bin/sh rootpw, timestamp_timeout=0
+Defaults!/etc/sudo-scripts/wpa-status !syslog
+sshguest ALL= /var/run/current-system/sw/bin/ls /home/sshguest
+wwwrun	ALL= NOPASSWD: /var/run/current-system/sw/bin/mplayer,\
+	/var/run/current-system/sw/bin/amixer
+xserver ALL= NOPASSWD: /var/run/current-system/sw/sbin/start xserver,\
+	/var/run/current-system/sw/sbin/stop xserver
+halt ALL= NOPASSWD: /var/run/current-system/sw/sbin/halt
+

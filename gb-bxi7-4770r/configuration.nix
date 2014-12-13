@@ -79,12 +79,10 @@ rec {
 	    vim gptfdisk utillinux git wpa_supplicant subversion mtr
 	    btrfsProgs dhcp screen monotone sshfsFuse zsh squids.latest
 	    ecl rlwrap which gcc htop parallel dmtx pdftk iotop iftop
-	    bind sbcl mercurial unzip pv
+	    bind sbcl mercurial unzip pv lsof qrencode zxing
 	    (import ../texlive-set.nix pkgs)
-	    mplayer lame sox ffmpeg
-	    julia octave maxima
-	    openssl sqlite gnumake
-	    wget sysdig
+	    mplayer lame sox ffmpeg julia octave maxima openssl sqlite 
+	    gnumake wget sysdig asymptote smbnetfs imagemagick zbar
 	    ];
   };
 

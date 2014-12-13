@@ -21,11 +21,7 @@
 let
   myTexLive = import ./texlive-set.nix pkgs;
   myKDE = pkgs.kde414;
-  kernelToUse = rec {
-    kernelPackages = pkgs.linuxPackagesFor pkgs.linux_latest kernelPackages;
-    extraModulePackages = [kernelPackages.acpi_call /*kernelPackages.aufs */
-      kernelPackages.sysdig];
-  };
+  kernelToUse = (import ./kernel-options.nix pkgs).baseKernel;
   packageGroups = import /etc/nixos/configurations/misc/raskin/package-groups.nix {
     inherit pkgs myTexLive myKDE;
     baseKernel = kernelToUse;
@@ -49,7 +45,6 @@ let
       "usbhid" "hid-generic"
     ];
     kernelParams=[];
-    resumeDevice=''254:8'';
     postBootCommands = ''
        exec &> /var/log/post-boot-commands
 
@@ -112,6 +107,7 @@ let
     distributedBuilds = true;
     buildMachines = with import ./nix-build-machines.nix; [
       gb-bxi7-4770r-1
+      gb-bxi7-4770r-1-i686
     ];
 
     maxJobs = 4;
@@ -193,11 +189,7 @@ trusted-binary-caches = http://nixos.org/binary-cache http://cache.nixos.org htt
   nixpkgs.config = import (builtins.getEnv "NIXPKGS_CONFIG");
 
   security = {
-    setuidPrograms = ["fusermount"
-      "mount" "umount" "sudo" "xlaunch"
-      "lsof" "suid-chroot" "fbterm" "pmount"
-      "pumount" "udisks"
-    ];
+    setuidPrograms = import ./setuid-programs.nix;
     setuidOwners = [
       {
         program = "sendmail";
@@ -211,46 +203,7 @@ trusted-binary-caches = http://nixos.org/binary-cache http://cache.nixos.org htt
       }
     ];
     sudo = {
-      configFile = "
-#generated
-raskin ALL= NOPASSWD: /etc/sudo-scripts/setfreq,\\
-		/etc/sudo-scripts/standby,\\
-		/etc/sudo-scripts/xfs,\\
-		/var/run/current-system/sw/bin/wodim,\\
-		/var/run/current-system/sw/sbin/halt,\\
-		/etc/sudo-scripts/dateupdate,\\
-		/etc/sudo-scripts/eth,\\
-		/etc/sudo-scripts/wifi,\\
-		/etc/sudo-scripts/wvdial,\\
-		/etc/sudo-scripts/nonet,\\
-		/etc/sudo-scripts/up-ifs,\\
-		/etc/sudo-scripts/brightness,\\
-		/etc/sudo-scripts/renice0,\\
-		/etc/sudo-scripts/glusterfs-start,\\
-		/etc/sudo-scripts/gvpe-start,\\
-		/etc/sudo-scripts/chmod,\\
-		/etc/sudo-scripts/update-mesa-link,\\
-		/etc/sudo-scripts/arpflush,\\
-		/etc/sudo-scripts/wpa-status,\\
-		/etc/sudo-scripts/nas-halt,\\
-		/etc/sudo-scripts/wifi-scan,\\
-		/etc/sudo-scripts/start-home-multiplexor,\\
-		/etc/sudo-scripts/eth-for-nas,\\
-		/etc/sudo-scripts/home-alt-net,\\
-		/etc/sudo-scripts/nix-cleanup-tests
-raskin ALL= NOPASSWD: SETENV: /etc/sudo-scripts/checkGw6
-raskin ALL= /bin/sh
-Defaults!/bin/sh rootpw, timestamp_timeout=0
-Defaults!/etc/sudo-scripts/wpa-status !syslog
-sshguest ALL= /var/run/current-system/sw/bin/ls /home/sshguest
-wwwrun	ALL= NOPASSWD: /var/run/current-system/sw/bin/mplayer,\\
-	/var/run/current-system/sw/bin/amixer
-xserver ALL= NOPASSWD: /var/run/current-system/sw/sbin/start xserver,\\
-	/var/run/current-system/sw/sbin/stop xserver
-halt ALL= NOPASSWD: /var/run/current-system/sw/sbin/halt
-
-";
-    };
+      configFile = (builtins.readFile ./sudoers); };
 
   };
 

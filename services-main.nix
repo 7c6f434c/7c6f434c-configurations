@@ -33,18 +33,7 @@
       password = "/root/nix-sysconfig/gw6c.pass";
       server   = (import /root/nix-sysconfig/gw6c.nix).new_freenet6.server;
     };
-    postgresql = {
-      enableTCPIP = true;
-      enable = true;
-      authentication = ''
-        host all all 192.168.0.0/16 md5
-      '';
-      extraConfig = ''
-        work_mem = 16MB
-        shared_buffers = 1GB
-      '';
-      package = pkgs.postgresql92;
-    };
+    postgresql = (import ./postgresql.nix) {inherit pkgs;};
     mysql = {
       enable=true;
       package = pkgs.mysql55;
