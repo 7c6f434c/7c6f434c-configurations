@@ -23,6 +23,7 @@ raskin ALL= NOPASSWD: /etc/sudo-scripts/setfreq,\
 		/etc/sudo-scripts/start-home-multiplexor,\
 		/etc/sudo-scripts/eth-for-nas,\
 		/etc/sudo-scripts/home-alt-net,\
+		/etc/sudo-scripts/xserver,\
 		/etc/sudo-scripts/nix-cleanup-tests
 raskin ALL= NOPASSWD: SETENV: /etc/sudo-scripts/checkGw6
 raskin ALL= /bin/sh

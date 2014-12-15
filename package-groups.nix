@@ -11,7 +11,7 @@ rec {
       acl attr bashInteractive bzip2 coreutils cpio curl diffutils eject
       findutils gawk glibc gnugrep gnupatch gnused gnutar gzip xz less libcap
       man nano ncurses netcat openssh pciutils perl procps rsync strace
-      sysvtools su time usbutils utillinux glibcLocales sudo
+      sysvtools su time usbutils utillinux glibcLocales sudo lvm2
   ];
 
 	bootstrap = {
@@ -29,6 +29,7 @@ rec {
 			xlaunch xterm rxvt_unicode xmacro
 			xsel xclip xorg.xmodmap xorg.xrandr
 			dmenu2 xdotool xorg.xkbcomp xorg.setxkbmap
+      xorg.xorgserver xkeyboard_config xorg.xprop
 		];
 		consoleTools = [
 			which sqlite bc psmisc file utillinuxCurses slmenu
@@ -140,7 +141,7 @@ rec {
 			mplayer myKDE.kmplayer timidity sox lame vlc ffmpeg
 		];
 		hwControl = [
-			alsaLib cups
+			alsaLib cups alsaUtils
 			pp.xsane udisks xlaunch
 			baseKernel.kernelPackages.kernel
 			pp.lcard_ltr_sdk
@@ -150,6 +151,7 @@ rec {
 		graphicEdit = [
 			inkscape gimp imagemagick vue dmtx graphviz
 			pdftk gnuplot openscad xfig zbar qrencode zxing
+      quirc
 		];
 		graphicView = [
 			xpdf zathura evince djvulibre fbida ghostscript
@@ -188,7 +190,6 @@ rec {
 		sandboxing = [
 			lxc firejail
 		];
-
-
+    fonts = (import ./fonts.nix pkgs).fonts;
 	};
 }

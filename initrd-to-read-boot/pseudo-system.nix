@@ -77,6 +77,17 @@ rec {
     makeLink ${services.postgresqlConfig}      services/configs/postgresql/postgresql.conf
     makeLink ${services.postgresqlScript}      services/scripts/postgresql
 
+    makeLink ${services.nixBinaryCacheScript}  services/scripts/nix-binary-cache
+    makeLink ${services.gpmScript}             services/scripts/gpm
+
+    makeLink ${services.udevConfigs}/etc/udev/rules.d  services/configs/udev
+    makeLink ${services.udevScript}                    services/scripts/udev
+
+    makeLink ${services.XorgConfig}        services/configs/xorg/xorg.conf
+    makeLink ${services.XorgScript}        services/scripts/xorg
+
+    makeLink ${services.fontsConf} services/configs/fontconfig/fonts.conf
+
     makeLink ${setuidWrapper} "setuid/wrapper"
 
     for i in ${toString setuidPrograms}; do
@@ -105,13 +116,28 @@ rec {
     makeLink ${
       writeScript "modprobe" ("#! ${stdenv.shell}\n" +
         ''
-          export PATH="$(${coreutils}/bin/dirname "$0")/sw/bin"
-          export MODULE_DIR="$(dirname "$0")/kernel-modules/lib/modules"
+          export PATH="$(${coreutils}/bin/dirname "$0")/../sw/bin"
+          export MODULE_DIR="$(dirname "$0")/../boot/kernel-modules/lib/modules"
           echo "$@" > /dev/kmsg
-          "$(dirname "$0")/sw/bin/modprobe" "$@"
+          modprobe "$@"
         ''
         )
     } "bin/modprobe"
+
+    makeLink ${
+      writeScript "run-service"
+      ''#! ${stdenv.shell}
+          export theSystem="$(${coreutils}/bin/dirname "$0")/..";
+          export PATH="$PATH:$theSystem/sw/bin"
+          script="$1"
+          shift
+          "$theSystem"/services/scripts/"$script" start "$@" \
+            0</dev/null                                 \
+            1>/var/log/services/"$1"-stdout-"$(date -u +%Y%m%d-%H%M%S)" \
+            2>/var/log/services/"$1"-stderr-"$(date -u +%Y%m%d-%H%M%S)" \
+            ;
+      ''
+    } "bin/run-service"
 
     makeLink ${writeText "sudoers" (builtins.readFile ../sudoers)} "etc/sudoers"
   '';

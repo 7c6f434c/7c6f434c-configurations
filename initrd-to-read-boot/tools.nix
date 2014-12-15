@@ -179,7 +179,7 @@ rec {
   extraEnv
   ''
     mkdir -p "$out"
-    ${toString (map (x: "cp ${x} \$out/ ;") ruleFiles)}
+    ${toString (map (x: "cp -v ${x} \$out/ || true ;") ruleFiles)}
     ${extraCommands}
 
     # Let's just set the PATH correctly instead
@@ -196,9 +196,9 @@ rec {
   '';
 
   storageUdevRules = [
-    "${eudev}/lib/udev/rules.d/50-*.rules"
-    "${eudev}/lib/udev/rules.d/60-cdrom*.rules"
-    "${eudev}/lib/udev/rules.d/60-persistent-storage*.rules"
+    "${eudev}/var/lib/udev/rules.d/50-*.rules"
+    "${eudev}/var/lib/udev/rules.d/60-cdrom*.rules"
+    "${eudev}/var/lib/udev/rules.d/60-persistent-storage*.rules"
     "${lvm2}/lib/udev/rules.d/*.rules"
   ];
 
@@ -278,10 +278,7 @@ rec {
       }
 
       # make device nodes
-      mkdir -p /run/udev/rules.d
-      cp /etc/udev/rules.d/*.rules /run/udev/rules.d/
       udevd --daemon
-      udevadm control --reload
       udevadm trigger -c add
       udevadm trigger
       udevadm settle || true
