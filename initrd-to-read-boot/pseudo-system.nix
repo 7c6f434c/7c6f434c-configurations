@@ -52,7 +52,9 @@ rec {
     paths = system-packages;
   };
   setuidPrograms = import ../setuid-programs.nix;
-  system = runCommand "system" {} ''
+  system = runCommand "system" {
+    preferLocalBuild = true;
+  } ''
     makeLink() {
       mkdir -p "$out/$(dirname "$2")"
       if test "$(basename "$2")" = .; then
@@ -133,8 +135,8 @@ rec {
           shift
           "$theSystem"/services/scripts/"$script" start "$@" \
             0</dev/null                                 \
-            1>/var/log/services/"$1"-stdout-"$(date -u +%Y%m%d-%H%M%S)" \
-            2>/var/log/services/"$1"-stderr-"$(date -u +%Y%m%d-%H%M%S)" \
+            1>/var/log/services/"$script"-stdout-"$(date -u +%Y%m%d-%H%M%S)" \
+            2>/var/log/services/"$script"-stderr-"$(date -u +%Y%m%d-%H%M%S)" \
             ;
       ''
     } "bin/run-service"

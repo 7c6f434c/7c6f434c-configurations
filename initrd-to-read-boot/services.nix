@@ -101,6 +101,7 @@ rec {
   '');
 
   nixBinaryCacheScript = writeScript "nix-binary-cache-start" ''
+    export PATH="$PATH:${coreutils}/bin"
     ${nix-binary-cache}/bin/nix-binary-cache-start --port 32062
   '';
 
@@ -249,7 +250,10 @@ rec {
       export XKB_BINDIR=${xorg.xkbcomp}/bin
       ln -sf ${mesa_drivers} /run/opengl-driver
       mkdir -p /etc/fonts
-      mount --bind ${fontsConf} /etc/fonts
+      mount --bind ${fontsConf} /etc/fonts || {
+        touch /etc/fonts/fonts.conf
+        mount --bind ${fontsConf} /etc/fonts/fonts.conf
+      }
       LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/run/opengl-driver/lib"
       ${xorg.xorgserver}/bin/Xorg -ac -logverbose -verbose -logfile "/var/log/X.''${DISPLAY#:}.log" \
         -terminate -config "${XorgConfig}" -xkbdir "${xkeyboard_config}/etc/X11/xkb"           \

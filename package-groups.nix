@@ -86,7 +86,7 @@ rec {
 			gcc maxima guile 
 			eprover
 			julia icedtea7_jdk apache-jena
-			nox
+			nox mono
 
 			pythonPackages.ipython
 		];
@@ -96,13 +96,13 @@ rec {
 			xorg.xdpyinfo xorg.xdriinfo glxinfo
 			xscreensaver xvidcap
 			xcalib xorg.xwd xdaliclock
-      xorg.xinput 
+      xorg.xinput xorg.xset
 		];
 		consoleTools = [
 			remind expect pinentry fdupes mc
 		];
 		clientServer = [
-			dict 
+			dict dbus.tools
 			ripmime gtkvnc tigervnc samba
 			lighttpd nix-binary-cache
 			openvpn youtubeDL
@@ -159,7 +159,7 @@ rec {
 		];
 		browsers = [
 			conkeror firefox chromium 
-			slimerjs
+			slimerjs midori
 
 			nspluginwrapper 
 			icedtea7_web
@@ -176,6 +176,7 @@ rec {
 		];
 
 		filesystems = [
+      dosfstools e2fsprogs btrfsProgs
 
 			inotifyTools ncdu cdrkit smbnetfs genext2fs
 		];

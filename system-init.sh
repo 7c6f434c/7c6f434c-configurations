@@ -19,6 +19,7 @@ mount --bind /nix/store /nix/store
 mount /nix/store /nix/store -o remount,bind,ro
 mkdir /dev/shm
 mount -t tmpfs devshm /dev/shm -o rw,nosuid,nodev,size=1024M
+mkdir -p /run/lock
 
 hostname "401a0bf1.ignorelist.com"
 

@@ -1,4 +1,15 @@
 #generated
+
+        # Environment variables to keep for root and %wheel.
+        Defaults:root,%wheel env_keep+=TERMINFO_DIRS
+        Defaults:root,%wheel env_keep+=TERMINFO
+
+        # Keep SSH_AUTH_SOCK so that pam_ssh_agent_auth.so can do its magic.
+        Defaults env_keep+=SSH_AUTH_SOCK
+
+        # "root" is allowed to do anything.
+        root        ALL=(ALL) SETENV: ALL
+
 raskin ALL= NOPASSWD: /etc/sudo-scripts/setfreq,\
 		/etc/sudo-scripts/standby,\
 		/etc/sudo-scripts/xfs,\
@@ -24,7 +35,13 @@ raskin ALL= NOPASSWD: /etc/sudo-scripts/setfreq,\
 		/etc/sudo-scripts/eth-for-nas,\
 		/etc/sudo-scripts/home-alt-net,\
 		/etc/sudo-scripts/xserver,\
-		/etc/sudo-scripts/nix-cleanup-tests
+		/etc/sudo-scripts/nix-cleanup-tests,\
+		/run/current-system/bin/run-service bind,\
+		/run/current-system/bin/run-service gpm,\
+		/run/current-system/bin/run-service nix-binary-cache,\
+		/run/current-system/bin/run-service postgresql,\
+		/run/current-system/bin/run-service udev,\
+		/run/current-system/sw/bin/true
 raskin ALL= NOPASSWD: SETENV: /etc/sudo-scripts/checkGw6
 raskin ALL= /bin/sh
 Defaults!/bin/sh rootpw, timestamp_timeout=0

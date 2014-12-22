@@ -30,7 +30,7 @@ linkFarm "raskin-packages" ([
 			"zlib"
 			])
 		++
-		(map ppUse ["uzbl" ])
+		(map ppUse [])
 		++ 
 		[
 		{name="dbus-services"; path=(symlinkJoin "dbus-services" 
