@@ -30,3 +30,7 @@ echo -n /run/current-system/bin/modprobe > /proc/sys/kernel/modprobe
 for i in /run/current-system/etc/*; do 
 	ln -sfT "$i" /etc/"${i#/run/current-system/etc/}"
 done
+
+rm /etc/crontab
+cat /run/current-system/etc/crontab > /etc/crontab
+chmod 0600 /etc/crontab

@@ -61,7 +61,36 @@ rec {
     server   = (import /root/nix-sysconfig/gw6c.nix).brix1_aarnet.server;
   };
 
-  networking.wireless.enable = true;
+  services.xserver = {
+    enable = true;
+    autorun = false;
+    enableTCP = true;
+    virtualScreen = {x=3520; y=2200;};
+    layout = "us(altgr-intl),ru(common),gr(basic)";			
+    xkbOptions = "grp:caps_toggle, grp_led:caps, lv3:lwin_switch, terminate:ctrl_alt_bksp";	
+  };
+
+  services.nixosManual.enable = false;
+
+  services.postgresql = {
+	  enableTCPIP = true;
+	  enable = true;
+	  authentication = ''
+		  host all all 192.168.0.0/16 md5
+		  '';
+	  extraConfig = ''
+		  work_mem = 16MB
+		  shared_buffers = 1GB
+		  '';
+	  package = pkgs.postgresql92;
+  };
+
+  systemd.services.nixBinaryCache.serviceConfig = {
+    User = "nobody";
+    ExecStart = "${pkgs.nix-binary-cache}/bin/nix-binary-cache-start --port 32062 --ipv6";
+  };
+
+  networking.wireless.enable = false;
   networking.dhcpcd.runHook = ''
   export PATH=${pkgs.iproute}/sbin:${pkgs.iproute}/bin:${pkgs.coreutils}/bin:${pkgs.gnugrep}/bin:${pkgs.gnused}/bin:${pkgs.curl}/bin:$PATH
   iface=$(ip l | grep 74:d4:35:65:c7:5f -B1 | head -n 1 | sed -re 's/^[0-9]+: //; s/:.*//')
@@ -83,6 +112,11 @@ rec {
 	    (import ../texlive-set.nix pkgs)
 	    mplayer lame sox ffmpeg julia octave maxima openssl sqlite 
 	    gnumake wget sysdig asymptote smbnetfs imagemagick zbar
+	    quirc mono xvfb_run xorg.xauth xorg.xwininfo xorg.xkill
+	    xdotool x11vnc lynx inotifyTools ghostscript firefox 
+	    ratpoison evince xpdf ncdu fbterm nbd postgresql92 elinks
+	    dmenu2 slmenu libreoffice nmap pmount clisp fbida espeak
+	    wineUnstable
 	    ];
   };
 
@@ -95,8 +129,8 @@ gc-keep-outputs = true       # Nice for developers
 gc-keep-derivations = true   # Idem
 env-keep-derivations = false
 
-binary-caches = http://nixos.org/binary-cache http://cache.nixos.org http://192.168.0.203/~raskin/cgi/nix-serve.cgi\?
-trusted-binary-caches = http://nixos.org/binary-cache http://cache.nixos.org http://hydra.nixos.org http://192.168.0.203/~raskin/cgi/nix-binary-cache.cgi\? http://192.168.0.203/~raskin/cgi/nix-serve.cgi\?
+binary-caches = http://nixos.org/binary-cache http://cache.nixos.org http://192.168.0.203:32062/nix-bc.cgi\?
+trusted-binary-caches = http://nixos.org/binary-cache http://cache.nixos.org http://hydra.nixos.org http://192.168.0.203/~raskin/cgi/nix-binary-cache.cgi\? http://192.168.0.203/~raskin/cgi/nix-serve.cgi\? http://192.168.0.203:32062/nix-bc.cgi\?
     ";
     package = pkgs.lib.overrideDerivation pkgs.nixUnstable (x: rec {
       #src = "/home/repos/nix/";
@@ -156,7 +190,9 @@ raskin ALL= NOPASSWD: /etc/sudo-scripts/setfreq,\
   /etc/sudo-scripts/start-home-multiplexor,\
   /etc/sudo-scripts/eth-for-nas,\
   /etc/sudo-scripts/home-alt-net,\
-  /etc/sudo-scripts/nix-cleanup-tests
+  /etc/sudo-scripts/nix-cleanup-tests,\
+  /run/current-system/sw/bin/chvt,\
+  /run/current-system/sw/bin/true
 raskin ALL= NOPASSWD: SETENV: /etc/sudo-scripts/checkGw6
 raskin ALL= /bin/sh
 Defaults!/bin/sh rootpw, timestamp_timeout=0
@@ -169,5 +205,6 @@ xserver ALL= NOPASSWD: /var/run/current-system/sw/sbin/start xserver,\
 halt ALL= NOPASSWD: /var/run/current-system/sw/sbin/halt
       '';
     };
+    setuidPrograms = ["fbterm" "pmount" "pumount"];
   };
 }

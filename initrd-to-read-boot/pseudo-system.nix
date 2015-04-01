@@ -60,8 +60,10 @@ rec {
       if test "$(basename "$2")" = .; then
         ln -sf "$1" "$out/$2"
       else
+        rm -f "$out/$2"
         ln -sfT "$1" "$out/$2"
       fi
+      test -e "$1"
     }
 
     makeLink ${system-sw} sw
@@ -88,15 +90,32 @@ rec {
     makeLink ${services.XorgConfig}        services/configs/xorg/xorg.conf
     makeLink ${services.XorgScript}        services/scripts/xorg
 
+    makeLink ${services.sshdConfig}        services/configs/sshd/sshd_config
+    makeLink ${services.sshdScript}        services/scripts/sshd
+
+    makeLink ${services.cronScript}        services/scripts/cron
+    
+    makeLink ${services.gogocScript}       services/scripts/gogoc
+
+    makeLink ${services.cupsCupsdConfig}   services/configs/cups/cupsd.conf
+    makeLink ${services.cupsFilesConfig}   services/configs/cups/files.conf
+    makeLink ${services.cupsScript}        services/scripts/cups
+
     makeLink ${services.fontsConf} services/configs/fontconfig/fonts.conf
+    makeLink ${services.fontsConf} etc/fonts/fonts.conf
 
     makeLink ${setuidWrapper} "setuid/wrapper"
 
-    for i in ${toString setuidPrograms}; do
+    for i in ${toString setuidPrograms.plainSetuidPrograms}; do
       makeLink "$out/sw/bin/$i"  setuid/programs/. ||
       makeLink "$out/sw/sbin/$i" setuid/programs/. ||
       true
     done
+    ${lib.concatMapStrings (x: ''
+      makeLink  "$out/sw/bin/${x.src}" setuid/programs/"${x.dst}" ||
+      makeLink "$out/sw/sbin/${x.src}" setuid/programs/"${x.dst}" ||
+      true
+    '') (setuidPrograms.renamedSetuidPrograms or [])}
 
     makeLink ${cpioStatic}/bin/cpio static-tools/cpio
     makeLink ${gzipStatic}/bin/gzip static-tools/gzip
@@ -142,6 +161,53 @@ rec {
     } "bin/run-service"
 
     makeLink ${writeText "sudoers" (builtins.readFile ../sudoers)} "etc/sudoers"
+
+    makeLink ${cacert}/etc/ca-bundle.crt    etc/ssl/certs/ca-bundle.crt
+
+    makeLink ${services.nixConf}           etc/nix/nix.conf
+    makeLink ${services.nixMachinesConf}   etc/nix/machines
+    
+    for i in /var/cert/nix/signing-key.{pub,sec,sec.pub}; do
+      makeLink $i etc/nix/. || true
+    done
+
+    makeLink ${services.profileScript} etc/profile
+    makeLink ${tzdata}/share/zoneinfo etc/zoneinfo
+
+    makeLink ${iana_etc}/etc/protocols etc/protocols
+    makeLink ${iana_etc}/etc/services  etc/services
+
+    makeLink ${services.pamLoginConf}  etc/pam.d/login
+    makeLink ${services.pamLoginConf}  etc/pam.d/xscreensaver
+    makeLink ${services.pamLoginConf}  etc/pam.d/cups
+    makeLink ${services.pamLoginConf}  etc/pam.d/xlock
+    makeLink ${services.pamLoginConf}  etc/pam.d/vlock
+    makeLink ${services.pamSuConf}     etc/pam.d/su
+    makeLink ${services.pamSuConf}     etc/pam.d/sudo
+    makeLink ${services.pamSshdConf}   etc/pam.d/sshd
+    makeLink ${services.pamPasswdConf} etc/pam.d/passwd
+    makeLink ${services.pamSuConf} etc/pam.d/groupadd
+    makeLink ${services.pamSuConf} etc/pam.d/useradd
+    makeLink ${services.pamSuConf} etc/pam.d/usermod
+    makeLink ${services.pamSuConf} etc/pam.d/chsh
+
+    makeLink ${
+      writeText "ssh_config" ''
+        XAuthLocation ${xorg.xauth}/bin/xauth
+        ConnectTimeout 3
+      ''
+    } etc/ssh/ssh_config
+
+    makeLink ${
+      writeText "crontab" ''
+        SHELL=${stdenv.shell}
+        PATH=/run/current-system/sw/bin:/run/current-system/sw/sbin
+        NIX_CONF_DIR=/etc/nix
+        ${
+        lib.concatStringsSep "\n" (import ../services-main.nix {pkgs=pkgs; config={};}).cron.systemCronJobs
+        }
+      ''
+    } etc/crontab
   '';
   qemuScript = qemuLauncherFun { initrd = initrd ; };
 }

@@ -10,8 +10,8 @@ rec {
   nixosDefault = [
       acl attr bashInteractive bzip2 coreutils cpio curl diffutils eject
       findutils gawk glibc gnugrep gnupatch gnused gnutar gzip xz less libcap
-      man nano ncurses netcat openssh pciutils perl procps rsync strace
-      sysvtools su time usbutils utillinux glibcLocales sudo lvm2
+      man nano ncurses netcat openssh pciutils perl procps rsync strace pam
+      sysvtools su time usbutils utillinux glibcLocales sudo lvm2 shadow
   ];
 
 	bootstrap = {
@@ -78,15 +78,16 @@ rec {
 	};
 	constantly_used = {
 		extractors = [
-			unzip zip xarchive
+			unzip zip xarchive lrzip
 		];
 		programmingLanguages = [
-			fpc lazarus 
+			fpc lazarus
 			asymptote myTexLive
-			gcc maxima guile 
+			gcc maxima guile racket
 			eprover
 			julia icedtea7_jdk apache-jena
 			nox mono
+      haskellngPackages.ghc
 
 			pythonPackages.ipython
 		];
@@ -94,9 +95,11 @@ rec {
 			icewm stumpwm trayer 
 			keynav x11vnc xorg.xsetroot
 			xorg.xdpyinfo xorg.xdriinfo glxinfo
-			xscreensaver xvidcap
-			xcalib xorg.xwd xdaliclock
-      xorg.xinput xorg.xset
+			xscreensaver xvidcap apacheHttpd
+			xcalib xorg.xwd xdaliclock xvfb_run
+      xorg.xinput xorg.xset xorg.xauth ratpoison
+      xorg.xlsclients xorg.xwininfo xorg.xkill
+      myKDE.kdelibs
 		];
 		consoleTools = [
 			remind expect pinentry fdupes mc
@@ -108,7 +111,7 @@ rec {
 			openvpn youtubeDL
 			tftp_hpa netkittftp atftp 
 			telnet xinetd 
-			transmission
+			transmission nix-prefetch-scripts
 			(dictDBCollector {
 			 dictlist = with dictdDBs; map 
 			 (x:{
@@ -138,11 +141,11 @@ rec {
 			xxdiff myKDE.kdiff3
 		];
 		media = [
-			mplayer myKDE.kmplayer timidity sox lame vlc ffmpeg
+			mplayer myKDE.kmplayer timidity sox lame vlc ffmpeg espeak
 		];
 		hwControl = [
 			alsaLib cups alsaUtils
-			pp.xsane udisks xlaunch
+			xsane udisks xlaunch
 			baseKernel.kernelPackages.kernel
 			pp.lcard_ltr_sdk
 
@@ -151,7 +154,7 @@ rec {
 		graphicEdit = [
 			inkscape gimp imagemagick vue dmtx graphviz
 			pdftk gnuplot openscad xfig zbar qrencode zxing
-      quirc
+      quirc myKDE.kig drgeo potrace
 		];
 		graphicView = [
 			xpdf zathura evince djvulibre fbida ghostscript
@@ -159,7 +162,7 @@ rec {
 		];
 		browsers = [
 			conkeror firefox chromium 
-			slimerjs midori
+			pp.slimerjs midori
 
 			nspluginwrapper 
 			icedtea7_web
@@ -168,7 +171,7 @@ rec {
 			libreoffice
 		];
 		versionControl = [
-			monotoneViz gitFull 
+			monotoneViz gitFull fossil
 		];
 
 		monitoring = [
@@ -176,9 +179,11 @@ rec {
 		];
 
 		filesystems = [
-      dosfstools e2fsprogs btrfsProgs
+      dosfstools e2fsprogs btrfsProgs cifs_utils bedup
 
 			inotifyTools ncdu cdrkit smbnetfs genext2fs
+
+      ntfs3g
 		];
 		
 		toys = [
@@ -191,6 +196,11 @@ rec {
 		sandboxing = [
 			lxc firejail
 		];
+    emulators = [
+      wineUnstable pipelight
+    ];
     fonts = (import ./fonts.nix pkgs).fonts;
+    icons = [oxygen_gtk myKDE.oxygen_icons];
+    libraries = [myKDE.kde_runtime phonon];
 	};
 }

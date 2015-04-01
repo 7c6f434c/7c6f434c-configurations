@@ -80,13 +80,13 @@ rec {
     flags = lib.optional cfg.enableTCPIP "-i";
   in ''
     test -e ${dataDir} || {
-      mkdir -m 0701 -p ${dataDir}
+      mkdir -m 0700 -p ${dataDir}
       if [ "$(id -u)" = 0 ]; then
         chown -R postgres ${dataDir}
-      su -s ${stdenv.shell} postgres -c 'initdb -U root'
+        su -s ${stdenv.shell} postgres -c 'initdb -U root -D ${dataDir}'
       else
         # For non-root operation.
-        initdb
+        initdb ${dataDir}
       fi
     }
     rm -f ${dataDir}/*.conf
@@ -102,7 +102,7 @@ rec {
 
   nixBinaryCacheScript = writeScript "nix-binary-cache-start" ''
     export PATH="$PATH:${coreutils}/bin"
-    ${nix-binary-cache}/bin/nix-binary-cache-start --port 32062
+    ${nix-binary-cache}/bin/nix-binary-cache-start --port 32062 --ipv6
   '';
 
   gpmScript = writeScript "gpm-start" ''
@@ -249,11 +249,6 @@ rec {
       shift
       export XKB_BINDIR=${xorg.xkbcomp}/bin
       ln -sf ${mesa_drivers} /run/opengl-driver
-      mkdir -p /etc/fonts
-      mount --bind ${fontsConf} /etc/fonts || {
-        touch /etc/fonts/fonts.conf
-        mount --bind ${fontsConf} /etc/fonts/fonts.conf
-      }
       LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/run/opengl-driver/lib"
       ${xorg.xorgserver}/bin/Xorg -ac -logverbose -verbose -logfile "/var/log/X.''${DISPLAY#:}.log" \
         -terminate -config "${XorgConfig}" -xkbdir "${xkeyboard_config}/etc/X11/xkb"           \
@@ -261,6 +256,264 @@ rec {
         "$@"
     fi
   '';
+  nixConfNix={
+    maxJobs = 4;
+    buildCores = 1;
+    useChroot = true;
+    chrootDirs = ["/home/repos"];
+    binaryCaches = ["http://cache.nixos.org" "http://192.168.0.202:32062/nix-bc.cgi?"];
+    trustedBinaryCaches = ["http://cache.nixos.org" "http://hydra.nixos.org" "http://192.168.0.202:32062/nix-bc.cgi?"];
+    gcKeepOutputs = true;
+    gcKeepDerivations = true;
+  };
+  nixConfText = ''
+    build-users-group = nixbld
+    build-max-jobs = ${toString (nixConfNix.maxJobs)}
+    build-cores = ${toString (nixConfNix.buildCores)}
+    build-use-chroot = ${if nixConfNix.useChroot then "true" else "false"}
+    build-chroot-dirs = ${toString nixConfNix.chrootDirs} /bin/sh=${bash}/bin/sh ${glibc} ${bash}
+    binary-caches = ${toString nixConfNix.binaryCaches}
+    trusted-binary-caches = ${toString nixConfNix.trustedBinaryCaches}
+    gc-keep-outputs = ${if nixConfNix.gcKeepOutputs then "true" else "false"}
+    gc-keep-derivations = ${if nixConfNix.gcKeepDerivations then
+      "true" else "false"} 
+  '';
+  nixConf = writeText "nix.conf" nixConfText;
+  nixMachinesConf = writeText "nix-machines" (lib.concatMapStrings
+      (machine:
+       "${machine.sshUser}@${machine.hostName} "
+       + (if machine ? system then machine.system else lib.concatStringsSep "," machine.systems)
+       + " ${machine.sshKey} ${toString machine.maxJobs} "
+       + (if machine ? speedFactor then toString machine.speedFactor else "1" )
+       + " "
+       + (if machine ? supportedFeatures then lib.concatStringsSep "," machine.supportedFeatures else "" )
+       + " "
+       + (if machine ? mandatoryFeatures then lib.concatStringsSep "," machine.mandatoryFeatures else "" )
+       + "\n"
+      )
+      (with import ../nix-build-machines.nix; [gb-bxi7-4770r-1 gb-bxi7-4770r-1-i686]));
 
   fontsConf = makeFontsConf {fontDirectories = fontsNixConfig.fonts;};
+
+  promptInit = ''
+          # Provide a nice prompt.
+          PROMPT_COLOR="1;31m"
+          let $UID && PROMPT_COLOR="1;32m"
+          PS1="\n\[\033[$PROMPT_COLOR\][\u@\h:\w]\\$\[\033[0m\] "
+          if test "$TERM" = "xterm"; then
+            PS1="\[\033]2;\h:\u:\w\007\]$PS1"
+          fi
+  '';
+  profileScript = writeScript "profile" ''
+    export PATH="$PATH:/run/current-system/sw/bin"
+    export MODULE_DIR=/run/current-system/boot/kernel-modules/lib/modules
+    export GIT_SSL_CAINFO=/etc/ssl/certs/ca-bundle.crt
+    export INFOPATH=/run/current-system/sw/share/info
+    export LD_LIBRARY_PATH=/run/opengl-driver/lib:/run/opengl-driver-32/lib
+    export LOCALE_ARCHIVE=/run/current-system/sw/lib/locale/locale-archive
+    export LOCATE_PATH=/var/cache/locatedb
+    export NIXPKGS_CONFIG=/etc/nix/nixpkgs-config.nix
+    export NIX_BUILD_HOOK=${nixUnstable}/libexec/nix/build-remote.pl
+    export NIX_CONF_DIR=/etc/nix
+    export NIX_CURRENT_LOAD=/run/nix/current-load
+    export NIX_PATH=/home/repos
+    export NIX_REMOTE_SYSTEMS=/etc/nix/machines
+    export OPENSSL_X509_CERT_FILE=/etc/ssl/certs/ca-bundle.crt
+    export SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt
+    export TERMINFO_DIRS=/run/current-system/sw/share/terminfo
+    export TZDIR=/etc/zoneinfo
+
+    ${promptInit}
+  '';
+  pamEnvironment=writeText "pam-environment" ''
+    export PATH="$PATH:/run/current-system/sw/bin"
+    export MODULE_DIR=/run/current-system/boot/kernel-modules/lib/modules
+    export GIT_SSL_CAINFO=/etc/ssl/certs/ca-bundle.crt
+    export INFOPATH=/run/current-system/sw/share/info
+    export LD_LIBRARY_PATH=/run/opengl-driver/lib:/run/opengl-driver-32/lib
+    export LOCALE_ARCHIVE=/run/current-system/sw/lib/locale/locale-archive
+    export LOCATE_PATH=/var/cache/locatedb
+    export NIXPKGS_CONFIG=/etc/nix/nixpkgs-config.nix
+    export NIX_BUILD_HOOK=${nixUnstable}/libexec/nix/build-remote.pl
+    export NIX_CONF_DIR=/etc/nix
+    export NIX_CURRENT_LOAD=/run/nix/current-load
+    export NIX_PATH=/home/repos
+    export NIX_REMOTE_SYSTEMS=/etc/nix/machines
+    export OPENSSL_X509_CERT_FILE=/etc/ssl/certs/ca-bundle.crt
+    export SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt
+    export TERMINFO_DIRS=/run/current-system/sw/share/terminfo
+    export TZDIR=/etc/zoneinfo
+  '';
+  pamLoginConf = writeText "pam-login" ''
+    # Account management.
+    account sufficient pam_unix.so
+    # Authentication management.
+    auth sufficient pam_unix.so nullok likeauth
+    auth required   pam_deny.so
+    # Password management.
+    password requisite pam_unix.so nullok sha512
+    # Session management.
+    session required pam_env.so envfile=${pamEnvironment}
+    session required pam_unix.so
+  '';
+  pamSuConf = writeText ''pam-su'' ''
+    # Account management.
+    account sufficient pam_unix.so
+    # Authentication management.
+    auth sufficient pam_rootok.so
+    auth required pam_tally.so
+    auth sufficient pam_unix.so  likeauth
+    auth required   pam_deny.so
+    # Password management.
+    password requisite pam_unix.so nullok sha512
+    # Session management.
+    session required pam_unix.so
+  '';
+  pamPasswdConf = writeText ''passwd'' ''
+    # Account management.
+    account sufficient pam_unix.so
+    # Authentication management.
+    auth sufficient pam_unix.so  likeauth
+    auth required   pam_deny.so
+    # Password management.
+    password requisite pam_unix.so nullok sha512
+    # Session management.
+    session required pam_env.so envfile=${pamEnvironment}
+    session required pam_unix.so
+  '';
+  pamSshdConf = writeText ''passwd'' ''
+    # Account management.
+    account sufficient pam_unix.so
+    # Authentication management.
+    auth sufficient pam_unix.so  likeauth
+    auth required   pam_deny.so
+    # Password management.
+    password requisite pam_unix.so sha512
+    # Session management.
+    session required pam_env.so envfile=${pamEnvironment}
+    session required pam_unix.so
+  '';
+
+  sshdConfig = writeText "sshd_config" ''
+    GatewayPorts clientspecified
+    PermitRootLogin no
+    UseDNS no
+    UsePAM yes
+    VersionAddendum nixos@401a0bf1
+    X11Forwarding yes
+  '';
+  sshdScript = writeScript "sshd-start" ''
+    if [ "$1" = start ]; then
+      ${openssh}/bin/sshd -D -e -f ${sshdConfig} -h /var/cert/ssh/ssh_host_rsa_key -h /var/cert/ssh/ssh_host_dsa_key -h /var/cert/ssh/ssh_host_ecdsa_key
+    fi
+  '';
+  cronScript = writeScript "cron-start" ''
+    if [ "$1" = start ]; then
+      mkdir -p -m 0710 /var/cron/ 
+      ${cron}/sbin/cron -n
+    fi
+  '';
+  gogocScript = writeScript "gogoc-start" ''
+    if [ "$1" = start ]; then
+      ${gogoclient}/bin/gogoc -y -n -f ${gogoclient}/share/${gogoclient.name}/gogoc.conf.sample
+    fi
+  '';
+  cupsBindir = pkgs.buildEnv {
+    name = "cups-progs";
+    paths = 
+      [ cups pkgs.ghostscript pkgs.cups_filters 
+        pkgs.perl pkgs.coreutils pkgs.gnused pkgs.bc pkgs.gawk pkgs.gnugrep
+        pkgs.hplip pkgs.foo2zjs pkgs.foomatic_filters 
+      ];
+    pathsToLink = [ "/lib/cups" "/share/cups" "/bin" "/etc/cups" ];
+    postBuild = "";
+    ignoreCollisions = true;
+  };
+  cupsCupsdConfig = writeText "cupsd.conf" ''
+        LogLevel info
+
+        ${pkgs.lib.concatMapStrings (addr: ''
+          Listen ${addr}
+        '') ["127.0.0.1:631"]}
+        Listen /var/run/cups/cups.sock
+
+        SetEnv PATH ${cupsBindir}/lib/cups/filter:${cupsBindir}/bin:${cupsBindir}/sbin
+
+        Browsing On
+        BrowseOrder allow,deny
+        BrowseAllow @LOCAL
+
+        DefaultAuthType Basic
+
+        <Location />
+          Order allow,deny
+          Allow localhost
+        </Location>
+
+        <Location /admin>
+          Order allow,deny
+          Allow localhost
+        </Location>
+
+        <Location /admin/conf>
+          AuthType Basic
+          Require user @SYSTEM
+          Order allow,deny
+          Allow localhost
+        </Location>
+
+        <Policy default>
+          <Limit Send-Document Send-URI Hold-Job Release-Job Restart-Job Purge-Jobs Set-Job-Attributes Create-Job-Subscription Renew-Subscription Cancel-Subscription Get-Notifications Reprocess-Job Cancel-Current-Job Suspend-Current-Job Resume-Job CUPS-Move-Job>
+            Require user @OWNER @SYSTEM
+            Order deny,allow
+          </Limit>
+
+          <Limit Pause-Printer Resume-Printer Set-Printer-Attributes Enable-Printer Disable-Printer Pause-Printer-After-Current-Job Hold-New-Jobs Release-Held-New-Jobs Deactivate-Printer Activate-Printer Restart-Printer Shutdown-Printer Startup-Printer Promote-Job Schedule-Job-After CUPS-Add-Printer CUPS-Delete-Printer CUPS-Add-Class CUPS-Delete-Class CUPS-Accept-Jobs CUPS-Reject-Jobs CUPS-Set-Default>
+            AuthType Basic
+            Require user @SYSTEM
+            Order deny,allow
+          </Limit>
+
+          <Limit Cancel-Job CUPS-Authenticate-Job>
+            Require user @OWNER @SYSTEM
+            Order deny,allow
+          </Limit>
+
+          <Limit All>
+            Order deny,allow
+          </Limit>
+        </Policy>
+
+  '';
+  cupsFilesConfig = writeText "files.conf" ''
+
+        SystemGroup root wheel
+
+        ServerBin ${cupsBindir}/lib/cups
+        DataDir ${cupsBindir}/share/cups
+
+        AccessLog syslog
+        ErrorLog syslog
+        PageLog syslog
+
+        TempDir /tmp/cups
+
+        # User and group used to run external programs, including
+        # those that actually send the job to the printer.  Note that
+        # Udev sets the group of printer devices to `lp', so we want
+        # these programs to run as `lp' as well.
+        User cups
+        Group lp
+  '';
+  cupsScript = writeScript "cups-start" ''
+            mkdir -m 0755 -p /etc/cups
+            mkdir -m 0700 -p /var/cache/cups
+            mkdir -m 0700 -p /var/spool/cups
+            mkdir -m 0755 -p /tmp/cups
+
+            ln -sf ${cupsCupsdConfig} /etc/cups/cupsd.conf
+            ln -sf ${cupsFilesConfig} /etc/cups/files.conf
+
+            ${pkgs.cups}/sbin/cupsd
+  '';
 }

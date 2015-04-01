@@ -23,7 +23,7 @@ rec {
     "${glibc}/lib/librt[-.]*so*"
     "${glibc}/lib/libdl[-.]*so*"
     "${glibc}/lib/libpthread[-.]*so*"
-    "${gcc.gcc}/lib/libgcc_s[-.]*so*"
+    "${gcc.cc}/lib/libgcc_s[-.]*so*"
     ];
 
   busyboxForToolset = [

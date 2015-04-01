@@ -15,9 +15,11 @@ vgchange -ay
 
 udevadm settle
 
+readlink -f /dev/NotebookMain/Swap > /sys/power/resume
+
 for i in /dev/sd?; do hdparm -B 255 $i; done
 
-mkfs.ext4 /dev/NotebookMain/Tmp
+yes y | mkfs.ext4 /dev/NotebookMain/Tmp
 
 mount /dev/NotebookMain/SystemRoot /new-root
 
@@ -30,7 +32,10 @@ mount /dev/NotebookMain/Nix /new-root/nix &
 mount /dev/NotebookMain/Tmp /new-root/tmp &
 mount /dev/NotebookMain/Home /new-root/home &
 mount /dev/NotebookMain/Root /new-root/root &
-swapon /dev/NotebookMain/Swap &
+{
+mkswap /dev/NotebookMain/Swap 
+swapon $( readlink -f /dev/NotebookMain/Swap ) 
+} &
 mount /dev/disk/by-label/NIXOS_EFI /new-root/boot &
 
 while pgrep mount; do sleep 0.1; done

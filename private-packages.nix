@@ -156,19 +156,19 @@ let pp =
    JustStamp = "${builtins.readFile "${src}/.git/refs/heads/master"}";
    name = "sbcl-git-head";
  });
- saneBackends = saneBackends.override {
-    gt68xxFirmware = x: {
-      fw = /var/lib/firmware/SBfw.usb ; 
-      name = "SBfw.usb";
-    };
- };
- saneFrontends = saneFrontends.override {
-   saneBackends = pp.saneBackends;
- };
- xsane = xsane.override {
-   saneBackends = pp.saneBackends;
-   saneFrontends = pp.saneFrontends;
- };
+#saneBackends = saneBackends.override {
+#   gt68xxFirmware = x: {
+#     fw = /var/lib/firmware/SBfw.usb ; 
+#     name = "SBfw.usb";
+#   };
+#};
+#saneFrontends = saneFrontends.override {
+#  saneBackends = pp.saneBackends;
+#};
+#xsane = xsane.override {
+#  saneBackends = pp.saneBackends;
+#  saneFrontends = pp.saneFrontends;
+#};
  lcard_ltr_sdk = pkgs.stdenv.mkDerivation rec {
    name = "lcard-ltr-sdk";
    src = "/home/repos/ltr_cross_sdk/";
@@ -181,5 +181,17 @@ let pp =
    '';
    cmakeFlags = ["-DLTR_BUILD_LTRMANAGER=ON" "-DLTRD_USB_ENABLED=ON"];
  };
+ slimerjs = pkgs.lib.overrideDerivation pkgs.slimerjs (x: {
+   buildPhase = ''
+     (
+     mkdir omni.ja.unpacked
+     cd omni.ja.unpacked
+     unzip ../omni.ja
+     cp -r ${/home/repos/slimerjs-omni-ja-overrides}/* .
+     zip ../omni.ja -r . 
+     cd ..
+     )
+   '';
+ });
 }; in 
 pp

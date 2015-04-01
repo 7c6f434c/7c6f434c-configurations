@@ -36,6 +36,7 @@ raskin ALL= NOPASSWD: /etc/sudo-scripts/setfreq,\
 		/etc/sudo-scripts/home-alt-net,\
 		/etc/sudo-scripts/xserver,\
 		/etc/sudo-scripts/nix-cleanup-tests,\
+		/run/current-system/sw/bin/chvt,\
 		/run/current-system/bin/run-service bind,\
 		/run/current-system/bin/run-service gpm,\
 		/run/current-system/bin/run-service nix-binary-cache,\

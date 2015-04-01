@@ -37,7 +37,9 @@
       neededForBoot = true;
     };
 
-  swapDevices =[ ];
+  swapDevices =[ 
+    { label = "Swap"; }
+  ];
 
   nix.maxJobs = 8;
 }

@@ -33,6 +33,7 @@ for i in "snd-hda-codec-conexant" "snd-hda-intel power_save=5 index=1,0"       \
 	 "ax88179_178a" "smsc75xx" "asix" "cdc_ether" "usbhid" "hid-generic"   \
 	 "xhci-pci"  "af-packet" "wmi" "ctr" "arc4" "ath9k nohwcrypt=1" "ccm"  \
 	 "iptable_filter" "nf_conntrack_ipv4" "iptable_nat" "ipt-MASQUERADE"   \
+	 "ipv6" "cifs" "hmac" "md4" "nls-utf8"                                 \
          ;
   do      
 	  echo $i

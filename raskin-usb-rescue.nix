@@ -30,19 +30,20 @@
       ];
     };
     kernelPackages = 
-      pkgs.linuxPackagesFor pkgs.linux_3_16 kernelPackages;
+      pkgs.linuxPackagesFor pkgs.linux_latest kernelPackages;
     vesa = false;
     kernelParams = [
       "console=ttyS0,115200,n8r"
       "console=tty0"
     ];
+    blacklistedKernelModules = ["ath3k"];
   };
 
   fileSystems = [
     {
       mountPoint = "/";
       label = "NixOSRescue";
-      fsType = "ext3";
+      fsType = "ext4";
     }
     {
       mountPoint = "/boot/";
@@ -87,15 +88,18 @@
       vimHugeX ipmitool ipmiutil
       tcpdump subversion screen
       freeipmi utillinuxCurses
-      dmraid fbterm xlaunch icewm
-      icewm firefox lftp
+      dmraid fbterm xlaunch
+      icewm firefox lftp monotone
       hplip pmount mc evince
       xpdf glxinfo git dhcp emacs
       wpa_supplicant iw btrfsProgs
-      htop iotop iftop kvm
+      htop iotop iftop kvm zsh
       xorg.xmodmap elinks lynx wget
       parted gptfdisk gparted
-      wavemon
+      wavemon smartmontools hdparm
+      slmenu dmenu sbcl julia pv mtr
+      sshfsFuse fbida imagemagick
+      nix-binary-cache
     ];
   };
   
