@@ -265,6 +265,10 @@ rec {
     trustedBinaryCaches = ["http://cache.nixos.org" "http://hydra.nixos.org" "http://192.168.0.202:32062/nix-bc.cgi?"];
     gcKeepOutputs = true;
     gcKeepDerivations = true;
+    binaryCachePublicKeys = [
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      "hydra.nixos.org-1:CNHJZBh9K4tP3EKF6FkkgeVYsS3ohTl+oS0Qa8bezVs="
+      ];
   };
   nixConfText = ''
     build-users-group = nixbld
@@ -277,6 +281,7 @@ rec {
     gc-keep-outputs = ${if nixConfNix.gcKeepOutputs then "true" else "false"}
     gc-keep-derivations = ${if nixConfNix.gcKeepDerivations then
       "true" else "false"} 
+    binary-cache-public-keys = ${toString nixConfNix.binaryCachePublicKeys}
   '';
   nixConf = writeText "nix.conf" nixConfText;
   nixMachinesConf = writeText "nix-machines" (lib.concatMapStrings
@@ -492,9 +497,9 @@ rec {
         ServerBin ${cupsBindir}/lib/cups
         DataDir ${cupsBindir}/share/cups
 
-        AccessLog syslog
-        ErrorLog syslog
-        PageLog syslog
+        AccessLog stderr
+        ErrorLog stderr
+        PageLog stderr
 
         TempDir /tmp/cups
 

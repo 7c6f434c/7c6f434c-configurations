@@ -86,21 +86,15 @@
     cron = {
       systemCronJobs = [
 #	in local time
-	"44 4 * * * root [ -e /dev/sdb5 ] && ! [ -d /media/sdb5 ] && pmount /dev/sdb5 && ([ -f /media/sdb5/backup/auto-backup-here ] && backup_notebook /media/sdb5/backup ; ) ; sync && pumount /dev/sdb5 "
-	"29 4 * * * root [ -e /dev/sdb1 ] && ! [ -d /media/sdb1 ] && pmount /dev/sdb1 && ([ -f /media/sdb1/backup/auto-backup-here ] && backup_notebook /media/sdb1/backup ; ) ; sync && pumount /dev/sdb1 "
-	"14 4 * * * root sh -c 'PATH=$PATH:/root/script/; ensure-nas-backup-mount ; mount; ls /tmp/backup/backup ; [ -f /tmp/backup/backup/auto-backup-here ] ; echo $? ; ([ -f /tmp/backup/backup/auto-backup-here ] && /root/script/backup_notebook /tmp/backup/backup ; sync ) && umount /tmp/backup' &> /var/log/nas-backup.log"
-	"5-59/30 * * * * root cd /root && nice -n 10 ionice -c 3 /home/raskin/script/mtn-pending-changes > /root/.mtn-pending-changes"
-	"0-59/30 * * * * raskin export PATH=$PATH:/home/raskin/script ; cd /home/raskin && nice -n 10 ionice -c 3 mtn-pending-changes > /home/raskin/.mtn-pending-changes; cd rc && kill-gajim-passwords && purge-from-pending"
+	"34 4 * * * root ( [ -e /dev/sdb5 ] && ! [ -d /media/sdb5 ] && pmount /dev/sdb5 && ([ -f /media/sdb5/backup/auto-backup-here ] && backup_notebook /media/sdb5/backup ; ) ; sync && pumount /dev/sdb5 ) > /var/log/sdb5-backup.log "
+	"29 4 * * * root ( [ -e /dev/sdb1 ] && ! [ -d /media/sdb1 ] && pmount /dev/sdb1 && ([ -f /media/sdb1/backup/auto-backup-here ] && backup_notebook /media/sdb1/backup ; ) ; sync && pumount /dev/sdb1 ) > /var/log/sdb1-backup.log "
+	"44 4 * * * root ( [ -e /dev/sdc5 ] && ! [ -d /media/sdc5 ] && pmount /dev/sdc5 && ([ -f /media/sdc5/backup/auto-backup-here ] && backup_notebook /media/sdc5/backup ; ) ; sync && pumount /dev/sdc5 ) > /var/log/sdc5-backup.log "
+	"39 4 * * * root ( [ -e /dev/sdc1 ] && ! [ -d /media/sdc1 ] && pmount /dev/sdc1 && ([ -f /media/sdc1/backup/auto-backup-here ] && backup_notebook /media/sdc1/backup ; ) ; sync && pumount /dev/sdc1 ) > /var/log/sdc1-backup.log "
+#	"14 4 * * * root sh -c 'PATH=$PATH:/root/script/; ensure-nas-backup-mount ; mount; ls /tmp/backup/backup ; [ -f /tmp/backup/backup/auto-backup-here ] ; echo $? ; ([ -f /tmp/backup/backup/auto-backup-here ] && /root/script/backup_notebook /tmp/backup/backup ; sync ) && umount /tmp/backup' &> /var/log/nas-backup.log"
+	"5-59/30 * * * * root cd /root && nice -n 10 ionice -c 3 /home/raskin/src/sh/script/mtn-pending-changes > /root/.mtn-pending-changes"
+	"0-59/30 * * * * raskin export PATH=$PATH:/home/raskin/src/sh/script ; cd /home/raskin && nice -n 10 ionice -c 3 mtn-pending-changes > /home/raskin/.mtn-pending-changes; cd rc && kill-gajim-passwords && purge-from-pending"
 	"30 5 * * * root /var/run/current-system/sw/bin/nix-instantiate /home/raskin/.nix-personal/personal.nix"
-	"45 5 * * * raskin cd /home/raskin && /home/raskin/script/dev-sync && /home/raskin/script/public-sync && /home/raskin/script/gh-sync"
-##	in UTC
-#	"44 0 * * * root [ -e /dev/sdb5 ] && ! [ -d /media/sdb5 ] && pmount /dev/sdb5 && ([ -f /media/sdb5/backup/auto-backup-here ] && backup_notebook /media/sdb5/backup ; ) ; sync && pumount /dev/sdb5 "
-#	"29 0 * * * root [ -e /dev/sdb1 ] && ! [ -d /media/sdb1 ] && pmount /dev/sdb1 && ([ -f /media/sdb1/backup/auto-backup-here ] && backup_notebook /media/sdb1/backup ; ) ; sync && pumount /dev/sdb1 "
-#	"14 0 * * * root sh -c 'PATH=$PATH:/root/script/; ensure-nas-backup-mount ; mount; ls /tmp/backup/backup ; [ -f /tmp/backup/backup/auto-backup-here ] ; echo $? ; ([ -f /tmp/backup/backup/auto-backup-here ] && /root/script/backup_notebook /tmp/backup/backup ; sync ) && umount /tmp/backup' &> /var/log/nas-backup.log"
-#	"5-59/15 * * * * root cd /root && nice -n 10 ionice -c 3 /home/raskin/script/mtn-pending-changes > /root/.mtn-pending-changes"
-#	"0-59/15 * * * * raskin export PATH=$PATH:/home/raskin/script ; cd /home/raskin && nice -n 10 ionice -c 3 mtn-pending-changes > /home/raskin/.mtn-pending-changes; cd rc && kill-gajim-passwords && purge-from-pending"
-#	"30 1 * * * root /var/run/current-system/sw/bin/nix-instantiate /home/raskin/.nix-personal/personal.nix"
-#	"45 1 * * * raskin cd /home/raskin && /home/raskin/script/dev-sync && /home/raskin/script/public-sync && /home/raskin/script/gh-sync"
+	"45 5 * * * raskin cd /home/raskin && /home/raskin/src/sh/script/dev-sync && /home/raskin/src/sh/script/public-sync && /home/raskin/src/sh/script/gh-sync"
       ];
     };
     

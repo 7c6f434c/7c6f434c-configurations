@@ -8,6 +8,8 @@ shift ; shift; shift
 
 "$(dirname "$0")/deploy-nix-to-chroot.sh" "$tgt" "$nix" "$drv" &> /dev/null
 
+mkdir -p "$tgt"/{dev,sys,proc}
+
 test -e "$tgt/dev/null" || mount --bind /dev "$tgt/dev"
 test -e "$tgt/sys/class" || mount sys -t sysfs "$tgt/sys"
 test -e "$tgt/proc/self" || mount proc -t proc "$tgt/proc"

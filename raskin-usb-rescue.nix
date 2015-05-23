@@ -5,19 +5,20 @@
   boot = rec {
     loader = {
       grub = {
-        #enable = true;
-        enable = false;
+        enable = true;
+        #enable = false;
         version = 2;
-        device = "/dev/sda";
+        device = "nodev";
 	configurationLimit = 100;
         copyKernels = true;
         splashImage = null;
         extraConfig = ''
         '';
+        efiSupport = true;
       };
       gummiboot = {
-        enable = true;
-        #enable = false;
+        #enable = true;
+        enable = false;
       };
     };
     initrd = {
@@ -97,9 +98,21 @@
       xorg.xmodmap elinks lynx wget
       parted gptfdisk gparted
       wavemon smartmontools hdparm
-      slmenu dmenu sbcl julia pv mtr
+      slmenu sbcl julia pv mtr
       sshfsFuse fbida imagemagick
-      nix-binary-cache
+      nix-binary-cache powertop
+      gcc fuse rlwrap badvpn
+      dmtx gnuplot maxima libreoffice
+      slmenu dmenu2 nbd mplayer
+      python rxvt_unicode geeqie
+      (import ./private-packages.nix {}).slimerjs
+      vue squids.latest which lsof
+      grub2 grub2_efi efibootmgr
+      (import ./texlive-set.nix pkgs)
+      clisp xdotool ncdu
+      xorg.xdpyinfo xorg.xev pciutils usbutils
+      midori chromium zsh sqlite openssl
+      expect
     ];
   };
   
@@ -114,6 +127,8 @@
       "fusermount" "mount" "umount" "xlaunch"
       "lsof" "pmount" "pumount" "fbterm"
     ];
+    sudo = {
+      configFile = (builtins.readFile ./sudoers); };
   };
 
   nix = {
@@ -123,5 +138,21 @@
       trusted-binary-caches = http://cache.nixos.org http://nixos.org/binary-cache http://hydra.nixos.org
     '';
     package = pkgs.nixUnstable;
+  };
+
+  fonts = {
+    enableGhostscriptFonts = true;
+    enableFontDir = true;
+
+    fonts = with pkgs; [
+      (ghostscript + "/share/ghostscript/fonts/")
+      pkgs.dejavu_fonts
+      pkgs.liberation_ttf
+      pkgs.lmodern
+      pkgs.cm_unicode
+      pkgs.lmmath
+      pkgs.unifont
+      pkgs.xorg.fontcronyxcyrillic
+    ];
   };
 }

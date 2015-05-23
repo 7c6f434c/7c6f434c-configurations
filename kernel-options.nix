@@ -5,7 +5,7 @@
     kernelPackages = pkgs.linuxPackagesFor pkgs.linux_latest kernelPackages;
     extraModulePackages = [kernelPackages.acpi_call /*kernelPackages.aufs */
       kernelPackages.sysdig
-      kernelPackages.bbswitch
+      /*kernelPackages.bbswitch*/
       ];
   };
 }

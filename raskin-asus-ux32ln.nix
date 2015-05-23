@@ -22,7 +22,7 @@ let
   myTexLive = import ./texlive-set.nix pkgs;
   myKDE = pkgs.kde414;
   kernelToUse = (import ./kernel-options.nix pkgs).baseKernel;
-  packageGroups = import /etc/nixos/configurations/misc/raskin/package-groups.nix {
+  packageGroups = import /home/raskin/src/nix/configurations/misc/raskin/package-groups.nix {
     inherit pkgs myTexLive myKDE;
     baseKernel = kernelToUse;
   };

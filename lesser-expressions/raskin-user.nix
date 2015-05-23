@@ -54,4 +54,12 @@ linkFarm "raskin-packages" ([
 				  '');
 		}
 		{name="nix-serve"; path=(import /home/repos/nix-serve);}
+    { name="query-fs"; 
+      path = lib.overrideDerivation lispPackages.query-fs (x: {
+        linkedSystems = x.linkedSystems ++ ["clsql" "ironclad" "esrap-peg" 
+          "md5" "sb-bsd-sockets"]; 
+        nativeBuildInputs = x.nativeBuildInputs ++ (with lispPackages; 
+          [clsql ironclad esrap-peg md5]);
+      });
+    }
 		])

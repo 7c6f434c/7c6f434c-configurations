@@ -187,7 +187,8 @@ let pp =
      mkdir omni.ja.unpacked
      cd omni.ja.unpacked
      unzip ../omni.ja
-     cp -r ${/home/repos/slimerjs-omni-ja-overrides}/* .
+     patch -Np0 -i ${/home/repos/slimerjs-omni-ja-overrides/overrides.patch}
+     echo -n > modules/coffee-script/extras/coffee-script.js
      zip ../omni.ja -r . 
      cd ..
      )

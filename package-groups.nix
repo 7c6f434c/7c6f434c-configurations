@@ -90,6 +90,7 @@ rec {
       haskellngPackages.ghc
 
 			pythonPackages.ipython
+      lispPackages.clwrapper cl-launch
 		];
 		utilsX = [
 			icewm stumpwm trayer 
@@ -168,7 +169,7 @@ rec {
 			icedtea7_web
 		];
 		editors = [
-			libreoffice
+			libreoffice emacs
 		];
 		versionControl = [
 			monotoneViz gitFull fossil
@@ -201,6 +202,7 @@ rec {
     ];
     fonts = (import ./fonts.nix pkgs).fonts;
     icons = [oxygen_gtk myKDE.oxygen_icons];
-    libraries = [myKDE.kde_runtime phonon];
+    libraries = [myKDE.kde_runtime phonon lispPackages.command-line-arguments
+      asdf];
 	};
 }

@@ -104,6 +104,7 @@ rec {
   #hardware.firmware = ["/var/lib/firmware"];
 
   environment = {
+    pathsToLink = ["/"];
     systemPackages = with pkgs; [
 	    vim gptfdisk utillinux git wpa_supplicant subversion mtr
 	    btrfsProgs dhcp screen monotone sshfsFuse zsh squids.latest
@@ -116,7 +117,8 @@ rec {
 	    xdotool x11vnc lynx inotifyTools ghostscript firefox 
 	    ratpoison evince xpdf ncdu fbterm nbd postgresql92 elinks
 	    dmenu2 slmenu libreoffice nmap pmount clisp fbida espeak
-	    wineUnstable
+	    wineUnstable emacs qemu p7zip rxvt_unicode edk2 OVMF keynav
+	    gparted parted
 	    ];
   };
 

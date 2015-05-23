@@ -23,10 +23,18 @@ yes y | mkfs.ext4 /dev/NotebookMain/Tmp
 mount /dev/NotebookMain/SystemRoot /new-root
 
 {
+mkdir -p /new-root/var
 mount /dev/NotebookMain/Var /new-root/var
+mkdir -p /new-root/var/db
+mkdir -p /new-root/var/log
 mount /dev/NotebookMain/VarDB /new-root/var/db &
 mount /dev/NotebookMain/VarLog /new-root/var/log &
 } &
+mkdir -p /new-root/nix
+mkdir -p /new-root/tmp
+mkdir -p /new-root/home
+mkdir -p /new-root/root
+mkdir -p /new-root/boot
 mount /dev/NotebookMain/Nix /new-root/nix &
 mount /dev/NotebookMain/Tmp /new-root/tmp &
 mount /dev/NotebookMain/Home /new-root/home &
