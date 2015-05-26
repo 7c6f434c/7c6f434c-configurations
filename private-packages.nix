@@ -194,5 +194,11 @@ let pp =
      )
    '';
  });
+ stumpwm = pkgs.lib.overrideDerivation pkgs.stumpwm (x: {
+   nativeBuildInputs = x.nativeBuildInputs ++ [
+     pkgs.lispPackages.clx-truetype
+     pkgs.lispPackages.clx-xkeyboard
+   ];
+ });
 }; in 
 pp

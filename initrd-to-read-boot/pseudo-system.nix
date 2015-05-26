@@ -11,6 +11,7 @@ rec {
     modulesTree = [kernel-to-use.kernelPackages.kernel] ++ 
       kernel-to-use.extraModulePackages;
     modules = [ 
+    "asus-nb-wmi"
     "i915" "ahci" "sd-mod" 
     ] ++ x.modules ++ [
     "btrfs" "ext4" "nls-cp437" "vfat"

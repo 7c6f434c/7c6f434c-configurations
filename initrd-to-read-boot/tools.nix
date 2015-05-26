@@ -342,7 +342,7 @@ rec {
   ];
   setuidWrapper = runCommand "setuid-wrapper" {} ''
     mkdir -p "$out/bin"
-    gcc ${<nixpkgs>}/nixos/modules/security/setuid-wrapper.c \
+    gcc ${<nixpkgs> + "/nixos/modules/security/setuid-wrapper.c" } \
       -Wall -O2 -DWRAPPER_DIR='"/var/setuid-wrappers"' \
       -o "$out"/bin/setuid-wrapper 
   '';

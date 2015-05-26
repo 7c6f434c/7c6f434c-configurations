@@ -93,7 +93,7 @@ rec {
       lispPackages.clwrapper cl-launch
 		];
 		utilsX = [
-			icewm stumpwm trayer 
+			icewm pp.stumpwm trayer 
 			keynav x11vnc xorg.xsetroot
 			xorg.xdpyinfo xorg.xdriinfo glxinfo
 			xscreensaver xvidcap apacheHttpd

@@ -24,15 +24,16 @@ mkdir -p /run/lock
 hostname "401a0bf1.ignorelist.com"
 
 export MODULE_DIR="$targetSystem/boot/kernel-modules/lib/modules"
-for i in "snd-hda-codec-conexant" "snd-hda-intel power_save=5 index=1,0"       \
+for i in "snd-usb-audio" "snd-hda-codec-conexant" "asus-nb-wmi"                \
+         "snd-hda-intel power_save=5 index=1,0 model=auto position_fix=0"      \
 	 "af_packet" "acpi-cpufreq" "configs"                                  \
 	 "cpufreq-ondemand" "coretemp" "battery" "xhci-hcd" "uvcvideo" "tun"   \
 	 "snd-pcm" "kvm-intel" "aesni-intel" "crc32c-intel" "intel-powerclamp" \
-	 "asus-nb-wmi" "usb-storage" "mousedev" "evdev" "psmouse" "msr" "nbd"  \
-	 "ac" "battery" "thermal" "fuse" "loop" "rtc-cmos" "sysdig-probe"      \
-	 "ax88179_178a" "smsc75xx" "asix" "cdc_ether" "usbhid" "hid-generic"   \
-	 "xhci-pci"  "af-packet" "wmi" "ctr" "arc4" "ath9k nohwcrypt=1" "ccm"  \
-	 "iptable_filter" "nf_conntrack_ipv4" "iptable_nat" "ipt-MASQUERADE"   \
+	 "usb-storage" "mousedev" "evdev" "psmouse" "msr" "nbd" "ac" "battery" \
+	 "thermal" "fuse" "loop" "rtc-cmos" "sysdig-probe" "ax88179_178a"      \
+	 "smsc75xx" "asix" "cdc_ether" "usbhid" "hid-generic" "xhci-pci"       \
+	 "af-packet" "wmi" "ctr" "arc4" "ath9k nohwcrypt=1" "ccm"              \
+         "iptable_filter" "nf_conntrack_ipv4" "iptable_nat" "ipt-MASQUERADE"   \
 	 "ipv6" "cifs" "hmac" "md4" "nls-utf8"                                 \
          ;
   do      
