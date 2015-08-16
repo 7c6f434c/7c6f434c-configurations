@@ -29,6 +29,6 @@ machine-id $(cat /etc/machine-id)
 
 linux /EFI/everescue-nix/$kbasename
 initrd /EFI/everescue-nix/$ibasename
-options targetSystem=$target
+options targetSystem=$target BOOT_IMAGE=$kernel
 " | tee /boot/loader/entries/everescue-nix-generation-"$version".conf
 [ -n "$EFI_SET_DEFAULT" ] && sed -e "s@^default .*@default everescue-nix-generation-$version@" -i /boot/loader/loader.conf

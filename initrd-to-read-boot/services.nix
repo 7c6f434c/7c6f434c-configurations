@@ -261,8 +261,8 @@ rec {
     buildCores = 1;
     useChroot = true;
     chrootDirs = ["/home/repos"];
-    binaryCaches = ["http://cache.nixos.org" "http://192.168.0.202:32062/nix-bc.cgi?"];
-    trustedBinaryCaches = ["http://cache.nixos.org" "http://hydra.nixos.org" "http://192.168.0.202:32062/nix-bc.cgi?"];
+    binaryCaches = ["https://cache.nixos.org" "http://192.168.0.202:32062/nix-bc.cgi?"];
+    trustedBinaryCaches = ["http://hydra.nixos.org" "http://192.168.0.202:32062/nix-bc.cgi?" "https://cache.nixos.org/"];
     gcKeepOutputs = true;
     gcKeepDerivations = true;
     binaryCachePublicKeys = [
@@ -418,11 +418,24 @@ rec {
       ${cron}/sbin/cron -n
     fi
   '';
-  gogocScript = writeScript "gogoc-start" ''
+  gogocScript = writeScript "gogoc-start" 
+  (let
+    serviceConf = (import ../services-main.nix 
+      {inherit pkgs; config = {};}).gogoclient;
+  in ''
     if [ "$1" = start ]; then
-      ${gogoclient}/bin/gogoc -y -n -f ${gogoclient}/share/${gogoclient.name}/gogoc.conf.sample
+      mkdir -m 0600 -p /run/gogoc/
+      cat ${gogoclient}/share/${gogoclient.name}/gogoc.conf.sample |
+        sed -re "
+          s|^userid=|&${serviceConf.username}|;
+          s|^passwd=|&${lib.optionalString (serviceConf.password != "") 
+            "$(cat ${serviceConf.password})"}|
+          s|^server=.*|server=${serviceConf.server}|
+          s|^auth_method=.*|auth_method=${serviceConf.authMethod or "any"}|
+        " > /run/gogoc/gogoc.conf
+      ${gogoclient}/bin/gogoc -y -n -f /run/gogoc/gogoc.conf
     fi
-  '';
+  '');
   cupsBindir = pkgs.buildEnv {
     name = "cups-progs";
     paths = 
@@ -510,14 +523,20 @@ rec {
         User cups
         Group lp
   '';
+  cupsClientConfig = writeText "client.conf" "";
   cupsScript = writeScript "cups-start" ''
             mkdir -m 0755 -p /etc/cups
             mkdir -m 0700 -p /var/cache/cups
             mkdir -m 0700 -p /var/spool/cups
             mkdir -m 0755 -p /tmp/cups
+            chown cups:lp /tmp/cups
 
             ln -sf ${cupsCupsdConfig} /etc/cups/cupsd.conf
-            ln -sf ${cupsFilesConfig} /etc/cups/files.conf
+            ln -sf ${cupsFilesConfig} /etc/cups/cups-files.conf
+            ln -sf ${cupsClientConfig} /etc/cups/client.conf
+
+            rm /etc/cups/*.{types,convs}
+            ln -sf ${cupsBindir}/share/cups/mime/*.{types,convs} /etc/cups
 
             ${pkgs.cups}/sbin/cupsd
   '';

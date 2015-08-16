@@ -26,7 +26,7 @@ rec {
 			libtool automake autoconf gnumake patchelf nixUnstable
 		];
 		utilsX = [
-			xlaunch xterm rxvt_unicode xmacro
+			xlaunch xterm rxvt_unicode rxvt_unicode.terminfo xmacro
 			xsel xclip xorg.xmodmap xorg.xrandr
 			dmenu2 xdotool xorg.xkbcomp xorg.setxkbmap
       xorg.xorgserver xkeyboard_config xorg.xprop
@@ -85,8 +85,8 @@ rec {
 			asymptote myTexLive
 			gcc maxima guile racket
 			eprover
-			julia icedtea7_jdk apache-jena
-			nox mono
+			julia openjdk8 apache-jena
+			nox mono octave
       haskellngPackages.ghc
 
 			pythonPackages.ipython
@@ -100,7 +100,7 @@ rec {
 			xcalib xorg.xwd xdaliclock xvfb_run
       xorg.xinput xorg.xset xorg.xauth ratpoison
       xorg.xlsclients xorg.xwininfo xorg.xkill
-      myKDE.kdelibs
+      myKDE.kdelibs xorg.xrdb
 		];
 		consoleTools = [
 			remind expect pinentry fdupes mc
@@ -109,7 +109,7 @@ rec {
 			dict dbus.tools
 			ripmime gtkvnc tigervnc samba
 			lighttpd nix-binary-cache
-			openvpn youtubeDL
+			openvpn (youtubeDL.override {pandoc = null;})
 			tftp_hpa netkittftp atftp 
 			telnet xinetd 
 			transmission nix-prefetch-scripts
@@ -155,7 +155,7 @@ rec {
 		graphicEdit = [
 			inkscape gimp imagemagick vue dmtx graphviz
 			pdftk gnuplot openscad xfig zbar qrencode zxing
-      quirc myKDE.kig drgeo potrace
+      quirc myKDE.kig drgeo potrace slic3r
 		];
 		graphicView = [
 			xpdf zathura evince djvulibre fbida ghostscript
@@ -169,7 +169,7 @@ rec {
 			icedtea7_web
 		];
 		editors = [
-			libreoffice emacs
+			libreoffice emacs textadept
 		];
 		versionControl = [
 			monotoneViz gitFull fossil

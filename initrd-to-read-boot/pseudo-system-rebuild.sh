@@ -2,6 +2,7 @@
 
 nix-env -p /nix/var/nix/profiles/everescue-nix --set -f "$(dirname "$0")"/pseudo-system.nix -A system --fallback "$@"
 rm /boot/loader/entries/everescue-nix-generation-*.conf
+"$(dirname "$0")"/create-efi-entry.sh - - "$(readlink -f "/run/booted-system")" "previous boot"
 for i in /nix/var/nix/profiles/everescue-nix-*-link; do
 	n="${i}"
 	n="${n%-link}"

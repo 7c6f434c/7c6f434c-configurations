@@ -131,37 +131,11 @@ gc-keep-outputs = true       # Nice for developers
 gc-keep-derivations = true   # Idem
 env-keep-derivations = false
 
-binary-caches = http://nixos.org/binary-cache http://cache.nixos.org http://192.168.0.203:32062/nix-bc.cgi\?
-trusted-binary-caches = http://nixos.org/binary-cache http://cache.nixos.org http://hydra.nixos.org http://192.168.0.203/~raskin/cgi/nix-binary-cache.cgi\? http://192.168.0.203/~raskin/cgi/nix-serve.cgi\? http://192.168.0.203:32062/nix-bc.cgi\?
+binary-caches = http://cache.nixos.org http://192.168.0.203:32062/nix-bc.cgi\?
+trusted-binary-caches = http://cache.nixos.org http://hydra.nixos.org http://192.168.0.203/~raskin/cgi/nix-binary-cache.cgi\? http://192.168.0.203/~raskin/cgi/nix-serve.cgi\? http://192.168.0.203:32062/nix-bc.cgi\?
     ";
-    package = pkgs.lib.overrideDerivation pkgs.nixUnstable (x: rec {
-      #src = "/home/repos/nix/";
-      #revisionStamp = (builtins.readFile (src + "/.git/refs/heads/master"));
-      preConfigure = ''
-        sed -e '/bin_SCRIPTS = /anix-reduce-build \\' -i scripts/local.mk
-        sed -e '/bin_SCRIPTS = /anix-http-export.cgi \\' -i scripts/local.mk
-        export AC_LOCAL_PATH="$AC_LOCAL_PATH:${pkgs.autoconf}/share/aclocal:${pkgs.libtool}/share/aclocal:${pkgs.automake}/share/aclocal"
-        set
-	export
-        ./bootstrap.sh
-      '' + (if x ? preConfigure then x.preConfigure else "");
-      nativeBuildInputs = (with pkgs; [
-        autoconf automake libtool bison flex gettext
-	perlPackages.WWWCurl perlPackages.DBDSQLite perlPackages.DBI
-	libxml2 libxslt w3m
-	docbook5 docbook5_xsl docbook_xml_dtd_45
-      ]) ++ (x.nativeBuildInputs or []);
-      buildInputs = (with pkgs; [
-	perlPackages.WWWCurl perlPackages.DBDSQLite perlPackages.DBI
-      ]) ++ x.buildInputs;
-      configureFlags = x.configureFlags + ''
-          --with-docbook-rng=${pkgs.docbook5}/xml/rng/docbook
-          --with-docbook-xsl=${pkgs.docbook5_xsl}/xml/xsl/docbook
-          --with-xml-flags=--nonet
-	  --with-www-curl=${pkgs.perlPackages.WWWCurl}/${pkgs.perl.libPrefix}
-      '';
-      doInstallCheck = false;
-    }); 
+    requireSignedBinaryCaches = false;
+    package = pkgs.nix; 
   };
 
   security = {

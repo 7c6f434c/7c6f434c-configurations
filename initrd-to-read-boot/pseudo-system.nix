@@ -73,6 +73,8 @@ rec {
     makeLink ${initrd.kernel} boot/kernel-package
     makeLink ${initrd.kernel}/bzImage boot/kernel
     makeLink ${initrd.kernelModules} boot/kernel-modules
+    # NixOS compatibility for SystemTap
+    makeLink ${initrd.kernel}/bzImage kernel
 
     makeLink ${services.bindConfig} services/configs/bind/bind.conf
     makeLink ${services.bindScript} services/scripts/bind
@@ -163,7 +165,7 @@ rec {
 
     makeLink ${writeText "sudoers" (builtins.readFile ../sudoers)} "etc/sudoers"
 
-    makeLink ${cacert}/etc/ca-bundle.crt    etc/ssl/certs/ca-bundle.crt
+    makeLink ${cacert}/etc/ssl/certs/ca-bundle.crt    etc/ssl/certs/ca-bundle.crt
 
     makeLink ${services.nixConf}           etc/nix/nix.conf
     makeLink ${services.nixMachinesConf}   etc/nix/machines
@@ -189,6 +191,7 @@ rec {
     makeLink ${services.pamPasswdConf} etc/pam.d/passwd
     makeLink ${services.pamSuConf} etc/pam.d/groupadd
     makeLink ${services.pamSuConf} etc/pam.d/useradd
+    makeLink ${services.pamSuConf} etc/pam.d/userdel
     makeLink ${services.pamSuConf} etc/pam.d/usermod
     makeLink ${services.pamSuConf} etc/pam.d/chsh
 

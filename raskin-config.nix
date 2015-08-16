@@ -32,4 +32,6 @@
      (pkgs.lib.hasPrefix "nvidia-x11-" x.name) ||
      false
    );
+
+  allowTexliveBuilds = true;
 }

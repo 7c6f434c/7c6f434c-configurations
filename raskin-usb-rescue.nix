@@ -112,7 +112,8 @@
       clisp xdotool ncdu
       xorg.xdpyinfo xorg.xev pciutils usbutils
       midori chromium zsh sqlite openssl
-      expect
+      expect bc xfig transfig asymptote stumpwm
+      pdftk inotifyTools libeatmydata
     ];
   };
   
@@ -137,7 +138,8 @@
       binary-caches = http://cache.nixos.org http://nixos.org/binary-cache http://hydra.nixos.org
       trusted-binary-caches = http://cache.nixos.org http://nixos.org/binary-cache http://hydra.nixos.org
     '';
-    package = pkgs.nixUnstable;
+    requireSignedBinaryCaches = false;
+    #package = pkgs.nixUnstable;
   };
 
   fonts = {

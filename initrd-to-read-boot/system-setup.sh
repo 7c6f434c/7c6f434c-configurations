@@ -34,3 +34,5 @@ done
 rm /etc/crontab
 cat /run/current-system/etc/crontab > /etc/crontab
 chmod 0600 /etc/crontab
+
+ln -sf /run/current-system/sw/share/timezone/UTC /etc/localtime

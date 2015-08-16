@@ -172,7 +172,7 @@ let pp =
  lcard_ltr_sdk = pkgs.stdenv.mkDerivation rec {
    name = "lcard-ltr-sdk";
    src = "/home/repos/ltr_cross_sdk/";
-   revision = builtins.readFile "${src}/.hg/dirstate";
+   revision = builtins.readFile "${src}/.hg/cache/branch2-served";
    buildInputs = with pkgs; [cmake qt4 libusb1 pkgconfig];
    preConfigure = ''
      sed -e '/ltr35api/d' -i ltrapi/CMakeLists.txt
@@ -188,7 +188,6 @@ let pp =
      cd omni.ja.unpacked
      unzip ../omni.ja
      patch -Np0 -i ${/home/repos/slimerjs-omni-ja-overrides/overrides.patch}
-     echo -n > modules/coffee-script/extras/coffee-script.js
      zip ../omni.ja -r . 
      cd ..
      )
@@ -199,6 +198,9 @@ let pp =
      pkgs.lispPackages.clx-truetype
      pkgs.lispPackages.clx-xkeyboard
    ];
+   postInstall = (x.postInstall or "") + ''
+     echo "$nativeBuildInputs" > "$out/nix-support/build-inputs"
+   '';
  });
 }; in 
 pp

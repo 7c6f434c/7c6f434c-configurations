@@ -42,6 +42,11 @@ raskin ALL= NOPASSWD: /etc/sudo-scripts/setfreq,\
 		/run/current-system/bin/run-service nix-binary-cache,\
 		/run/current-system/bin/run-service postgresql,\
 		/run/current-system/bin/run-service udev,\
+		/etc/sudo-scripts/create-subuser,\
+		/etc/sudo-scripts/drop-subuser,\
+		/etc/sudo-scripts/switch-to-subuser,\
+		/etc/sudo-scripts/grant-to-subuser,\
+		/etc/sudo-scripts/take-from-subuser,\
 		/run/current-system/sw/bin/true
 raskin ALL= NOPASSWD: SETENV: /etc/sudo-scripts/checkGw6
 raskin ALL= /bin/sh

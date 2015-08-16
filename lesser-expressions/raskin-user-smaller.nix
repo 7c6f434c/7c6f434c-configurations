@@ -19,6 +19,8 @@ linkFarm "raskin-packages" ([
       });
     }
 		{name="clx-truetype"; path=lispPackages.clx-truetype;}
+		{name="clx-xkeyboard"; path=lispPackages.clx-xkeyboard;}
+		{name="bordeaux-threads"; path=lispPackages.bordeaux-threads;}
 		]
 		++ 
 		(map justUse [
