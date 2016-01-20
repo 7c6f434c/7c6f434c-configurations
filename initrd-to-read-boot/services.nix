@@ -442,6 +442,7 @@ rec {
       [ cups pkgs.ghostscript pkgs.cups_filters 
         pkgs.perl pkgs.coreutils pkgs.gnused pkgs.bc pkgs.gawk pkgs.gnugrep
         pkgs.hplip pkgs.foo2zjs pkgs.foomatic_filters 
+        pkgs.samba
       ];
     pathsToLink = [ "/lib/cups" "/share/cups" "/bin" "/etc/cups" ];
     postBuild = "";

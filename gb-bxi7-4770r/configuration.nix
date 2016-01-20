@@ -118,7 +118,7 @@ rec {
 	    ratpoison evince xpdf ncdu fbterm nbd postgresql92 elinks
 	    dmenu2 slmenu libreoffice nmap pmount clisp fbida espeak
 	    wineUnstable emacs qemu p7zip rxvt_unicode edk2 OVMF keynav
-	    gparted parted
+	    gparted parted glpk
 	    ];
   };
 

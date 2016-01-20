@@ -4,8 +4,9 @@
   baseKernel = rec{
     kernelPackages = pkgs.linuxPackagesFor pkgs.linux_latest kernelPackages;
     extraModulePackages = [kernelPackages.acpi_call /*kernelPackages.aufs */
-      kernelPackages.sysdig
+      /*kernelPackages.sysdig*/
       /*kernelPackages.bbswitch*/
+      kernelPackages.virtualbox
       ];
   };
 }

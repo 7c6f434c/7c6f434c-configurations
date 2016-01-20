@@ -26,6 +26,6 @@ linkFarm "raskin-packages" ([
 		(map justUse [
 		"gsettings_desktop_schemas"
 		"fuse" "mysql" "openssl" "opencv" "postgresql" "sqlite"
-		"sbcl_1_2_5"  
+		"sbcl_1_2_5" "graphviz_2_0"
 		])
 		)

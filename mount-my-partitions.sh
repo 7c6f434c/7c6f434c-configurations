@@ -18,6 +18,7 @@ udevadm settle
 readlink -f /dev/NotebookMain/Swap > /sys/power/resume
 
 for i in /dev/sd?; do hdparm -B 255 $i; done
+hdparm -B 60 /dev/sda
 
 yes y | mkfs.ext4 /dev/NotebookMain/Tmp
 
@@ -44,10 +45,13 @@ udevadm control --exit
 pkill udevd
 pkill udev
 pkill -9 udev
-kill $(pgrep -9 udev)
+kill -9 $(pgrep udev)
 ps -ef | grep udev
 
-for i in /dev /proc /run /sys ; do
+rm -rf /new-root/run/
+mkdir /new-root/run/
+
+for i in /proc /run /sys /dev ; do
 	mount --move $i /new-root/$i &
 done
 

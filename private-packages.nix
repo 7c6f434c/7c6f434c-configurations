@@ -190,6 +190,7 @@ let pp =
      patch -Np0 -i ${/home/repos/slimerjs-omni-ja-overrides/overrides.patch}
      zip ../omni.ja -r . 
      cd ..
+     test -d chrome && cp -r omni.ja.unpacked/* .
      )
    '';
  });

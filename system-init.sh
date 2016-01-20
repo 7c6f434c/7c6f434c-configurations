@@ -58,6 +58,8 @@ sh -c 'while true; do agetty tty3 -l /run/current-system/sw/bin/login; done' &
 sh -c 'while true; do agetty tty4 -l /run/current-system/sw/bin/login; done' & 
 sh -c 'while true; do agetty tty5 -l /run/current-system/sw/bin/login; done' & 
 
+pkill lighttpd; for i in bind nix-binary-cache postgresql sshd cron gogoc udev cups ; do pkill $i; /run/current-system/bin/run-service $i & done; pkill nix-daemon ; nix-daemon &
+
 { while ! test -f /run/shutdown; do sleep 1; done; ps -ef | grep '/var/setuid-wrappers/su -c true' | awk '{print $2}' | xargs kill ; } & 
 while ! test -f /run/shutdown && ! su nobody -s /bin/sh -c "/var/setuid-wrappers/su -c true"; do echo Please enter root password to continue; done
 mv /run/shutdown /run/shutdown.old &>/dev/null || true

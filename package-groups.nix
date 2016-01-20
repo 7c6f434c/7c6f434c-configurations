@@ -78,16 +78,17 @@ rec {
 	};
 	constantly_used = {
 		extractors = [
-			unzip zip xarchive lrzip
+			unzip zip xarchive lrzip mdbtools_git runzip
 		];
 		programmingLanguages = [
 			fpc lazarus
 			asymptote myTexLive
-			gcc maxima guile racket
+			gcc maxima guile /*racket*/
 			eprover
 			julia openjdk8 apache-jena
-			nox mono octave
-      haskellngPackages.ghc
+			mono octave nim ruby
+      haskellPackages.ghc
+      glpk
 
 			pythonPackages.ipython
       lispPackages.clwrapper cl-launch
@@ -100,10 +101,11 @@ rec {
 			xcalib xorg.xwd xdaliclock xvfb_run
       xorg.xinput xorg.xset xorg.xauth ratpoison
       xorg.xlsclients xorg.xwininfo xorg.xkill
-      myKDE.kdelibs xorg.xrdb
+      myKDE.kdelibs xorg.xrdb xprintidle-ng
 		];
 		consoleTools = [
-			remind expect pinentry fdupes mc
+			remind expect pinentry fdupes mc debootstrap
+			texinfoInteractive
 		];
 		clientServer = [
 			dict dbus.tools
@@ -111,7 +113,7 @@ rec {
 			lighttpd nix-binary-cache
 			openvpn (youtubeDL.override {pandoc = null;})
 			tftp_hpa netkittftp atftp 
-			telnet xinetd 
+			telnet xinetd nginx vsftpd
 			transmission nix-prefetch-scripts
 			(dictDBCollector {
 			 dictlist = with dictdDBs; map 
@@ -142,11 +144,12 @@ rec {
 			xxdiff myKDE.kdiff3
 		];
 		media = [
-			mplayer myKDE.kmplayer timidity sox lame vlc ffmpeg espeak
+			mplayer /*myKDE.kmplayer*/ timidity sox lame vlc ffmpeg espeak 
+      lilypond
 		];
 		hwControl = [
 			alsaLib cups alsaUtils
-			xsane udisks xlaunch
+			xsane udisks2 xlaunch
 			baseKernel.kernelPackages.kernel
 			pp.lcard_ltr_sdk
 
@@ -155,7 +158,8 @@ rec {
 		graphicEdit = [
 			inkscape gimp imagemagick vue dmtx graphviz
 			pdftk gnuplot openscad xfig zbar qrencode zxing
-      quirc myKDE.kig drgeo potrace slic3r
+      quirc myKDE.kig drgeo potrace slic3r transfig
+      povray
 		];
 		graphicView = [
 			xpdf zathura evince djvulibre fbida ghostscript
@@ -170,6 +174,7 @@ rec {
 		];
 		editors = [
 			libreoffice emacs textadept
+				emacsPackagesNg.slime
 		];
 		versionControl = [
 			monotoneViz gitFull fossil
@@ -188,7 +193,8 @@ rec {
 		];
 		
 		toys = [
-			fortune sgtpuzzles quantumminigolf liquidwar fsg golly
+			fortune sgtpuzzles quantumminigolf liquidwar fsg golly n2048
+      xpilot-ng pkgs."2048-in-terminal" xmoto
 		];
 
 		im = [
@@ -198,7 +204,10 @@ rec {
 			lxc firejail
 		];
     emulators = [
-      wineUnstable pipelight
+      wineUnstable pipelight dosbox
+    ];
+    nonNative = [
+      baseKernel.kernelPackages.virtualbox
     ];
     fonts = (import ./fonts.nix pkgs).fonts;
     icons = [oxygen_gtk myKDE.oxygen_icons];

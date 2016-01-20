@@ -39,6 +39,10 @@
       pkgs.gentium
       pkgs.cm_unicode
       pkgs.lmmath
+
+      pkgs.paratype-pt-mono
+      pkgs.paratype-pt-sans
+      pkgs.paratype-pt-serif
     ]);
 
     enableCoreFonts = false;

@@ -166,6 +166,7 @@ rec {
     makeLink ${writeText "sudoers" (builtins.readFile ../sudoers)} "etc/sudoers"
 
     makeLink ${cacert}/etc/ssl/certs/ca-bundle.crt    etc/ssl/certs/ca-bundle.crt
+    makeLink ${cacert}/etc/ssl/certs/ca-bundle.crt    etc/ssl/certs/ca-certificates.crt
 
     makeLink ${services.nixConf}           etc/nix/nix.conf
     makeLink ${services.nixMachinesConf}   etc/nix/machines

@@ -332,7 +332,7 @@ rec {
     "ext4" "ext3" "ext2" "btrfs" "vfat" "isofs" "squashfs" "loop"
     
     # ATA etc.
-    "ahci" "sd-mod" "sr-mod" "cdrom" "ata-piix"
+    "ahci" "sd-mod" "sr-mod" "cdrom" "ata-piix" "uas"
 
     # graphics
     "i915" "nouveau" "radeon" "fbcon"
