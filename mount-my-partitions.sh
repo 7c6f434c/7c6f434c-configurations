@@ -1,4 +1,7 @@
 export HOME=/root
+export PATH="$PATH:/init-tools/bin"
+
+uname -a
 
 grep boot.no-mount /proc/cmdline && exec /init-tools/bin/sh
 

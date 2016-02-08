@@ -82,16 +82,23 @@ rec {
 		];
 		programmingLanguages = [
 			fpc lazarus
-			asymptote myTexLive
+			asymptote
 			gcc maxima guile /*racket*/
 			eprover
-			julia openjdk8 apache-jena
+			/*julia*/ openjdk8 apache-jena
 			mono octave nim ruby
       haskellPackages.ghc
-      glpk
+      glpk ccl
 
 			pythonPackages.ipython
       lispPackages.clwrapper cl-launch
+
+      myTexLive
+      (runCommand "texlive-fixes" {}
+        ''
+          mkdir -p "$out/bin"
+          ln -s "${myTexLive}/bin/epstopdf" "$out/bin/repstopdf"
+        '')
 		];
 		utilsX = [
 			icewm pp.stumpwm trayer 
@@ -198,7 +205,7 @@ rec {
 		];
 
 		im = [
-			gajim ii mcabber
+			ii mcabber
 		];
 		sandboxing = [
 			lxc firejail

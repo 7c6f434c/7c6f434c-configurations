@@ -26,6 +26,10 @@ rec {
     "${gcc.cc}/lib/libgcc_s[-.]*so*"
     ];
 
+  lzmaLibsForToolset = [
+    "${lzma}/lib/liblzma.so*"
+  ];
+
   busyboxForToolset = [
     "${busybox}/bin/*"
   ];
@@ -149,7 +153,8 @@ rec {
   , extraContents ? []}: 
   let
     toolset = closedToolset {name = "tools";
-          contents = glibcLibsForToolset ++ busyboxForToolset ++ extraToolset;
+          contents = glibcLibsForToolset ++ busyboxForToolset ++ lzmaLibsForToolset
+            ++ extraToolset;
           contentsWithTargets = extraToolsetWithTargets;
           extraCommands = extraToolsetCommands;
         };

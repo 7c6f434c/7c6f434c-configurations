@@ -1,4 +1,5 @@
 pkgs:
+/*
 let 
   texLivePaths = with pkgs; [
           texLive texLiveExtra lmodern texLiveCMSuper 
@@ -11,3 +12,12 @@ let
   };
 in
   myTexLive
+*/
+
+pkgs.texlive.combine {
+  inherit(pkgs.texlive)
+    scheme-medium collection-langcyrillic collection-genericrecommended
+    cm-super cm-unicode xcolor pgf beamer moderncv tipa disser 
+    moderntimeline texinfo metafont multibib collection-fontutils
+    epstopdf epspdfconversion epspdf;
+}

@@ -21,14 +21,7 @@
       pkgs.ucsFonts
       pkgs.junicode
       pkgs.lmodern
-      (pkgs.libertine.passthru.function {
-          createTTF = false;
-	  createPFM = false;
-	  createPFB = false;
-	  createAFM = false;
-	  createMAP = false;
-	  createENC = false;
-      })
+      pkgs.libertine
       pkgs.arkpandora_ttf
       pkgs.andagii
       pkgs.anonymousPro
