@@ -111,7 +111,7 @@ rec {
 	    ecl rlwrap which gcc htop parallel dmtx pdftk iotop iftop
 	    bind sbcl mercurial unzip pv lsof qrencode zxing
 	    (import ../texlive-set.nix pkgs)
-	    mplayer lame sox ffmpeg julia octave maxima openssl sqlite 
+	    mplayer lame sox ffmpeg /*julia*/ octave maxima openssl sqlite 
 	    gnumake wget sysdig asymptote smbnetfs imagemagick zbar
 	    quirc mono xvfb_run xorg.xauth xorg.xwininfo xorg.xkill
 	    xdotool x11vnc lynx inotifyTools ghostscript firefox 
