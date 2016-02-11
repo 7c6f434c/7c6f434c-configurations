@@ -218,7 +218,9 @@ rec {
     ];
     fonts = (import ./fonts.nix pkgs).fonts;
     icons = [oxygen_gtk myKDE.oxygen_icons];
-    libraries = [myKDE.kde_runtime phonon lispPackages.command-line-arguments
+    libraries = [myKDE.kde_runtime phonon 
+      phonon_backend_gstreamer
+      lispPackages.command-line-arguments
       asdf];
 	};
 }
