@@ -83,9 +83,9 @@ rec {
 		programmingLanguages = [
 			fpc lazarus
 			asymptote
-			gcc maxima guile /*racket*/
-			eprover
-			/*julia*/ openjdk8 apache-jena
+			gcc maxima guile racket
+			eprover coq
+			julia-git openjdk8 apache-jena
 			mono octave nim ruby
       haskellPackages.ghc
       glpk ccl
@@ -112,7 +112,7 @@ rec {
 		];
 		consoleTools = [
 			remind expect pinentry fdupes mc debootstrap
-			texinfoInteractive
+			texinfoInteractive baseKernel.kernelPackages.sysdig
 		];
 		clientServer = [
 			dict dbus.tools
