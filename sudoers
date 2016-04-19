@@ -48,6 +48,7 @@ raskin ALL= NOPASSWD: /etc/sudo-scripts/setfreq,\
 		/etc/sudo-scripts/grant-to-subuser,\
 		/etc/sudo-scripts/take-from-subuser,\
 		/etc/sudo-scripts/start-system-dbus,\
+		/var/run/current-system/sw/bin/powertop,\
 		/run/current-system/sw/bin/true
 raskin ALL= NOPASSWD: SETENV: /etc/sudo-scripts/checkGw6
 raskin ALL= /bin/sh

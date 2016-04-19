@@ -107,7 +107,7 @@ rec {
     pathsToLink = ["/"];
     systemPackages = with pkgs; [
 	    vim gptfdisk utillinux git wpa_supplicant subversion mtr
-	    btrfsProgs dhcp screen monotone sshfsFuse zsh squids.latest
+	    btrfsProgs dhcp screen monotone sshfsFuse zsh squid
 	    ecl rlwrap which gcc htop parallel dmtx pdftk iotop iftop
 	    bind sbcl mercurial unzip pv lsof qrencode zxing
 	    (import ../texlive-set.nix pkgs)
@@ -118,7 +118,7 @@ rec {
 	    ratpoison evince xpdf ncdu fbterm nbd postgresql92 elinks
 	    dmenu2 slmenu libreoffice nmap pmount clisp fbida espeak
 	    wineUnstable emacs qemu p7zip rxvt_unicode edk2 OVMF keynav
-	    gparted parted glpk ccl
+	    gparted parted glpk ccl file
 	    ];
   };
 
@@ -135,7 +135,7 @@ binary-caches = http://cache.nixos.org http://192.168.0.203:32062/nix-bc.cgi\?
 trusted-binary-caches = http://cache.nixos.org http://hydra.nixos.org http://192.168.0.203/~raskin/cgi/nix-binary-cache.cgi\? http://192.168.0.203/~raskin/cgi/nix-serve.cgi\? http://192.168.0.203:32062/nix-bc.cgi\?
     ";
     requireSignedBinaryCaches = false;
-    package = pkgs.nix; 
+    package = pkgs.nix.out; 
   };
 
   security = {

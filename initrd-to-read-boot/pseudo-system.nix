@@ -51,6 +51,8 @@ rec {
     name = "system-software-set";
     ignoreCollisions = true;
     paths = system-packages;
+    extraOutputsToInstall =
+      ["all" "bin" "lib" "etc" "doc" "man" "share" "info" "dev" "docdev"]; 
   };
   setuidPrograms = import ../setuid-programs.nix;
   system = runCommand "system" {

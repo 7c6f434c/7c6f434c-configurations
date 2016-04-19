@@ -196,10 +196,10 @@ let pp =
  });
  stumpwm = pkgs.lib.overrideDerivation pkgs.stumpwm (x: {
    nativeBuildInputs = x.nativeBuildInputs ++ [
-     pkgs.lispPackages.clx-truetype
-     pkgs.lispPackages.clx-xkeyboard
+     pkgs.stumpwm.lispPackages.clx-truetype
+     pkgs.stumpwm.lispPackages.clx-xkeyboard
    ];
-   postInstall = (x.postInstall or "") + ''
+   installPhase = (x.installPhase or "") + ''
      echo "$nativeBuildInputs" > "$out/nix-support/build-inputs"
    '';
  });

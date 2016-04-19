@@ -6,6 +6,7 @@ pkgs = import pkgsPath {}; in with pkgs;
 let customVim = import /home/raskin/src/nix/configurations/misc/raskin/custom-vim.nix; in
 let pp = import /home/raskin/src/nix/configurations/misc/raskin/private-packages.nix {inherit pkgs;}; in
 let justUse = str: {name = str; path = builtins.getAttr str pkgs;}; in
+let justUseMult = output: str: {name = "${str}.${output}"; path = builtins.getAttr output (builtins.getAttr str pkgs);}; in
 let ppUse = str: {name = str; path = builtins.getAttr str pp;}; in
 
 linkFarm "raskin-packages" ([
@@ -28,4 +29,8 @@ linkFarm "raskin-packages" ([
 		"fuse" "mysql" "openssl" "opencv" "postgresql" "sqlite"
 		"sbcl_1_2_5" "graphviz_2_0"
 		])
+    ++
+    (map (justUseMult "out") [
+    "openssl"
+    ])
 		)

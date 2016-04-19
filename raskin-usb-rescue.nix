@@ -117,12 +117,6 @@
     ];
   };
   
-  jobs = {
-    ttyS0 = {
-      exec = " 38400";
-    };
-  };
-
   security = {
     setuidPrograms = [
       "fusermount" "mount" "umount" "xlaunch"

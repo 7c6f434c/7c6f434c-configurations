@@ -17,17 +17,17 @@ rec {
     '';
 
   glibcLibsForToolset = [
-    "${glibc}/lib/ld*.so*"
-    "${glibc}/lib/libc[-.]*so*"
-    "${glibc}/lib/libm[-.]*so*"
-    "${glibc}/lib/librt[-.]*so*"
-    "${glibc}/lib/libdl[-.]*so*"
-    "${glibc}/lib/libpthread[-.]*so*"
+    "${glibc.out}/lib/ld*.so*"
+    "${glibc.out}/lib/libc[-.]*so*"
+    "${glibc.out}/lib/libm[-.]*so*"
+    "${glibc.out}/lib/librt[-.]*so*"
+    "${glibc.out}/lib/libdl[-.]*so*"
+    "${glibc.out}/lib/libpthread[-.]*so*"
     "${gcc.cc}/lib/libgcc_s[-.]*so*"
     ];
 
   lzmaLibsForToolset = [
-    "${lzma}/lib/liblzma.so*"
+    "${lzma.out}/lib/liblzma.so*"
   ];
 
   busyboxForToolset = [
@@ -57,8 +57,8 @@ rec {
 
   blkidForToolset = [
     "${utillinux}/sbin/blkid"
-    "${utillinux}/lib/libblkid*.so*"
-    "${utillinux}/lib/libuuid*.so*"
+    "${utillinux.out}/lib/libblkid*.so*"
+    "${utillinux.out}/lib/libuuid*.so*"
     ];
 
   kmodForToolset = [
@@ -352,7 +352,8 @@ rec {
       -o "$out"/bin/setuid-wrapper 
   '';
 
-  cpioStatic = lib.overrideDerivation cpio (x: {LDFLAGS=["-static"];});
-  gzipStatic = lib.overrideDerivation gzip (x: {LDFLAGS=["-static"];});
+  cpioStatic = lib.overrideDerivation cpio (x: {LDFLAGS=["-static" "-L${glibc.static}/lib"]; nativeBuildInputs = x.nativeBuildInputs ++ [glibc.static];});
+  gzipStatic = lib.overrideDerivation gzip (x: {LDFLAGS=["-static" "-L${glibc.static}/lib"]; nativeBuildInputs = x.nativeBuildInputs ++ [glibc.static];});
+
 
 }

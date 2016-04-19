@@ -19,5 +19,5 @@ pkgs.texlive.combine {
     scheme-medium collection-langcyrillic collection-genericrecommended
     cm-super cm-unicode xcolor pgf beamer moderncv tipa disser 
     moderntimeline texinfo metafont multibib collection-fontutils
-    epstopdf epspdfconversion epspdf;
+    epstopdf epspdfconversion epspdf algorithm2e relsize;
 }

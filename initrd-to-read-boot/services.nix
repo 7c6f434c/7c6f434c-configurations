@@ -137,7 +137,7 @@ rec {
 
   fontsNixConfig = import ../fonts.nix {inherit pkgs;};
 
-  XorgModules = with xorg; [xf86videointel xorgserver xf86inputevdev xf86inputsynaptics];
+  XorgModules = with xorg; [xf86videointel xorgserver.out xf86inputevdev xf86inputsynaptics];
   XNixConfig = import ../xserver-intel.nix {inherit pkgs;};
   XorgConfig = let
     cfg = XNixConfig; 
@@ -250,7 +250,7 @@ rec {
       export XKB_BINDIR=${xorg.xkbcomp}/bin
       ln -sf ${mesa_drivers} /run/opengl-driver
       LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/run/opengl-driver/lib"
-      ${xorg.xorgserver}/bin/Xorg -ac -logverbose -verbose -logfile "/var/log/X.''${DISPLAY#:}.log" \
+      ${xorg.xorgserver.out}/bin/Xorg -ac -logverbose -verbose -logfile "/var/log/X.''${DISPLAY#:}.log" \
         -terminate -config "${XorgConfig}" -xkbdir "${xkeyboard_config}/etc/X11/xkb"           \
         ${lib.optionalString (! (XNixConfig.enableTCPIP or false)) "-nolisten tcp"} $DISPLAY vt$vt \
         "$@"
@@ -439,7 +439,7 @@ rec {
   cupsBindir = pkgs.buildEnv {
     name = "cups-progs";
     paths = 
-      [ cups pkgs.ghostscript pkgs.cups_filters 
+      [ cups.out pkgs.ghostscript pkgs.cups_filters 
         pkgs.perl pkgs.coreutils pkgs.gnused pkgs.bc pkgs.gawk pkgs.gnugrep
         pkgs.hplip pkgs.foo2zjs pkgs.foomatic_filters 
         pkgs.samba
@@ -539,6 +539,6 @@ rec {
             rm /etc/cups/*.{types,convs}
             ln -sf ${cupsBindir}/share/cups/mime/*.{types,convs} /etc/cups
 
-            ${pkgs.cups}/sbin/cupsd
+            ${pkgs.cups.out}/sbin/cupsd
   '';
 }

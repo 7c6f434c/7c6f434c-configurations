@@ -32,7 +32,7 @@ rec {
       xorg.xorgserver xkeyboard_config xorg.xprop
 		];
 		consoleTools = [
-			which sqlite bc psmisc file utillinuxCurses slmenu
+			which sqlite bc psmisc file slmenu
 			rlwrap screen pv manpages kmod module_init_tools
 		];
 		debugTools = [
@@ -40,7 +40,7 @@ rec {
 		];
 		clientServer = [
 			postgresql openssh wget curl
-			squids.latest fdm nbd bind
+			squid fdm nbd bind
 			lftp ntp
 		];
 		networkTools = [
@@ -88,10 +88,11 @@ rec {
 			julia-git openjdk8 apache-jena
 			mono octave nim ruby
       haskellPackages.ghc
-      glpk ccl
+      glpk ccl go gccgo
 
 			pythonPackages.ipython
       lispPackages.clwrapper cl-launch
+      lispPackages.quicklisp
 
       myTexLive
       (runCommand "texlive-fixes" {}
@@ -115,12 +116,12 @@ rec {
 			texinfoInteractive baseKernel.kernelPackages.sysdig
 		];
 		clientServer = [
-			dict dbus.tools
+			dict dbus wgetpaste
 			ripmime gtkvnc tigervnc samba
 			lighttpd nix-binary-cache
 			openvpn (youtubeDL.override {pandoc = null;})
 			tftp_hpa netkittftp atftp 
-			telnet xinetd nginx vsftpd
+			telnet xinetd nginx vsftpd axel
 			transmission nix-prefetch-scripts
 			(dictDBCollector {
 			 dictlist = with dictdDBs; map 
@@ -192,9 +193,9 @@ rec {
 		];
 
 		filesystems = [
-      dosfstools e2fsprogs btrfsProgs cifs_utils bedup
-
-			inotifyTools ncdu cdrkit smbnetfs genext2fs
+      dosfstools e2fsprogs btrfsProgs cifs_utils 
+      python3Packages.bedup
+      inotifyTools ncdu cdrkit smbnetfs genext2fs
 
       ntfs3g
 		];
@@ -205,7 +206,7 @@ rec {
 		];
 
 		im = [
-			ii mcabber
+			ii mcabber ratox
 		];
 		sandboxing = [
 			lxc firejail

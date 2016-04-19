@@ -7,7 +7,7 @@
     extraModulePackages = [kernelPackages.acpi_call /*kernelPackages.aufs */
       /*kernelPackages.sysdig*/
       /*kernelPackages.bbswitch*/
-      kernelPackages.virtualbox
+      /*kernelPackages.virtualbox*/
       ];
   };
 }
