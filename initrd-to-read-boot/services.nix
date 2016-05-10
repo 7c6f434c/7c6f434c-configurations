@@ -100,9 +100,8 @@ rec {
     fi;
   '');
 
-  nixBinaryCacheScript = writeScript "nix-binary-cache-start" ''
-    export PATH="$PATH:${coreutils}/bin"
-    ${nix-binary-cache}/bin/nix-binary-cache-start --port 32062 --ipv6
+  nixServeScript = writeScript "nix-serve-start" ''
+    ${nix-serve}/bin/nix-serve --port 32062
   '';
 
   gpmScript = writeScript "gpm-start" ''
@@ -261,8 +260,8 @@ rec {
     buildCores = 1;
     useChroot = true;
     chrootDirs = ["/home/repos"];
-    binaryCaches = ["https://cache.nixos.org" "http://192.168.0.202:32062/nix-bc.cgi?"];
-    trustedBinaryCaches = ["http://hydra.nixos.org" "http://192.168.0.202:32062/nix-bc.cgi?" "https://cache.nixos.org/"];
+    binaryCaches = ["https://cache.nixos.org" "http://192.168.0.202:32062/"];
+    trustedBinaryCaches = ["http://hydra.nixos.org" "http://192.168.0.202:32062/" "https://cache.nixos.org/"];
     gcKeepOutputs = true;
     gcKeepDerivations = true;
     binaryCachePublicKeys = [
@@ -318,7 +317,7 @@ rec {
     export LOCALE_ARCHIVE=/run/current-system/sw/lib/locale/locale-archive
     export LOCATE_PATH=/var/cache/locatedb
     export NIXPKGS_CONFIG=/etc/nix/nixpkgs-config.nix
-    export NIX_BUILD_HOOK=${nixUnstable}/libexec/nix/build-remote.pl
+    export NIX_BUILD_HOOK=${nix.bin or nix.out or nix}/libexec/nix/build-remote.pl
     export NIX_CONF_DIR=/etc/nix
     export NIX_CURRENT_LOAD=/run/nix/current-load
     export NIX_PATH=/home/repos

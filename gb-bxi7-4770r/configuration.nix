@@ -85,9 +85,9 @@ rec {
 	  package = pkgs.postgresql92;
   };
 
-  systemd.services.nixBinaryCache.serviceConfig = {
-    User = "nobody";
-    ExecStart = "${pkgs.nix-binary-cache}/bin/nix-binary-cache-start --port 32062 --ipv6";
+  services.nix-serve = {
+    enable = true;
+    port = 32062;
   };
 
   networking.wireless.enable = false;
@@ -131,8 +131,8 @@ gc-keep-outputs = true       # Nice for developers
 gc-keep-derivations = true   # Idem
 env-keep-derivations = false
 
-binary-caches = http://cache.nixos.org http://192.168.0.203:32062/nix-bc.cgi\?
-trusted-binary-caches = http://cache.nixos.org http://hydra.nixos.org http://192.168.0.203/~raskin/cgi/nix-binary-cache.cgi\? http://192.168.0.203/~raskin/cgi/nix-serve.cgi\? http://192.168.0.203:32062/nix-bc.cgi\?
+binary-caches = http://cache.nixos.org http://192.168.0.203:32062/
+trusted-binary-caches = http://cache.nixos.org http://192.168.0.203:32062/
     ";
     requireSignedBinaryCaches = false;
     package = pkgs.nix.out; 

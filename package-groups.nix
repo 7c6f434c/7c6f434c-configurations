@@ -88,7 +88,7 @@ rec {
 			julia-git openjdk8 apache-jena
 			mono octave nim ruby
       haskellPackages.ghc
-      glpk ccl go gccgo
+      glpk ccl go gccgo nix-repl
 
 			pythonPackages.ipython
       lispPackages.clwrapper cl-launch
@@ -121,7 +121,7 @@ rec {
 			lighttpd nix-binary-cache
 			openvpn (youtubeDL.override {pandoc = null;})
 			tftp_hpa netkittftp atftp 
-			telnet xinetd nginx vsftpd axel
+			telnet xinetd nginx vsftpd axel aria2
 			transmission nix-prefetch-scripts
 			(dictDBCollector {
 			 dictlist = with dictdDBs; map 
@@ -181,7 +181,7 @@ rec {
 			icedtea7_web
 		];
 		editors = [
-			libreoffice emacs textadept
+			libreoffice emacs textadept bvi
 				emacsPackagesNg.slime
 		];
 		versionControl = [

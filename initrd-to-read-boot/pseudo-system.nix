@@ -86,7 +86,7 @@ rec {
     makeLink ${services.postgresqlConfig}      services/configs/postgresql/postgresql.conf
     makeLink ${services.postgresqlScript}      services/scripts/postgresql
 
-    makeLink ${services.nixBinaryCacheScript}  services/scripts/nix-binary-cache
+    makeLink ${services.nixServeScript}  services/scripts/nix-serve
     makeLink ${services.gpmScript}             services/scripts/gpm
 
     makeLink ${services.udevConfigs}/etc/udev/rules.d  services/configs/udev
