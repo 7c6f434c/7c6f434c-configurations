@@ -12,7 +12,7 @@ rec {
 
   # Use the gummiboot efi boot loader.
   boot.loader.grub.enable = false;
-  boot.loader.gummiboot.enable = true;
+  boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelPackages = pkgs.linuxPackagesFor 
     pkgs.linux_latest config.boot.kernelPackages;
@@ -90,6 +90,12 @@ rec {
     port = 32062;
   };
 
+  services.logind = {
+    extraConfig = ''
+      KillUserProcesses = no
+    '';
+  };
+
   networking.wireless.enable = false;
   networking.dhcpcd.runHook = ''
   export PATH=${pkgs.iproute}/sbin:${pkgs.iproute}/bin:${pkgs.coreutils}/bin:${pkgs.gnugrep}/bin:${pkgs.gnused}/bin:${pkgs.curl}/bin:$PATH
@@ -118,14 +124,14 @@ rec {
 	    ratpoison evince xpdf ncdu fbterm nbd postgresql92 elinks
 	    dmenu2 slmenu libreoffice nmap pmount clisp fbida espeak
 	    wineUnstable emacs qemu p7zip rxvt_unicode edk2 OVMF keynav
-	    gparted parted glpk ccl file
+	    gparted parted glpk ccl file gfortran
 	    ];
   };
 
   nix = {
-    useChroot = true;
+    useSandbox = true;
     buildCores = 8;
-    chrootDirs = ["/home/repos"];
+    sandboxPaths = ["/home/repos"];
     extraOptions = "
 gc-keep-outputs = true       # Nice for developers
 gc-keep-derivations = true   # Idem

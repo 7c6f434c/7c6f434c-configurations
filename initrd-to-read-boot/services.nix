@@ -53,7 +53,7 @@ rec {
     ${coreutils}/bin/mkdir -p /run/named
     ${gnugrep}/bin/grep '^named:' /etc/passwd || ${shadow}/bin/useradd named
     ${coreutils}/bin/chown named -R /run/named
-    ${bind}/sbin/named -u named ${lib.optionalString (bindNixConfig.ipv4Only or false) "-4"} -c ${bindConfig} -f -g
+    ${bind.bin}/sbin/named -u named ${lib.optionalString (bindNixConfig.ipv4Only or false) "-4"} -c ${bindConfig} -f -g
   '';
 
   postgresqlNixConfig = import ../postgresql.nix {inherit pkgs;};
@@ -136,7 +136,8 @@ rec {
 
   fontsNixConfig = import ../fonts.nix {inherit pkgs;};
 
-  XorgModules = with xorg; [xf86videointel xorgserver.out xf86inputevdev xf86inputsynaptics];
+  XorgModules = with xorg; lib.concatLists (map (x: [x x.out]) 
+    [ xf86videointel xorgserver.out xf86inputevdev xf86inputsynaptics ]);
   XNixConfig = import ../xserver-intel.nix {inherit pkgs;};
   XorgConfig = let
     cfg = XNixConfig; 
@@ -173,6 +174,7 @@ rec {
         echo '  Option "XkbLayout" "${XNixConfig.layout or "us"}"' >> $out
         echo '  Option "XkbOptions" "${XNixConfig.xkbOptions or ""}"' >> $out
         echo '  Option "XkbVariant" ""' >> $out
+        echo '  Driver "evdev"' >> $out
         echo 'EndSection' >> $out
         echo 'Section "InputClass"' >> $out
         echo '  Identifier "Mouse catchall"' >> $out
@@ -238,6 +240,10 @@ rec {
         echo '  Option "SendCoreEvents" "on"' >> $out
         echo 'EndSection' >> $out
   '';
+  XorgMesaDrivers = buildEnv {
+    name = "opengl-drivers";
+    paths = [ mesa_drivers mesa ];
+  };
   XorgScript = writeScript "xorg-start" 
   ''#!${stdenv.shell}
     if [ "$1" == "start" ]; then
@@ -247,7 +253,7 @@ rec {
       [ "$DISPLAY" != "''${DISPLAY#:}" ] || exit
       shift
       export XKB_BINDIR=${xorg.xkbcomp}/bin
-      ln -sf ${mesa_drivers} /run/opengl-driver
+      ln -sf ${XorgMesaDrivers} /run/opengl-driver
       LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/run/opengl-driver/lib"
       ${xorg.xorgserver.out}/bin/Xorg -ac -logverbose -verbose -logfile "/var/log/X.''${DISPLAY#:}.log" \
         -terminate -config "${XorgConfig}" -xkbdir "${xkeyboard_config}/etc/X11/xkb"           \

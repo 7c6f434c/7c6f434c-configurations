@@ -9,10 +9,9 @@ let justUse = str: {name = str; path = builtins.getAttr str pkgs;}; in
 let ppUse = str: {name = str; path = builtins.getAttr str pp;}; in
 
 linkFarm "raskin-packages" ([
-		{name="mime"; path=shared_mime_info;}
 		]
 		++ 
 		(map justUse [
-		"flashplayer"
+		"flashplayer" "jrePlugin" "tptp"
 		])
 		)

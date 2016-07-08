@@ -85,7 +85,7 @@ rec {
 			asymptote
 			gcc maxima guile racket
 			eprover coq
-			julia-git openjdk8 apache-jena
+			julia openjdk8 apache-jena
 			mono octave nim ruby
       haskellPackages.ghc
       glpk ccl go gccgo nix-repl
@@ -100,12 +100,15 @@ rec {
           mkdir -p "$out/bin"
           ln -s "${myTexLive}/bin/epstopdf" "$out/bin/repstopdf"
         '')
+
+      love_0_10 luajit
 		];
 		utilsX = [
 			icewm pp.stumpwm trayer 
 			keynav x11vnc xorg.xsetroot
 			xorg.xdpyinfo xorg.xdriinfo glxinfo
-			xscreensaver xvidcap apacheHttpd
+			(xscreensaver.override {forceInstallAllHacks = true;})
+      xvidcap apacheHttpd xdg_utils
 			xcalib xorg.xwd xdaliclock xvfb_run
       xorg.xinput xorg.xset xorg.xauth ratpoison
       xorg.xlsclients xorg.xwininfo xorg.xkill
@@ -120,9 +123,10 @@ rec {
 			ripmime gtkvnc tigervnc samba
 			lighttpd nix-binary-cache
 			openvpn (youtubeDL.override {pandoc = null;})
-			tftp_hpa netkittftp atftp 
+			tftp_hpa netkittftp atftp
 			telnet xinetd nginx vsftpd axel aria2
 			transmission nix-prefetch-scripts
+      offlineimap
 			(dictDBCollector {
 			 dictlist = with dictdDBs; map 
 			 (x:{
@@ -202,7 +206,7 @@ rec {
 		
 		toys = [
 			fortune sgtpuzzles quantumminigolf liquidwar fsg golly n2048
-      xpilot-ng pkgs."2048-in-terminal" xmoto
+      xpilot-ng pkgs."2048-in-terminal" xmoto atanks lincity_ng
 		];
 
 		im = [
