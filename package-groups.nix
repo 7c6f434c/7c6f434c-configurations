@@ -28,7 +28,7 @@ rec {
 		utilsX = [
 			xlaunch xterm rxvt_unicode rxvt_unicode.terminfo xmacro
 			xsel xclip xorg.xmodmap xorg.xrandr
-			dmenu2 xdotool xorg.xkbcomp xorg.setxkbmap
+			dmenu2 rofi xdotool xorg.xkbcomp xorg.setxkbmap
       xorg.xorgserver xkeyboard_config xorg.xprop
 		];
 		consoleTools = [
@@ -84,7 +84,7 @@ rec {
 			fpc lazarus
 			asymptote
 			gcc maxima guile racket
-			eprover coq
+			eprover coq cvc4
 			julia openjdk8 apache-jena
 			mono octave nim ruby
       haskellPackages.ghc
@@ -164,6 +164,7 @@ rec {
 			xsane udisks2 xlaunch
 			baseKernel.kernelPackages.kernel
 			pp.lcard_ltr_sdk
+      multipath-tools
 
 			androidenv.androidsdk_4_2
 		] ++ baseKernel.extraModulePackages;
@@ -187,6 +188,7 @@ rec {
 		editors = [
 			libreoffice emacs textadept bvi
 				emacsPackagesNg.slime
+      neovim neovim-qt
 		];
 		versionControl = [
 			monotoneViz gitFull fossil
@@ -207,6 +209,7 @@ rec {
 		toys = [
 			fortune sgtpuzzles quantumminigolf liquidwar fsg golly n2048
       xpilot-ng pkgs."2048-in-terminal" xmoto atanks lincity_ng
+      blobby
 		];
 
 		im = [
@@ -219,7 +222,7 @@ rec {
       wineUnstable pipelight dosbox
     ];
     nonNative = [
-      baseKernel.kernelPackages.virtualbox
+      /*baseKernel.kernelPackages.virtualbox*/
     ];
     fonts = (import ./fonts.nix pkgs).fonts;
     icons = [oxygen_gtk myKDE.oxygen_icons];

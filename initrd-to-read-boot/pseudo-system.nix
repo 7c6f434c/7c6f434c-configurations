@@ -37,7 +37,7 @@ rec {
     myKDE = pkgs.kde414;
     baseKernel = rec {
       kernel = linux_latest;
-      kernelPackages = linuxPackagesFor kernel kernelPackages;
+      kernelPackages = linuxPackagesFor kernel;
       extraModulePackages = kernel-to-use.extraModulePackages;
     };
   };
@@ -72,6 +72,7 @@ rec {
     makeLink ${system-sw} sw
     makeLink ${initrd} boot/initrd-package
     makeLink ${initrd}/initrd boot/initrd
+    gzip -d < "$out"/boot/initrd > "$out"/boot/initrd-uncompressed
     makeLink ${initrd.kernel} boot/kernel-package
     makeLink ${initrd.kernel}/bzImage boot/kernel
     makeLink ${initrd.kernelModules} boot/kernel-modules
@@ -123,7 +124,6 @@ rec {
     '') (setuidPrograms.renamedSetuidPrograms or [])}
 
     makeLink ${cpioStatic}/bin/cpio static-tools/cpio
-    makeLink ${gzipStatic}/bin/gzip static-tools/gzip
 
     makeLink ${
       writeScript "init" ("#! ${stdenv.shell}\n"

@@ -14,8 +14,7 @@ rec {
   boot.loader.grub.enable = false;
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.kernelPackages = pkgs.linuxPackagesFor 
-    pkgs.linux_latest config.boot.kernelPackages;
+  boot.kernelPackages = pkgs.linuxPackagesFor pkgs.linux_latest;
   boot.extraModulePackages = [
     boot.kernelPackages.sysdig
     (pkgs.runCommand "firmware-rtl8821ae" {} ''

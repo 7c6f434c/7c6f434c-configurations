@@ -67,8 +67,7 @@ mkdir /new-root/run/initrd
 cd /new-root
 
 staticCpio=$(chroot . readlink -f $targetSystem/static-tools/cpio)
-staticGzip=$(chroot . readlink -f $targetSystem/static-tools/gzip)
-initrdFile=$(chroot . readlink -f $targetSystem/boot/initrd)
+initrdFile=$(chroot . readlink -f $targetSystem/boot/initrd-uncompressed)
 
 } 2>/var/log/medium-boot-stderr >/var/log/medium-boot-stdout
 
@@ -88,7 +87,7 @@ fi
 
 cd /
 
-/new-root/$staticGzip -d < /new-root/$initrdFile | /new-root/$staticCpio -i 
+/new-root/$staticCpio -i < /new-root/$initrdFile
 mount --move /new-root/dev /dev
 mount --move /new-root/proc /proc
 
@@ -170,3 +169,5 @@ cat /proc/mounts | cut -d ' ' -f 2 | tac | xargs umount
 mount procfs -t proc /proc
 cat /proc/mounts
 sync
+
+chvt 1

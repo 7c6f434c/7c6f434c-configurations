@@ -259,7 +259,7 @@ rec {
           ''
             modprobe "${modName}" ${toString modArgs} ;
           ''
-      ) (modules ++ ["atkbd"])
+      ) (modules ++ ["atkbd" "i8042" "serio"])
       )}
 
       # mount kernel filesystems
@@ -304,7 +304,7 @@ rec {
         sh
       done
     '';
-    modules = ["atkbd" "unix"] ++ modules ++ modulesAvailable;
+    modules = ["atkbd" "i8042" "serio" "unix"] ++ modules ++ modulesAvailable;
   };
 
   qemuLauncherFun = makeOverridable ({initrd}: 
@@ -347,13 +347,16 @@ rec {
   ];
   setuidWrapper = runCommand "setuid-wrapper" {} ''
     mkdir -p "$out/bin"
-    gcc ${<nixpkgs> + "/nixos/modules/security/setuid-wrapper.c" } \
+    ${gcc}/bin/gcc ${<nixpkgs> + "/nixos/modules/security/setuid-wrapper.c" } \
       -Wall -O2 -DWRAPPER_DIR='"/var/setuid-wrappers"' \
       -o "$out"/bin/setuid-wrapper 
   '';
 
   cpioStatic = lib.overrideDerivation cpio (x: {LDFLAGS=["-static" "-L${glibc.static}/lib"]; nativeBuildInputs = x.nativeBuildInputs ++ [glibc.static];});
-  gzipStatic = lib.overrideDerivation gzip (x: {LDFLAGS=["-static" "-L${glibc.static}/lib"]; nativeBuildInputs = x.nativeBuildInputs ++ [glibc.static];});
 
-
+  gzipStatic = lib.overrideDerivation gzip (x: {
+    NIX_CFLAGS_LINK=(x.NIX_CFLAGS_LINK or "") + " -static "; 
+    NIX_CFLAGS_COMPILE=(x.NIX_CFLAGS_COMPILE or "") + " -D "; 
+    nativeBuildInputs = x.nativeBuildInputs ++ [glibc.static];
+  });
 }

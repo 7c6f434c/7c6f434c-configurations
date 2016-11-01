@@ -2,7 +2,7 @@
         #baseKernel = pkgs.kernel_2_6_33_zen1_bfs;
         #baseKernel = pkgs.kernel_2_6_36;
   baseKernel = rec{
-    kernelPackages = pkgs.linuxPackagesFor pkgs.linux_latest kernelPackages;
+    kernelPackages = pkgs.linuxPackagesFor pkgs.linux_latest;
     #kernelPackages = pkgs.linuxPackagesFor pkgs.linux_4_3 kernelPackages;
     extraModulePackages = [kernelPackages.acpi_call /*kernelPackages.aufs */
       /*kernelPackages.sysdig*/
