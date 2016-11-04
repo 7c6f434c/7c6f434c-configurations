@@ -20,5 +20,5 @@ pkgs.texlive.combine {
     cm-super cm-unicode xcolor pgf beamer moderncv tipa disser 
     moderntimeline texinfo metafont multibib collection-fontutils
     epstopdf epspdfconversion epspdf algorithm2e relsize type1cm
-    ucs;
+    ucs todonotes;
 }

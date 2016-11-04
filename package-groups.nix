@@ -119,8 +119,9 @@ rec {
 			texinfoInteractive baseKernel.kernelPackages.sysdig
 		];
 		clientServer = [
-			dict dbus wgetpaste
+			dict dbus wgetpaste whois
 			ripmime gtkvnc tigervnc samba
+      (lowPrio tightvnc)
 			lighttpd nix-binary-cache
 			openvpn (youtubeDL.override {pandoc = null;})
 			tftp_hpa netkittftp atftp
