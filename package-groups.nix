@@ -26,7 +26,7 @@ rec {
 			libtool automake autoconf gnumake patchelf nixUnstable
 		];
 		utilsX = [
-			xlaunch xterm rxvt_unicode rxvt_unicode.terminfo xmacro
+			xterm rxvt_unicode rxvt_unicode.terminfo xmacro
 			xsel xclip xorg.xmodmap xorg.xrandr
 			dmenu2 rofi xdotool xorg.xkbcomp xorg.setxkbmap
       xorg.xorgserver xkeyboard_config xorg.xprop
@@ -87,12 +87,14 @@ rec {
 			eprover coq cvc4
 			julia openjdk8 apache-jena
 			mono octave nim ruby
-      haskellPackages.ghc
+      haskellPackages.ghc gfortran
       glpk ccl go gccgo nix-repl
 
 			pythonPackages.ipython
       lispPackages.clwrapper cl-launch
       lispPackages.quicklisp
+
+      valgrind
 
       myTexLive
       (runCommand "texlive-fixes" {}
@@ -162,7 +164,7 @@ rec {
 		];
 		hwControl = [
 			alsaLib cups alsaUtils
-			xsane udisks2 xlaunch
+			xsane udisks2
 			baseKernel.kernelPackages.kernel
 			pp.lcard_ltr_sdk
       multipath-tools
@@ -230,6 +232,10 @@ rec {
     libraries = [myKDE.kde_runtime phonon 
       phonon-backend-gstreamer
       lispPackages.command-line-arguments
-      asdf];
+      asdf
+      
+      xorg.libX11 xorg.libXxf86vm mesa mesa_noglu
+      xorg.libXcursor xorg.libX11 xorg.libXrandr
+      ];
 	};
 }

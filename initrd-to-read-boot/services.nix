@@ -244,6 +244,10 @@ rec {
     name = "opengl-drivers";
     paths = [ mesa_drivers mesa ];
   };
+  XorgMesaDrivers32 = buildEnv {
+    name = "opengl-drivers";
+    paths = with pkgsi686Linux; [ mesa_drivers mesa ];
+  };
   XorgScript = writeScript "xorg-start" 
   ''#!${stdenv.shell}
     if [ "$1" == "start" ]; then
@@ -254,7 +258,8 @@ rec {
       shift
       export XKB_BINDIR=${xorg.xkbcomp}/bin
       ln -sf ${XorgMesaDrivers} /run/opengl-driver
-      LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/run/opengl-driver/lib"
+      ln -sf ${XorgMesaDrivers32} /run/opengl-driver-32
+      LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/run/opengl-driver/lib:/run/opengl-driver-32/lib"
       ${xorg.xorgserver.out}/bin/Xorg -ac -logverbose -verbose -logfile "/var/log/X.''${DISPLAY#:}.log" \
         -terminate -config "${XorgConfig}" -xkbdir "${xkeyboard_config}/etc/X11/xkb"           \
         ${lib.optionalString (! (XNixConfig.enableTCPIP or false)) "-nolisten tcp"} $DISPLAY vt$vt \

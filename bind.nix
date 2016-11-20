@@ -1,7 +1,7 @@
 {pkgs, config, ...}:
 {
       enable = true;
-      ipv4Only = true;
+      ipv4Only = false;
       cacheNetworks = [
         "127.0.0.0/24"
 	"::1/128"
@@ -18,5 +18,10 @@
 	  file = "" + ./root-servers;
 	}
       ];
+    extraConfig = ''
+      logging {
+        category default { default_stderr; };
+      };
+    '';
     }
 

@@ -12,7 +12,7 @@ chown "$3" "$1/$2"
 
 cd "$1"
 
-mkdir -p sys proc dev nix usr bin sbin lib lib64 etc var/run/current-system/ etc/nixos
+mkdir -p sys proc dev nix usr bin sbin lib lib64 etc var/run/current-system/ etc/nixos run/udev
 
 for i in nix etc/nixos ; do
   [ -d /$i ] && [ -d ./$i ] && {
@@ -34,13 +34,13 @@ for i in var/run/current-system ; do
   fi
 done
 
-for i in sys proc dev ; do
+for i in sys proc dev run/udev ; do
   [ -d /$i ] && [ -d ./$i ] && {
     mount --rbind /$i ./$i;
   }
 done
 
-cp -L -r /etc/{hosts,services,passwd,shadow,pam.d,resolv.conf,nsswitch.conf,shells,login.defs,fonts} ./etc
+cp -L -r /etc/{hosts,services,passwd,shadow,pam.d,resolv.conf,nsswitch.conf,shells,login.defs,fonts,machine-id} ./etc
 
 mount --rbind ./var/run/current-system/sw/ ./usr
 [ -z "$4" ] && {

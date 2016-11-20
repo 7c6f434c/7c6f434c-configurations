@@ -16,7 +16,7 @@
         '';
         efiSupport = true;
       };
-      gummiboot = {
+      systemd-boot = {
         #enable = true;
         enable = false;
       };
@@ -31,7 +31,7 @@
       ];
     };
     kernelPackages = 
-      pkgs.linuxPackagesFor pkgs.linux_latest kernelPackages;
+      pkgs.linuxPackagesFor pkgs.linux_latest;
     vesa = false;
     kernelParams = [
       "console=ttyS0,115200,n8r"
@@ -68,7 +68,7 @@
       autorun = false;
       exportConfiguration = true;
       enableTCP = true;
-      videoDrivers = ["ati" "intel" "nv"];
+      videoDrivers = ["intel" "nv" "ati" "cirrus" "vesa"];
       synaptics = {
         enable = true;
 	dev = null;
@@ -81,45 +81,19 @@
       enable = true;
       drivers = [pkgs.hplip];
     };
+    nix-serve = {
+      enable = true;
+      port = 32062;
+    };
   };
   
   environment = {
-    systemPackages = with pkgs;
-    [
-      vimHugeX ipmitool ipmiutil
-      tcpdump subversion screen
-      freeipmi utillinuxCurses
-      dmraid fbterm xlaunch
-      icewm firefox lftp monotone
-      hplip pmount mc evince
-      xpdf glxinfo git dhcp emacs
-      wpa_supplicant iw btrfsProgs
-      htop iotop iftop kvm zsh
-      xorg.xmodmap elinks lynx wget
-      parted gptfdisk gparted
-      wavemon smartmontools hdparm
-      slmenu sbcl julia pv mtr
-      sshfsFuse fbida imagemagick
-      nix-binary-cache powertop
-      gcc fuse rlwrap badvpn
-      dmtx gnuplot maxima libreoffice
-      slmenu dmenu2 nbd mplayer
-      python rxvt_unicode geeqie
-      (import ./private-packages.nix {}).slimerjs
-      vue squids.latest which lsof
-      grub2 grub2_efi efibootmgr
-      (import ./texlive-set.nix pkgs)
-      clisp xdotool ncdu
-      xorg.xdpyinfo xorg.xev pciutils usbutils
-      midori chromium zsh sqlite openssl
-      expect bc xfig transfig asymptote stumpwm
-      pdftk inotifyTools libeatmydata
-    ];
+    systemPackages = (import ./raskin-usb-rescue-packages.nix) pkgs;
   };
   
   security = {
     setuidPrograms = [
-      "fusermount" "mount" "umount" "xlaunch"
+      "fusermount" "mount" "umount"
       "lsof" "pmount" "pumount" "fbterm"
     ];
     sudo = {
@@ -127,10 +101,10 @@
   };
 
   nix = {
-    useChroot = true;
+    useSandbox = true;
     extraOptions = ''
-      binary-caches = http://cache.nixos.org http://nixos.org/binary-cache http://hydra.nixos.org
-      trusted-binary-caches = http://cache.nixos.org http://nixos.org/binary-cache http://hydra.nixos.org
+      binary-caches = http://cache.nixos.org http://nixos.org/binary-cache
+      trusted-binary-caches = http://cache.nixos.org http://nixos.org/binary-cache
     '';
     requireSignedBinaryCaches = false;
     #package = pkgs.nixUnstable;
@@ -150,5 +124,9 @@
       pkgs.unifont
       pkgs.xorg.fontcronyxcyrillic
     ];
+  };
+
+  hardware = {
+    enableAllFirmware = true;
   };
 }

@@ -47,12 +47,15 @@ rec {
     ++ (lib.concatLists (lib.attrValues constantly_used))
     ++ nixosDefault
     ;
+  extraOutputsToInstall =
+      ["out" "all" "bin" "lib" "lib64"
+      "etc" "doc" "man" "share" "info"
+      "dev" "docdev" "drivers"]; 
   system-sw = buildEnv {
     name = "system-software-set";
     ignoreCollisions = true;
     paths = system-packages;
-    extraOutputsToInstall =
-      ["all" "bin" "lib" "etc" "doc" "man" "share" "info" "dev" "docdev"]; 
+    inherit extraOutputsToInstall;
   };
   setuidPrograms = import ../setuid-programs.nix;
   system = runCommand "system" {
@@ -138,6 +141,8 @@ rec {
         + (builtins.readFile ../system-setup.sh)
         )
     } "bin/setup"
+
+    makeLink ${chrootEnv}/bin/global-chroot bin/fhs-chroot
     
     makeLink ${
       writeScript "modprobe" ("#! ${stdenv.shell}\n" +
@@ -217,4 +222,9 @@ rec {
     } etc/crontab
   '';
   qemuScript = qemuLauncherFun { initrd = initrd ; };
+  chrootEnv = buildFHSUserEnv {
+    name = "global-chroot";
+    targetPkgs = pkgs: system-packages;
+    inherit extraOutputsToInstall;
+  };
 }
