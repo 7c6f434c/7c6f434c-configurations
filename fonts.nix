@@ -7,15 +7,16 @@
     enableFontDir = true;
     									
     fonts = ([
+      pkgs.dejavu_fonts
       (pkgs.ghostscript + "/share/ghostscript/fonts/")
       pkgs.xorg.fontcronyxcyrillic
       pkgs.xorg.fontadobe100dpi
       pkgs.xorg.fontadobe75dpi
       pkgs.xorg.fontxfree86type1
       pkgs.mph_2b_damase
-      pkgs.dejavu_fonts
       pkgs.liberation_ttf
       pkgs.unifont
+      pkgs.unifont_upper
       pkgs.wqy_zenhei
       pkgs.clearlyU
       pkgs.ucsFonts
@@ -32,10 +33,13 @@
       pkgs.gentium
       pkgs.cm_unicode
       pkgs.lmmath
+      pkgs.freefont_ttf
 
       pkgs.paratype-pt-mono
       pkgs.paratype-pt-sans
       pkgs.paratype-pt-serif
+
+      pkgs.dejavu_fonts
     ]);
 
     enableCoreFonts = false;

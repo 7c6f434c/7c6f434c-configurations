@@ -106,11 +106,11 @@ rec {
       love_0_10 luajit
 		];
 		utilsX = [
-			icewm pp.stumpwm trayer 
+			icewm pp.stumpwm trayer
 			keynav x11vnc xorg.xsetroot
 			xorg.xdpyinfo xorg.xdriinfo glxinfo
 			(xscreensaver.override {forceInstallAllHacks = true;})
-      xvidcap apacheHttpd xdg_utils
+      xvidcap apacheHttpd xdg_utils fontconfig
 			xcalib xorg.xwd xdaliclock xvfb_run
       xorg.xinput xorg.xset xorg.xauth ratpoison
       xorg.xlsclients xorg.xwininfo xorg.xkill
@@ -168,6 +168,15 @@ rec {
 			baseKernel.kernelPackages.kernel
 			pp.lcard_ltr_sdk
       multipath-tools
+
+      (bumblebee.override { useNvidia = false; })
+      (lib.overrideDerivation xorg.xf86videointel (x: 
+         {
+           configureFlags = x.configureFlags + " --enable-tools" ; 
+           nativeBuildInputs = x.nativeBuildInputs ++ [
+             xorg.libXcomposite.dev cairo.dev xorg.libXScrnSaver
+           ];
+         }))
 
 			androidenv.androidsdk_4_2
 		] ++ baseKernel.extraModulePackages;

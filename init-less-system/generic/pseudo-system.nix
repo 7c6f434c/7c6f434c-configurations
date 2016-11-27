@@ -15,7 +15,7 @@ let
     linux = pkgs.linux_latest;
     linuxPackages = pkgs.linuxPackagesFor self.linux;
     initrd = pkgs.makeOverridable tools.makeUdevInitrd {
-      modulesTree = [self.linux];
+      modulesTree = [self.linux] ++ self.initrdModulesTree;
       initScript = self.bootInitScript;
       modules = self.initrdModules;
       modulesAvailable = self.initrdModulesAvailables;
@@ -26,6 +26,7 @@ let
       "vfat" "ext4" "nls-iso8859-1" "unix" "configs" "loop" "sd-mod"
     ];
     initrdModulesAvailables = [];
+    initrdModulesTree = [];
     qemuScript = tools.qemuLauncherFun { inherit (self) initrd; };
     nixosDefaultPackages = with pkgs; [
       acl attr bashInteractive bzip2 coreutils cpio curl diffutils eject nix
@@ -111,11 +112,29 @@ let
 
       ln -s /proc/mounts "$out"/mtab
 
-      mkdir -p "$out"/fonts
-      ln -s "${self.fontsConf}" "$out"/fonts/fonts.conf
+      ${self.etcFontsCommands}
 
       ${self.extraEtcBuildCommands}
     '';
+    etcFontsCommands = if self.etcFonts == null then
+      if self.fontPackages == null then "" else
+        ''
+          mkdir -p "$out/fonts"
+          ln -s "${self.fontsConf}" "$out/fonts/fonts.conf"
+        ''
+    else
+    ''
+      ln -s ${self.etcFonts} "$out/fonts"
+    '';
+    nixosEtcFonts = cfg: let nixosWithFonts = nixos {
+        configuration = {
+          fonts.fontconfig = {
+            enable = true;
+          } // cfg;
+          fonts.fonts = self.fontPackages;
+        };
+      }; 
+      in nixosWithFonts.config.environment.etc.fonts.source;
     hostList = [
       "127.0.0.1\t${self.hostName} localhost"
     ];
@@ -123,6 +142,7 @@ let
     extraEtcBuildCommands = "";
     initrdVirtualMountCommands = ''
       mount sysfs -t sysfs /new-root/sys
+      mount debugfs -t debugfs /new-root/sys/kernel/debug
       mount procfs -t proc /new-root/proc
       umount /dev/pts
       umount /dev/shm
@@ -215,20 +235,32 @@ let
       } > /var/log/medium-boot-stdout.log 2> /var/log/medium-boot-stderr.log 
       ${self.bootChrootCommands}
     '';
-    initrdPrePivotRootCommands = "";
+    initrdPrePivotRootCommands = ''
+      grep "boot.pre_pivot_root_shell" /proc/cmdline && /init-tools/busybox ash -i
+    '';
     bootChrootCommands = ''
+      timestamp=$(date +%Y%m%d-%H%M%S)
+      mkdir -p "/new-root/var/log/boot"/late
+      touch   /new-root/var/log/boot/late/$timestamp-stdout.log
+      touch   /new-root/var/log/boot/late/$timestamp-stderr.log
+      tail -f /new-root/var/log/boot/late/$timestamp-stdout.log &
+      tail -f /new-root/var/log/boot/late/$timestamp-stderr.log &
+      {
       bootedSystem="$(cat /proc/cmdline | tr ' ' '\n' | grep targetSystem= | tr '=' '\n' | tail -n 1)"
       cd /new-root
       mkdir -p ./initrd
       mkdir -p "/new-root/var/log/boot"/early
       mkdir -p "/new-root/var/log/boot"/medium
-      timestamp=$(date +%Y%m%d-%H%M%S)
-      pkill tail
+      mkdir -p "/new-root/var/log/boot"/late
+      mkdir -p "/new-root/var/log/boot"/after
       cp /var/log/early-boot-stderr.log   /new-root/var/log/boot/early/$timestamp-stderr.log
       cp /var/log/early-boot-stdout.log   /new-root/var/log/boot/early/$timestamp-stdout.log
-      cp /var/log/medium-boot-stderr.log /new-root/var/log/boot/early/$timestamp-stderr.log
-      cp /var/log/medium-boot-stdout.log /new-root/var/log/boot/early/$timestamp-stdout.log
+      cp /var/log/medium-boot-stderr.log /new-root/var/log/boot/medium/$timestamp-stderr.log
+      cp /var/log/medium-boot-stdout.log /new-root/var/log/boot/medium/$timestamp-stdout.log
       ${self.initrdPrePivotRootCommands}
+      } 1> /new-root/var/log/boot/late/$timestamp-stdout.log \
+        2> /new-root/var/log/boot/late/$timestamp-stderr.log
+      pkill tail
       killall5
       fuser -m -k /
       sleep 0.5
@@ -238,7 +270,8 @@ let
       cat /proc/mounts | cut -d ' ' -f 2 | grep -v /new-root | grep -v /proc | tac |  xargs umount
       cat /proc/mounts | cut -d ' ' -f 2 | grep -v /new-root | grep -v /proc | tac |  xargs fuser -m -k
       cat /proc/mounts | cut -d ' ' -f 2 | grep -v /new-root | grep -v /proc | tac |  xargs umount
-      umount /proc
+      bootedSystem="$(cat /proc/cmdline | tr ' ' '\n' | grep targetSystem= | tr '=' '\n' | tail -n 1)"
+      umount /proc/
       export PATH="$bootedSystem/sw/bin:$PATH"
       if busybox pivot_root . ./initrd; then
         exec chroot . "$bootedSystem"/bin/init
@@ -248,10 +281,15 @@ let
       fi
     '';
     stage2InitCommands = "#! ${pkgs.stdenv.shell}\n" + ''
+      timestamp=$(date +%Y%m%d-%H%M%S)
+      {
       "''${0%/init}/activate"
       source /etc/profile
       ${self.stage2InitUdevCommands}
       ${self.stage2InitShellCommands}
+      }   1> /var/log/boot/after/$timestamp-stdout.log \
+          2> /var/log/boot/after/$timestamp-stderr.log 
+      ${self.stage2InitBackToInitrdCommands}
     '';
     dbusConfigCommands = ''
       mkdir "$out"
@@ -274,9 +312,15 @@ let
     autoServiceCommands = (lib.concatMapStrings (x:
       "run-service ${x}; "
     ) self.autoServices);
+    stage2DebugShellCommands = ''
+      grep "boot.pre_getty_shell" /proc/cmdline && /bin/sh -i
+    '';
     stage2InitShellCommands = ''
+      ${self.stage2DebugShellCommands}
       ${self.gettyCommands}
       ${self.autoServiceCommands}
+    '';
+    stage2InitBackToInitrdCommands = ''
       grep '^nobody:' /etc/passwd || useradd -u 65534 nobody
       { while ! test -f /run/shutdown; do sleep 1; done; ps -ef | grep '/var/current-system/setuid/wrappers/su -c true' | awk '{print $2}' | xargs kill ; } & 
       while ! test -f /run/shutdown && ! su nobody -s /bin/sh -c "/var/current-system/setuid/wrappers/su -c true"; do echo Please enter root password to continue; sleep 1; done
@@ -342,6 +386,7 @@ let
       gzip -d < "$out"/boot/initrd > "$out"/boot/initrd-uncompressed
       ln -s "${self.initrd.kernelModules}" "$out"/boot/kernel-modules
       ln -s "${self.firmwarePath}/lib/firmware" "$out"/boot/firmware
+      ln -s "${self.kernelParametersFile}" "$out"/boot/kernel-parameters
 
       # For copying to bootloader stash
       ln -s "${self.initrd.kernel}/bzImage" "$out/boot/for-bootloader/$(basename "${self.initrd.kernel}").linux.efi"
@@ -413,6 +458,8 @@ let
       MODULE_DIR="/run/booted-system/boot/kernel-modules/lib/modules" modprobe "$@" ||
       MODULE_DIR="/new-root/$(readlink -f "$(readlink -f /new-root/var/latest-booted-system)"/boot/kernel-modules)/lib/modules" modprobe "$@"
     '';
+    kernelParameters = [];
+    kernelParametersFile = pkgs.writeText "kernel-parameters" (builtins.toString self.kernelParameters);
     modprobeScript = pkgs.writeScript "modprobe" self.modprobeCode;
     systemCaption = "EveRescueNix";
     extraGrubHeader = "";
@@ -430,7 +477,8 @@ let
       name="$(cat "$target"/boot/system-caption), default"
       "${./grub-print-entry.sh}" "$name" "$tgtboot"/*.linux.efi "$tgtboot"/*.initrd.efi \
          targetSystem="$target" \
-         BOOT_IMAGE="$(readlink -f "$target/boot/kernel-package")"
+         BOOT_IMAGE="$(readlink -f "$target/boot/kernel-package")" \
+         "$(cat "$target/boot/kernel-parameters")"
 
       target="$(cd "/var/current-system"; readlink -f "$(pwd)")"
       tgtboot="$target/boot/for-bootloader"
@@ -520,6 +568,7 @@ let
     '';
     fontPackages = [];
     fontsConf = pkgs.makeFontsConf {fontDirectories = self.fontPackages;};
+    etcFonts = null;
     hostName = "local-everescue-nix-host";
     nsswitchOptions = {
       passwd = ["files"];

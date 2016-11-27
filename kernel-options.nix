@@ -6,7 +6,7 @@
     #kernelPackages = pkgs.linuxPackagesFor pkgs.linux_4_3 kernelPackages;
     extraModulePackages = [kernelPackages.acpi_call /*kernelPackages.aufs */
       /*kernelPackages.sysdig*/
-      /*kernelPackages.bbswitch*/
+      kernelPackages.bbswitch
       /*kernelPackages.virtualbox*/
       ];
   };
