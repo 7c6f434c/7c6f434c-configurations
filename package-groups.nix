@@ -40,7 +40,7 @@ rec {
 		];
 		clientServer = [
 			postgresql openssh wget curl
-			squid fdm nbd bind
+			(pkgs.squid4 or squid) fdm nbd bind
 			lftp ntp
 		];
 		networkTools = [
@@ -85,10 +85,10 @@ rec {
 			asymptote
 			gcc maxima guile racket
 			eprover coq cvc4
-			julia openjdk8 apache-jena
+			julia_05 openjdk8 apache-jena
 			mono octave nim ruby
       haskellPackages.ghc gfortran
-      glpk ccl go gccgo nix-repl
+      glpk ccl go gccgo nix-repl abcl gcl
 
 			pythonPackages.ipython
       lispPackages.clwrapper cl-launch
@@ -106,25 +106,25 @@ rec {
       love_0_10 luajit
 		];
 		utilsX = [
-			icewm pp.stumpwm trayer
+			icewm pp.stumpwm trayer jwm
 			keynav x11vnc xorg.xsetroot
 			xorg.xdpyinfo xorg.xdriinfo glxinfo
 			(xscreensaver.override {forceInstallAllHacks = true;})
       xvidcap apacheHttpd xdg_utils fontconfig
-			xcalib xorg.xwd xdaliclock xvfb_run
+			xcalib xorg.xwd xdaliclock xvfb_run xorg.xev
       xorg.xinput xorg.xset xorg.xauth ratpoison
       xorg.xlsclients xorg.xwininfo xorg.xkill
       myKDE.kdelibs xorg.xrdb xprintidle-ng
 		];
 		consoleTools = [
-			remind expect pinentry fdupes mc debootstrap
-			texinfoInteractive baseKernel.kernelPackages.sysdig
+			remind expect pinentry fdupes mc debootstrap parallel
+			texinfoInteractive /*baseKernel.kernelPackages.sysdig*/
 		];
 		clientServer = [
 			dict dbus wgetpaste whois
 			ripmime gtkvnc tigervnc samba
       (lowPrio tightvnc)
-			lighttpd nix-binary-cache
+			lighttpd nix-serve
 			openvpn (youtubeDL.override {pandoc = null;})
 			tftp_hpa netkittftp atftp
 			telnet xinetd nginx vsftpd axel aria2
@@ -164,7 +164,7 @@ rec {
 		];
 		hwControl = [
 			alsaLib cups alsaUtils
-			xsane udisks2
+			xsane udisks2 go-mtpfs
 			baseKernel.kernelPackages.kernel
 			pp.lcard_ltr_sdk
       multipath-tools
@@ -172,7 +172,6 @@ rec {
       (bumblebee.override { useNvidia = false; })
       (lib.overrideDerivation xorg.xf86videointel (x: 
          {
-           configureFlags = x.configureFlags + " --enable-tools" ; 
            nativeBuildInputs = x.nativeBuildInputs ++ [
              xorg.libXcomposite.dev cairo.dev xorg.libXScrnSaver
            ];
@@ -181,10 +180,10 @@ rec {
 			androidenv.androidsdk_4_2
 		] ++ baseKernel.extraModulePackages;
 		graphicEdit = [
-			inkscape gimp imagemagick vue dmtx graphviz
+			inkscape gimp imagemagick7Big vue dmtx graphviz
 			pdftk gnuplot openscad xfig zbar qrencode zxing
       quirc myKDE.kig drgeo potrace slic3r transfig
-      povray
+      povray xournal
 		];
 		graphicView = [
 			xpdf zathura evince djvulibre fbida ghostscript
@@ -221,7 +220,7 @@ rec {
 		toys = [
 			fortune sgtpuzzles quantumminigolf liquidwar fsg golly n2048
       xpilot-ng pkgs."2048-in-terminal" xmoto atanks lincity_ng
-      blobby
+      blobby pioneer xsok xaos
 		];
 
 		im = [

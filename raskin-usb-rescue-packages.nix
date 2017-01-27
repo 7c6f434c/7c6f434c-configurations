@@ -20,7 +20,7 @@ with pkgs;
       slmenu dmenu2 nbd mplayer
       python rxvt_unicode geeqie
       (import ./private-packages.nix {}).slimerjs
-      vue squid which lsof grub2 grub2_efi 
+      vue squid4 which lsof grub2 grub2_efi 
       efibootmgr
       (import ./texlive-set.nix pkgs)
       clisp xdotool ncdu ntfs3g

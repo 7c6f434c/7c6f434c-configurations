@@ -8,6 +8,7 @@
     									
     fonts = ([
       pkgs.dejavu_fonts
+      (pkgs.dejavu_fonts + "/share/fonts/truetype/")
       (pkgs.ghostscript + "/share/ghostscript/fonts/")
       pkgs.xorg.fontcronyxcyrillic
       pkgs.xorg.fontadobe100dpi
@@ -34,6 +35,7 @@
       pkgs.cm_unicode
       pkgs.lmmath
       pkgs.freefont_ttf
+      pkgs.comic-neue
 
       pkgs.paratype-pt-mono
       pkgs.paratype-pt-sans

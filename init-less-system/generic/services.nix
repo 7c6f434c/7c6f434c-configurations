@@ -27,7 +27,7 @@ self: {
       ${self.pkgs.coreutils}/bin/mkdir -p /run/named
       ${self.pkgs.gnugrep}/bin/grep '^named:' /etc/passwd || ${self.pkgs.shadow}/bin/useradd -r -s /run/current-system/sw/sbin/nologin -g nogroup named
       ${self.pkgs.coreutils}/bin/chown named -R /run/named
-      ${self.pkgs.bind.bin}/sbin/named -u named ${self.lib.optionalString (cfg.ipv4Only or false) "-4"} -c ${config} -f -g
+      ${self.pkgs.bind}/bin/named -u named ${self.lib.optionalString (cfg.ipv4Only or false) "-4"} -c ${config} -f -g
     '';
   });
   cron = cfg: (rec {
@@ -104,7 +104,8 @@ self: {
 
       ${self.pkgs.xorg.xorgserver.out}/bin/Xorg -ac -logverbose -verbose -logfile "/var/log/X.''${DISPLAY#:}.log" \
         -config "${config}" -xkbdir "${self.pkgs.xkeyboard_config}/etc/X11/xkb"           \
-        ${self.lib.optionalString (! (cfg.services.xserver.enableTCP or false)) "-nolisten tcp"} $DISPLAY vt$vt \
+        ${if (! (cfg.services.xserver.enableTCP or false)) then
+          "-nolisten tcp" else "-listen tcp"} $DISPLAY vt$vt \
         "$@"
     '';
   });

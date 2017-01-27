@@ -14,6 +14,7 @@ import ../generic/pseudo-system.nix {
           extraModulePackages = kernel-to-use.baseKernel.extraModulePackages;
         };
     initrdModulesTree = x.kernelToUse.extraModulePackages ++ x.initial.initrdModulesTree;
+    linux = x.kernelToUse.kernel;
     systemPackages = x.initial.systemPackages ++ 
       (let z = 
       (import ../../package-groups.nix {
@@ -45,10 +46,8 @@ import ../generic/pseudo-system.nix {
       x.pkgs.firmwareLinuxNonfree
     ];
     linuxLateModules = [
-      # Give nouveau some time to settle before bbswitch is loaded
-      "nouveau"
       "iwlwifi swcrypto=1" "iwldvm" "arc4" "ctr" "ccm" "hmac" "md4" "af-packet"
-      "e1000e" "uvcvideo" "tpacpi" "thinkpad-acpi"
+      "e1000e" "uvcvideo" "tpacpi" "thinkpad-acpi" "msr"
       "ac" "battery"
       "fuse" "tun"
       "coretemp" "button" "acpi-cpufreq" "thermal" 
@@ -57,13 +56,14 @@ import ../generic/pseudo-system.nix {
       "aesni-intel" "kvm-intel" "rtc-cmos"
       "rndis-host" "cdc-ether"
       "ax88179_178a" "smsc75xx" "asix"
-      "bbswitch"
+      "sdhci-pci" "mmc-block"
     ] ++ x.initial.linuxLateModules;
     fontPackages = (import ../../fonts.nix {inherit (x) pkgs;}).fonts;
     etcFonts = x.pkgs.runCommand "etc-fonts" { source = x.nixosEtcFonts {
     }; } ''
       mkdir -p "$out/conf.d"
       ln -s "$source/conf.d"/*-default-fonts.conf "$out/conf.d/"
+      ln -s "$source/conf.d"/*-cache.conf "$out/conf.d/"
       ln -s "$source/fonts.conf" "$out/"
     '';
     gettyConsoles = ["tty2" "tty3" "tty4" "tty5" "tty6"]; 
@@ -88,7 +88,7 @@ import ../generic/pseudo-system.nix {
       ln -s ${../../sudoers} "$out/sudoers"
       ln -s /root/sudo-scripts "$out"/sudo-scripts
     '' + x.initial.extraEtcBuildCommands;
-    profileText = x.initial.profileText + ''
+    extraProfileText = ''
       export EDITOR=vim
 
           # Provide a nice prompt.
@@ -175,10 +175,10 @@ import ../generic/pseudo-system.nix {
        })
       (x.serviceDefinitions.udev {})
       (x.serviceDefinitions.dbus {})
-      (x.pkgs.writeScript "wpa_supplicant" ''pkill wpa_supplicant && wpa_supplicant -c "''${1:-/root/src/rc/wpa_supplicant.conf}" -i wlan0 -D nl80211'')
+      (x.pkgs.writeScript "wpa_supplicant" ''pkill wpa_supplicant ; wpa_supplicant -c "''${1:-/root/src/rc/wpa_supplicant.conf}" -i wlan0 -D nl80211'')
       (x.pkgs.writeScript "dhclient-wlan0" ''dhclient -r wlan0; dhclient wlan0 -d'')
       (x.pkgs.writeScript "wlan" ''/var/current-system/bin/run-service wpa_supplicant; /var/current-system/bin/run-service dhclient-wlan0;'')
-      (x.pkgs.writeScript "bumblebee" "export MODULE_DIR=/var/latest-booted-system/boot/kernel-modules/lib/modules; bumblebeed -v -d :10")
+      (x.pkgs.writeScript "bumblebee" "export MODULE_DIR=/var/latest-booted-system/boot/kernel-modules/lib/modules; pkill bumblebee; bumblebeed -v -d :10")
       (x.pkgs.writeScript "intel-virtual-output" ''intel-virtual-output -d "''${1:-:0}" -f'')
       (x.pkgs.writeScript "optimus" ''/var/current-system/bin/run-service bumblebee; /var/current-system/bin/run-service intel-virtual-output "$1";'')
     ];
@@ -199,6 +199,11 @@ import ../generic/pseudo-system.nix {
       "${x.pkgs.eudev}/var/lib/udev/rules.d/60-evdev.rules"
       "${x.pkgs.eudev}/var/lib/udev/rules.d/60-persistent-input.rules"
     ];
-    kernelParameters = ["intel_pstate=disable"];
+    kernelParameters = ["intel_pstate=disable" ''acpi_osi="!Windows 2015"''];
+    nixPath = ["/home/repos"];
+    nixRemoteMachines = (with import ../../nix-build-machines.nix;
+      [gb-bxi7-4770r-1 gb-bxi7-4770r-1-i686]);
+    nixSigningKey = "/var/cert/nix/signing-key.sec";
+    globalChrootPackages = x.nixosDefaultPackages;
   };
 }

@@ -43,6 +43,7 @@ raskin ALL= NOPASSWD: /etc/sudo-scripts/setfreq,\
 		/run/current-system/bin/run-service postgresql,\
 		/run/current-system/bin/run-service udev,\
 		/run/current-system/bin/run-service wlan,\
+		/run/current-system/bin/run-service bumblebee,\
 		/etc/sudo-scripts/create-subuser,\
 		/etc/sudo-scripts/drop-subuser,\
 		/etc/sudo-scripts/switch-to-subuser,\
@@ -50,10 +51,56 @@ raskin ALL= NOPASSWD: /etc/sudo-scripts/setfreq,\
 		/etc/sudo-scripts/take-from-subuser,\
 		/etc/sudo-scripts/start-system-dbus,\
 		/etc/sudo-scripts/tether-android,\
+		/etc/sudo-scripts/reload-nouveau,\
 		/var/run/current-system/sw/bin/powertop,\
 		/run/current-system/sw/bin/true
 raskin ALL= NOPASSWD: SETENV: /etc/sudo-scripts/checkGw6
 raskin ALL= /bin/sh
+polly ALL= /bin/sh
+polly ALL= NOPASSWD: /etc/sudo-scripts/setfreq,\
+		/etc/sudo-scripts/standby,\
+		/etc/sudo-scripts/xfs,\
+		/var/run/current-system/sw/bin/wodim,\
+		/var/run/current-system/sw/sbin/halt,\
+		/etc/sudo-scripts/dateupdate,\
+		/etc/sudo-scripts/eth,\
+		/etc/sudo-scripts/wifi,\
+		/etc/sudo-scripts/wvdial,\
+		/etc/sudo-scripts/nonet,\
+		/etc/sudo-scripts/up-ifs,\
+		/etc/sudo-scripts/brightness,\
+		/etc/sudo-scripts/renice0,\
+		/etc/sudo-scripts/glusterfs-start,\
+		/etc/sudo-scripts/gvpe-start,\
+		/etc/sudo-scripts/chmod,\
+		/etc/sudo-scripts/update-mesa-link,\
+		/etc/sudo-scripts/arpflush,\
+		/etc/sudo-scripts/wpa-status,\
+		/etc/sudo-scripts/nas-halt,\
+		/etc/sudo-scripts/wifi-scan,\
+		/etc/sudo-scripts/start-home-multiplexor,\
+		/etc/sudo-scripts/eth-for-nas,\
+		/etc/sudo-scripts/home-alt-net,\
+		/etc/sudo-scripts/xserver,\
+		/etc/sudo-scripts/nix-cleanup-tests,\
+		/run/current-system/sw/bin/chvt,\
+		/run/current-system/bin/run-service bind,\
+		/run/current-system/bin/run-service gpm,\
+		/run/current-system/bin/run-service nix-binary-cache,\
+		/run/current-system/bin/run-service postgresql,\
+		/run/current-system/bin/run-service udev,\
+		/run/current-system/bin/run-service wlan,\
+		/run/current-system/bin/run-service bumblebee,\
+		/etc/sudo-scripts/create-subuser,\
+		/etc/sudo-scripts/drop-subuser,\
+		/etc/sudo-scripts/switch-to-subuser,\
+		/etc/sudo-scripts/grant-to-subuser,\
+		/etc/sudo-scripts/take-from-subuser,\
+		/etc/sudo-scripts/start-system-dbus,\
+		/etc/sudo-scripts/tether-android,\
+		/etc/sudo-scripts/reload-nouveau,\
+		/var/run/current-system/sw/bin/powertop,\
+		/run/current-system/sw/bin/true
 Defaults!/bin/sh rootpw, timestamp_timeout=0
 Defaults!/etc/sudo-scripts/wpa-status !syslog
 sshguest ALL= /var/run/current-system/sw/bin/ls /home/sshguest

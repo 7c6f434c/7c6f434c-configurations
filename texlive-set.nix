@@ -20,5 +20,8 @@ pkgs.texlive.combine {
     cm-super cm-unicode xcolor pgf beamer moderncv tipa disser 
     moderntimeline texinfo metafont multibib collection-fontutils
     epstopdf epspdfconversion epspdf algorithm2e relsize type1cm
-    ucs todonotes;
+    ucs todonotes xargs forloop pbox varwidth bigfoot environ trimspaces
+    forest arydshln pgfopts elocalloc libertine mweights fontaxes
+    totpages comment
+    ;
 }

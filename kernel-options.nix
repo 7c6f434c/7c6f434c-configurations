@@ -3,7 +3,7 @@
         #baseKernel = pkgs.kernel_2_6_36;
   baseKernel = rec{
     kernelPackages = pkgs.linuxPackagesFor pkgs.linux_latest;
-    #kernelPackages = pkgs.linuxPackagesFor pkgs.linux_4_3 kernelPackages;
+    #kernelPackages = pkgs.linuxPackagesFor pkgs.linux_4_9;
     extraModulePackages = [kernelPackages.acpi_call /*kernelPackages.aufs */
       /*kernelPackages.sysdig*/
       kernelPackages.bbswitch

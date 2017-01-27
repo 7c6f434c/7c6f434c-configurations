@@ -29,11 +29,12 @@ let
     initrdModulesTree = [];
     qemuScript = tools.qemuLauncherFun { inherit (self) initrd; };
     nixosDefaultPackages = with pkgs; [
-      acl attr bashInteractive bzip2 coreutils cpio curl diffutils eject nix
+      acl attr bashInteractive bzip2 coreutils cpio curl diffutils eject
       findutils gawk glibc gnugrep gnupatch gnused gnutar gzip xz less libcap
       man nano ncurses netcat openssh pciutils perl procps rsync strace pam
       sysvtools su time usbutils utillinux glibcLocales sudo lvm2 shadow
-    ];
+    ] ++ [self.nix];
+    nix = self.pkgs.nix;
     everescueNeededPackages = with pkgs; [
       which file iproute grub2_efi
     ];
@@ -55,7 +56,9 @@ let
       "su" "sudo" "passwd" "mount" "umount" "fusermount"
       {src="unix_chkpwd.orig";dst="unix_chkpwd";}
     ];
-    setuidPrograms = pkgs.runCommand "setuid-programs" {} ''
+    setuidPrograms = pkgs.runCommand "setuid-programs" {
+       preferLocalBuild = true;
+    } ''
       mkdir -p "$out"
       ${pkgs.gcc}/bin/gcc -Wall -O2 -DWRAPPER_DIR="\"/var/setuid-wrapper-storage/$(basename "$out")\"" ${tools.setuidWrapperSource} -o "$out/canonical-wrapper"
       ${lib.concatMapStrings (x:
@@ -178,17 +181,19 @@ let
       ln -sf /proc/mounts "$targetSystem"/global/etc/mtab
     '';
     systemActivationSymlinkCommands = ''
+      mkdir -p "$(readlink -f "$targetSystem/global/etc/")"
       mountpoint "$targetSystem/global/etc" ||
       {
         etcWorkDir="/var/etc-workdir/$(basename "$targetSystem")"
         mkdir -p "$etcWorkDir"
+        find /var/etc -type c | xargs rm
         mount -t overlay etc-overlayfs "$targetSystem/global/etc" -o \
           "lowerdir=$targetSystem/global/etc-static,upperdir=/var/etc,workdir=$etcWorkDir"
         ${self.setupEtcCommands}
       }
 
       for i in bin usr etc; do
-        if test -e /$i && ! test -L /$i; then mv /$i /$i.old; fi
+        if test -e /$i && ! test -L /$i; then umount /$i/; mv /$i /$i.old; fi
         ln -sfT /var/current-system/global/$i /$i
       done
 
@@ -376,7 +381,9 @@ let
       done
     '';
     stage2InitScript = pkgs.writeScript "stage2-init" self.stage2InitCommands;
-    system = pkgs.runCommand "system-instance" {} ''
+    system = pkgs.runCommand "system-instance" {
+      preferLocalBuild = true;
+    } ''
       mkdir -p "$out"/{boot/for-bootloader,setuid,global/usr/bin,global/bin,bin}
       ln -s "${self.systemSoftware}" "$out/sw"
       ln -s "${self.initrd.kernel}" "$out"/boot/kernel-package
@@ -401,7 +408,7 @@ let
       ln -s "${self.serviceDir}" "$out/services"
 
       ln -s "${self.etc}" "$out"/global/etc-static
-      mkdir "$out"/global/etc
+      ln -sf "/var/etc-mountpoint/$(basename "$out")" "$out/global/etc"
       ln -s "$out/sw/bin/sh" "$out/global/bin/sh"
       ln -s "$out/sw/bin/env" "$out/global/usr/bin/env"
 
@@ -422,9 +429,10 @@ let
     '';
     chrootEnv = pkgs.buildFHSUserEnv {
       name = "global-chroot";
-      targetPkgs = pkgs: self.systemPackages;
+      targetPkgs = pkgs: self.globalChrootPackages;
       inherit (self) extraOutputsToInstall;
     };
+    globalChrootPackages = self.systemPackages;
     runServiceCode = "#! ${pkgs.stdenv.shell}\n" + ''
       svc="$1"
       shift
@@ -518,7 +526,10 @@ let
       sync
     '';
     createGrubCfgScript = pkgs.writeScript "create-grub-config" self.createGrubCfgCode;
-    profileText = self.pamEnvironmentText + self.profileSpecificText;
+    profileText = self.pamEnvironmentText + self.profileSpecificText
+      + (lib.optionalString (self.nixRemoteMachines != []) self.nixRemoteBuildEnv)
+      + self.extraProfileText;
+    extraProfileText = "";
     profileSpecificText = ''
       if test "$USER" = root; then
         export NIX_REMOTE=
@@ -526,13 +537,14 @@ let
         export NIX_REMOTE=daemon
       fi
       export PAGER="less -R"
-      export NIX_PATH=/home/repos
+      export NIX_PATH="${self.lib.concatStringsSep ":" self.nixPath}"
       export GIT_SSL_CAINFO=/etc/ssl/certs/ca-bundle.crt
       export INFOPATH=/var/current-system/sw/share/info
       
       export http_proxy=http://127.0.0.1:3128
       export https_proxy=http://127.0.0.1:3128
     '';
+    nixPath = [];
     profile = pkgs.writeText "profile" self.profileText;
     loginDefsText = ''
       DEFAULT_HOME yes

@@ -53,7 +53,7 @@ rec {
     ${coreutils}/bin/mkdir -p /run/named
     ${gnugrep}/bin/grep '^named:' /etc/passwd || ${shadow}/bin/useradd named
     ${coreutils}/bin/chown named -R /run/named
-    ${bind.bin}/sbin/named -u named ${lib.optionalString (bindNixConfig.ipv4Only or false) "-4"} -c ${bindConfig} -f -g
+    ${bind}/sbin/named -u named ${lib.optionalString (bindNixConfig.ipv4Only or false) "-4"} -c ${bindConfig} -f -g
   '';
 
   postgresqlNixConfig = import ../postgresql.nix {inherit pkgs;};

@@ -16,7 +16,7 @@ rec {
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelPackages = pkgs.linuxPackagesFor pkgs.linux_latest;
   boot.extraModulePackages = [
-    boot.kernelPackages.sysdig
+    /*boot.kernelPackages.sysdig*/
     (pkgs.runCommand "firmware-rtl8821ae" {} ''
       mkdir -p "$out/lib/firmware/rtlwifi"
       cp "${pkgs.firmwareLinuxNonfree}/lib/firmware/rtlwifi/rtl8821aefw.bin" "$out/lib/firmware/rtlwifi/"
@@ -112,18 +112,19 @@ rec {
     pathsToLink = ["/"];
     systemPackages = with pkgs; [
 	    vim gptfdisk utillinux git wpa_supplicant subversion mtr
-	    btrfsProgs dhcp screen monotone sshfsFuse zsh squid
+	    btrfsProgs dhcp screen monotone sshfsFuse zsh squid4
 	    ecl rlwrap which gcc htop parallel dmtx pdftk iotop iftop
-	    bind sbcl mercurial unzip pv lsof qrencode zxing
+	    bind sbcl mercurial unzip pv lsof qrencode zxing axel
 	    (import ../texlive-set.nix pkgs)
-	    mplayer lame sox ffmpeg /*julia*/ octave maxima openssl sqlite 
-	    gnumake wget sysdig asymptote smbnetfs imagemagick zbar
+	    mplayer lame sox ffmpeg julia_05 octave maxima openssl sqlite 
+	    gnumake wget /*sysdig*/ asymptote smbnetfs imagemagick7Big 
+      zbar
 	    quirc mono xvfb_run xorg.xauth xorg.xwininfo xorg.xkill
 	    xdotool x11vnc lynx inotifyTools ghostscript firefox 
 	    ratpoison evince xpdf ncdu fbterm nbd postgresql92 elinks
 	    dmenu2 slmenu libreoffice nmap pmount clisp fbida espeak
 	    wineUnstable emacs qemu p7zip rxvt_unicode edk2 OVMF keynav
-	    gparted parted glpk ccl file gfortran
+	    gparted parted glpk ccl file gfortran tesseract
 	    ];
   };
 

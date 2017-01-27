@@ -27,5 +27,37 @@ self: {
   etcNix = self.pkgs.runCommand "etc-nix" {} ''
     mkdir "$out"
     ln -s "${self.nixConf}" "$out/nix.conf"
+    ${self.lib.optionalString (self.nixRemoteMachines != []) ''
+      ln -s "${self.nixMachinesConf}" "$out/nix-machines.conf"
+    ''}
+    ${self.lib.optionalString (self.nixSigningKey != null) ''
+      ln -s "${self.nixSigningKey}" "$out/"
+      ln -s "${self.nixSigningKey}.pub" "$out/"
+    ''}
   '';
+  nixRemoteMachines = [];
+  nixMachinesConf = self.pkgs.writeText "nix-machines.conf"
+    (self.lib.concatMapStrings
+     (machine:
+      "${machine.sshUser}@${machine.hostName} "
+      + (if machine ? system then machine.system else 
+                self.lib.concatStringsSep "," machine.systems)
+      + " ${machine.sshKey} ${toString machine.maxJobs} "
+      + (if machine ? speedFactor then toString machine.speedFactor else "1" )
+      + " "
+      + (if machine ? supportedFeatures then self.lib.concatStringsSep "," 
+                machine.supportedFeatures else "" )
+      + " "
+      + (if machine ? mandatoryFeatures then self.lib.concatStringsSep "," 
+                machine.mandatoryFeatures else "" )
+      + "\n"
+     ) self.nixRemoteMachines);
+  nixRemoteBuildEnv = ''
+    export NIX_BUILD_HOOK=${
+        self.nix.bin or self.nix.out or self.nix
+      }/libexec/nix/build-remote.pl
+    export NIX_CURRENT_LOAD=/run/nix/current-load
+    export NIX_REMOTE_SYSTEMS=/etc/nix/nix-machines.conf
+  '';
+  nixSigningKey = null;
 }
