@@ -375,7 +375,7 @@ rec {
 
   nixosEtcSelect = nixos: filename:
     let selected = (lib.filterAttrs (k: v: v.target == filename) nixos.config.environment.etc);
-    in (builtins.getAttr (builtins.head (builtins.attrNames selected)) selected).source;
+    in (builtins.getAttr (builtins.head (builtins.attrNames selected)) selected).source.outPath;
 
   initrdContentEntry = symlinkPrefix: pkg: {
     object = pkg;
