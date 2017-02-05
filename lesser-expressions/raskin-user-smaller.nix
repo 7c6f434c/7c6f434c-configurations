@@ -29,7 +29,7 @@ linkFarm "raskin-packages" ([
 		(map justUse [
 		"gsettings_desktop_schemas"
 		"fuse" "mysql" "openssl" "opencv" "postgresql" "sqlite"
-		"sbcl_1_2_5" "graphviz_2_0" "icedtea_web" "love_0_10" "love_0_9"
+		"graphviz_2_0" "icedtea_web" "love_0_10" "love_0_9"
 		])
     ++
     (map (justUseMult "out") [
