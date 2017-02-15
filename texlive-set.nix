@@ -22,6 +22,6 @@ pkgs.texlive.combine {
     epstopdf epspdfconversion epspdf algorithm2e relsize type1cm
     ucs todonotes xargs forloop pbox varwidth bigfoot environ trimspaces
     forest arydshln pgfopts elocalloc libertine mweights fontaxes
-    totpages comment
+    totpages comment soul multirow threeparttable lastpage preprint
     ;
 }

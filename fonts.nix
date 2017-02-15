@@ -37,6 +37,10 @@
       pkgs.freefont_ttf
       pkgs.comic-neue
 
+      pkgs.noto-fonts
+      pkgs.noto-fonts-cjk
+      pkgs.noto-fonts-emoji
+
       pkgs.paratype-pt-mono
       pkgs.paratype-pt-sans
       pkgs.paratype-pt-serif

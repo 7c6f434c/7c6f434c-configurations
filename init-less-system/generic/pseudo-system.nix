@@ -60,7 +60,7 @@ let
        preferLocalBuild = true;
     } ''
       mkdir -p "$out"
-      ${pkgs.gcc}/bin/gcc -Wall -O2 -DWRAPPER_DIR="\"/var/setuid-wrapper-storage/$(basename "$out")\"" ${tools.setuidWrapperSource} -o "$out/canonical-wrapper"
+      ${pkgs.gcc}/bin/gcc -Wall -O2 -DWRAPPER_DIR="\"/var/setuid-wrapper-storage/$(basename "$out")\"" ${tools.setuidWrapperSource} -o "$out/canonical-wrapper" -L${pkgs.libcap.lib}/lib -I${pkgs.libcap.dev}/include -L${pkgs.libcap_ng}/lib -I${pkgs.libcap_ng}/include -lcap -lcap-ng
       ${lib.concatMapStrings (x:
       let
         src = if builtins.isAttrs x then x.src else x;
@@ -348,15 +348,22 @@ let
         sync
         cat /proc/mounts | cut -d ' ' -f 2 | grep /new-root | tac | xargs umount
         cat /proc/mounts | cut -d ' ' -f 2 | grep /new-root | tac | xargs fuser -m -k
+        fuser -m -k /new-root/nix/store
         cat /proc/mounts | cut -d ' ' -f 2 | grep /new-root | tac | xargs umount
         sleep 1
         sync
         cat /proc/mounts | cut -d ' ' -f 2 | grep /new-root | tac | xargs fuser -m -k -2
+        fuser -m -k /new-root/nix/store -2
         cat /proc/mounts | cut -d ' ' -f 2 | grep /new-root | tac | xargs umount
         sleep 0.5
         sync
         cat /proc/mounts | cut -d ' ' -f 2 | grep /new-root | tac | xargs fuser -m -k -6
+        fuser -m -k /new-root/nix/store -6
         sleep 0.3
+        sync
+        cat /proc/mounts | cut -d ' ' -f 2 | grep /new-root | tac | xargs fuser -m -k -9
+        fuser -m -k /new-root/nix/store -9
+        sleep 0.1
         sync
         cat /proc/mounts | cut -d ' ' -f 2 | grep /new-root | tac | xargs umount
         cat /proc/mounts | cut -d ' ' -f 2 | grep /new-root | tac | xargs umount

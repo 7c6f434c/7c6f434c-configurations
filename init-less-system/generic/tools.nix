@@ -354,7 +354,7 @@ rec {
     # FS dependencies
     "crc32c-generic" "nls-cp437"
   ];
-  setuidWrapperSource = <nixpkgs> + "/nixos/modules/security/setuid-wrapper.c";
+  setuidWrapperSource = <nixpkgs> + "/nixos/modules/security/wrappers/wrapper.c";
   setuidWrapper = runCommand "setuid-wrapper" {} ''
     mkdir -p "$out/bin"
     ${gcc}/bin/gcc ${<nixpkgs> + "/nixos/modules/security/setuid-wrapper.c" } \
