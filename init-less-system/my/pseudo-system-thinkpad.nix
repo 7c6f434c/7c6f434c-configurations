@@ -41,6 +41,7 @@ import ../generic/pseudo-system.nix {
       {name = "loop"; args = ["max_loop=16"];}
       "configs"
       "fbcon" "i915"
+      "nouveau" "bbswitch"
     ] ++ x.initial.initrdModules;
     firmwarePackages = [
       x.pkgs.firmwareLinuxNonfree
@@ -148,43 +149,27 @@ import ../generic/pseudo-system.nix {
           '';
       })
       (x.serviceXorg "-intel" { videoDrivers = x.lib.mkForce ["intel"]; })
-      (x.serviceXorg "" { videoDrivers = x.lib.mkForce ["intel"]; })
-      (x.serviceXorg "-multi" {  
+      (x.serviceXorg "-modesetting" { videoDrivers = x.lib.mkForce ["modesetting"]; })
+      (x.serviceXorg "" {  
        serverLayoutSection = ''
          Option "AIGLX" "on"
-         Inactive "Device-nouveau[0]"
-         Screen 0 "Screen-intel[0]"
-       EndSection
-
-       Section "ServerLayout"
-         Identifier "Inactive"
        '';
-       videoDrivers = x.lib.mkForce [];
-       drivers = [
-       ({ driverName = ''nouveau"
-        BusID "PCI:1:0:0'';
-        name = "nouveau";
-        modules = [x.pkgs.xorg.xf86videonouveau]; 
-        })
-       ({ driverName = ''intel"
-        BusID "PCI:0:2:0''; 
-        name = "intel";
-        modules = [x.pkgs.xorg.xf86videointel];
-        })
-       ];
+       videoDrivers = x.lib.mkForce ["nouveau" "modesetting"];
+       })
+       (x.serviceXorg "-multi" {  
+       serverLayoutSection = ''
+         Option "AIGLX" "on"
+       '';
+       videoDrivers = x.lib.mkForce ["nouveau" "modesetting"];
        })
       (x.serviceDefinitions.udev {})
       (x.serviceDefinitions.dbus {})
       (x.pkgs.writeScript "wpa_supplicant" ''pkill wpa_supplicant ; wpa_supplicant -c "''${1:-/root/src/rc/wpa_supplicant.conf}" -i wlan0 -D nl80211'')
       (x.pkgs.writeScript "dhclient-wlan0" ''dhclient -r wlan0; dhclient wlan0 -d'')
       (x.pkgs.writeScript "wlan" ''/var/current-system/bin/run-service wpa_supplicant; /var/current-system/bin/run-service dhclient-wlan0;'')
-      (x.pkgs.writeScript "bumblebee" "export MODULE_DIR=/var/latest-booted-system/boot/kernel-modules/lib/modules; pkill bumblebee; bumblebeed -v -d :10")
-      (x.pkgs.writeScript "intel-virtual-output" ''intel-virtual-output -d "''${1:-:0}" -f'')
-      (x.pkgs.writeScript "optimus" ''/var/current-system/bin/run-service bumblebee; /var/current-system/bin/run-service intel-virtual-output "$1";'')
     ];
     autoServices = x.initial.autoServices ++ [
        "udev" "bind" "cron" "cups" "nix-serve" "openssh" "postgresql"
-       "bumblebee"
     ];
     extraUdevRules = [
       (x.pkgs.writeText "30-local-touchpad.rules" ''
