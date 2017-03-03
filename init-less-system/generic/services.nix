@@ -100,7 +100,7 @@ self: {
       ln -fs "${nixosWithX.config.hardware.opengl.package32}" /run/opengl-driver-32
       export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/run/opengl-driver/lib:/run/opengl-driver-32/lib"
 
-      { while ! fuser /tmp/.X11-unix/''${DISPLAY#:}; do sleep 1; done; udevadm trigger ; } & 
+      { while ! fuser /tmp/.X11-unix/X''${DISPLAY#:}; do sleep 1; done; udevadm trigger ; } & 
 
       ${self.pkgs.xorg.xorgserver.out}/bin/Xorg -ac -logverbose -verbose -logfile "/var/log/X.''${DISPLAY#:}.log" \
         -config "${config}" -xkbdir "${self.pkgs.xkeyboard_config}/etc/X11/xkb"           \

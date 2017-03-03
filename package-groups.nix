@@ -119,6 +119,7 @@ rec {
 		consoleTools = [
 			remind expect pinentry fdupes mc debootstrap parallel
 			texinfoInteractive /*baseKernel.kernelPackages.sysdig*/
+      rhash
 		];
 		clientServer = [
 			dict dbus wgetpaste whois
@@ -156,7 +157,7 @@ rec {
 			elinks lynx links2
 		];
 		textCrunchers = [
-			xxdiff myKDE.kdiff3
+			xxdiff /*myKDE.kdiff3*/
 		];
 		media = [
 			mplayer /*myKDE.kmplayer*/ timidity sox lame vlc ffmpeg espeak 
@@ -236,8 +237,8 @@ rec {
       /*baseKernel.kernelPackages.virtualbox*/
     ];
     fonts = (import ./fonts.nix pkgs).fonts;
-    icons = [oxygen_gtk myKDE.oxygen_icons];
-    libraries = [myKDE.kde_runtime phonon 
+    icons = [kdeFrameworks.oxygen-icons5];
+    libraries = [ /*myKDE.kde_runtime*/ phonon 
       phonon-backend-gstreamer
       lispPackages.command-line-arguments
       asdf

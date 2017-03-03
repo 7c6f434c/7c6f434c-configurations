@@ -20,7 +20,7 @@ import ../generic/pseudo-system.nix {
       (import ../../package-groups.nix {
         pkgs = x.pkgs;
         myTexLive = import ../../texlive-set.nix x.pkgs;
-        myKDE = x.pkgs.kde414;
+        myKDE = x.pkgs.kdeApplications;
         baseKernel = x.kernelToUse;
         });
         zb = z.bootstrap;

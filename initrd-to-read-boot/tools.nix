@@ -347,9 +347,11 @@ rec {
   ];
   setuidWrapper = runCommand "setuid-wrapper" {} ''
     mkdir -p "$out/bin"
-    ${gcc}/bin/gcc ${<nixpkgs> + "/nixos/modules/security/setuid-wrapper.c" } \
+    ${gcc}/bin/gcc ${<nixpkgs> + "/nixos/modules/security/wrappers/wrapper.c" } \
       -Wall -O2 -DWRAPPER_DIR='"/var/setuid-wrappers"' \
-      -o "$out"/bin/setuid-wrapper 
+      -o "$out"/bin/setuid-wrapper \
+      -L${pkgs.libcap.lib}/lib -I${pkgs.libcap.dev}/include -L${pkgs.libcap_ng}/lib \
+      -I${pkgs.libcap_ng}/include -lcap -lcap-ng
   '';
 
   cpioStatic = lib.overrideDerivation cpio (x: {LDFLAGS=["-static" "-L${glibc.static}/lib"]; nativeBuildInputs = x.nativeBuildInputs ++ [glibc.static];});

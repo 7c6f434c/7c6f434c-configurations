@@ -125,6 +125,8 @@ rec {
       makeLink "$out/sw/sbin/${x.src}" setuid/programs/"${x.dst}" ||
       true
     '') (setuidPrograms.renamedSetuidPrograms or [])}
+    mkdir /run/wrappers
+    ln -sfT /var/setuid-wrappers/ /run/wrappers/bin
 
     makeLink ${cpioStatic}/bin/cpio static-tools/cpio
 

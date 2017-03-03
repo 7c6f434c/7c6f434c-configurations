@@ -197,7 +197,10 @@ let
         ln -sfT /var/current-system/global/$i /$i
       done
 
-      ln -sf /var/current-system/setuid/wrappers /var/setuid-wrappers
+      ln -sfT /var/current-system/setuid/wrappers /var/setuid-wrappers
+
+      mkdir /run/wrappers
+      ln -sfT /var/current-system/setuid/wrappers /run/wrappers/bin
 
       ln -sf /var/current-system /nix/var/nix/gcroots/
       ln -sf /var/latest-booted-system /nix/var/nix/gcroots/

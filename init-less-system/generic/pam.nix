@@ -74,6 +74,8 @@ self: {
     ln -s ${self.pamLoginConf}  "$out"/cups
     ln -s ${self.pamLoginConf}  "$out"/xlock
     ln -s ${self.pamLoginConf}  "$out"/vlock
+    ln -s ${self.pamLoginConf}  "$out"/screen
+    ln -s ${self.pamLoginConf}  "$out"/other
     ln -s ${self.pamSuConf}     "$out"/su
     ln -s ${self.pamSuConf}     "$out"/sudo
     ln -s ${self.pamSshdConf}   "$out"/sshd
