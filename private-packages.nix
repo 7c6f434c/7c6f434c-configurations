@@ -2,38 +2,38 @@
 with pkgs;
 let pp = 
 {
-  warmux = (warmux.override (let x = (warmux.function {}); in
-	    {
-	     src= "/home/repos/warmux/"; 
-	     phaseNames = ["JustStamp" "doAutogen"] ++ x.phaseNames;
-	     JustStamp = x.noDepEntry ''
-	       echo "${builtins.readFile "/home/repos/warmux/.svn/svn-info-output"}" &> /dev/null
-	     '';
-	     buildInputs = x.buildInputs ++ [automake autoconf libtool intltool perl];
-	     }));
-  tbe = (tbe.override (let x = (tbe.function {}); in {
-	      src = "/home/repos/tbe/";
-	      name = "tbe-svn-head";
-	      phaseNames = ["JustStamp" "doCmake"] ++ 
-	      (lib.filter
-	        (y : y!="doConfigure")
-	        x.phaseNames
-		)
-		++ ["postInstall"];
-	      makeFlags = ["all" "translations"];
-	      JustStamp = x.noDepEntry ''
-	         echo "${builtins.readFile "/home/repos/tbe/.svn/svn-info-output"}" &> /dev/null
-	      '';
-	      postInstall = x.fullDepEntry ''
-	        cd "$out/bin"
-		mv tbe .tbe-wrapped
-		echo -e '#!/bin/sh\ncd "'"$out"'"\n./bin/.tbe-wrapped "$@"' > tbe
-		chmod a+x tbe
-	      '' ["minInit"];
-	      qt4 = qt48;
-	      buildInputs = [qt48 cmake] ++ (lib.filter (y : y.outPath != qt48.outPath) x.buildInputs);
-	    }));
-  drgeo = (drgeo.override {src="" + /home/repos/drgeo-1.1.0 + "/";});
+   #warmux = (warmux.override (let x = (warmux.function {}); in
+   #    {
+   #     src= "/home/repos/warmux/"; 
+   #     phaseNames = ["JustStamp" "doAutogen"] ++ x.phaseNames;
+   #     JustStamp = x.noDepEntry ''
+   #       echo "${builtins.readFile "/home/repos/warmux/.svn/svn-info-output"}" &> /dev/null
+   #     '';
+   #     buildInputs = x.buildInputs ++ [automake autoconf libtool intltool perl];
+   #     }));
+   #tbe = (tbe.override (let x = (tbe.function {}); in {
+   #      src = "/home/repos/tbe/";
+   #      name = "tbe-svn-head";
+   #      phaseNames = ["JustStamp" "doCmake"] ++ 
+   #      (lib.filter
+   #        (y : y!="doConfigure")
+   #        x.phaseNames
+   #	)
+   #	++ ["postInstall"];
+   #      makeFlags = ["all" "translations"];
+   #      JustStamp = x.noDepEntry ''
+   #         echo "${builtins.readFile "/home/repos/tbe/.svn/svn-info-output"}" &> /dev/null
+   #      '';
+   #      postInstall = x.fullDepEntry ''
+   #        cd "$out/bin"
+   #	mv tbe .tbe-wrapped
+   #	echo -e '#!/bin/sh\ncd "'"$out"'"\n./bin/.tbe-wrapped "$@"' > tbe
+   #	chmod a+x tbe
+   #      '' ["minInit"];
+   #      qt4 = qt48;
+   #      buildInputs = [qt48 cmake] ++ (lib.filter (y : y.outPath != qt48.outPath) x.buildInputs);
+   #    }));
+  #drgeo = (drgeo.override {src="" + /home/repos/drgeo-1.1.0 + "/";});
   btrfsProgs = (lib.overrideDerivation btrfsProgs (x: rec {
     justStamp = "${builtins.readFile "${src}/.git/refs/heads/master"}";
 		  src = "/home/repos/btrfs-progs/";
@@ -58,33 +58,33 @@ let pp =
       ${x.prePatch}
     '';
   }));
-  liquidwar = liquidwar.override (x: {
-    src = ("" + /home/repos/liquidwar6 + "/");
-    goSrcDir = ''cd liquidwar6'';
-    phaseNames = ["setHome" "doAutotools"] ++ x.phaseNames ;
-    buildInputs = 
-      (lib.filter (y: y.outPath != gettext_0_18.outPath) x.buildInputs)
-      ++ [autoconf automake libtool gettext_0_17 texinfo];
-    setHome = builderDefs.noDepEntry ''
-      export HOME="$PWD"
-    '';
-  });
-  vvTest = veracity.override {
-    runTests = true;
-  };
+  #liquidwar = liquidwar.override (x: {
+  #  src = ("" + /home/repos/liquidwar6 + "/");
+  #  goSrcDir = ''cd liquidwar6'';
+  #  phaseNames = ["setHome" "doAutotools"] ++ x.phaseNames ;
+  #  buildInputs = 
+  #    (lib.filter (y: y.outPath != gettext_0_18.outPath) x.buildInputs)
+  #    ++ [autoconf automake libtool gettext_0_17 texinfo];
+  #  setHome = builderDefs.noDepEntry ''
+  #    export HOME="$PWD"
+  #  '';
+  #});
+  # vvTest = veracity.override {
+  #   runTests = true;
+  # };
   gettext_expat = lib.overrideDerivation gettext (x: {
     buildInputs = x.buildInputs ++ [expat gnome.libglade];
     configureFlags = x.configureFlags ++ [ " --with-libexpat-prefix=${expat}/ " ];
   });
-  webdsl = lib.overrideDerivation pkgsi686Linux.webdsl (x : {
-    src = "/home/repos/webdsl/";
-    buildInputs = x.buildInputs ++ [glib libtool autoconf automake m4 ant ];
-    preConfigure = ''
-      echo "${builtins.readFile "/home/repos/webdsl/.svn//svn-info-output"}" &> /dev/null
-      libtoolize
-      ./bootstrap
-    '';
-  });
+  #webdsl = lib.overrideDerivation pkgsi686Linux.webdsl (x : {
+  #  src = "/home/repos/webdsl/";
+  #  buildInputs = x.buildInputs ++ [glib libtool autoconf automake m4 ant ];
+  #  preConfigure = ''
+  #    echo "${builtins.readFile "/home/repos/webdsl/.svn//svn-info-output"}" &> /dev/null
+  #    libtoolize
+  #    ./bootstrap
+  #  '';
+  #});
   quarter = stdenv.mkDerivation rec {
     name = "quarter-1.0.0";
     src = fetchurl {
@@ -106,12 +106,12 @@ let pp =
       done
     '';
   };
-  ode = ode.override (x: {
-    exportPIC = builderDefs.noDepEntry ''
-      export NIX_CFLAGS_COMPILE="$NIX_CFLAGS_COMPILE -fPIC "
-    '';
-    phaseNames = ["exportPIC"] ++ x.phaseNames;
-  });
+  #ode = ode.override (x: {
+  #  exportPIC = builderDefs.noDepEntry ''
+  #    export NIX_CFLAGS_COMPILE="$NIX_CFLAGS_COMPILE -fPIC "
+  #  '';
+  #  phaseNames = ["exportPIC"] ++ x.phaseNames;
+  #});
   emergent = stdenv.mkDerivation rec {
     name = "emergent-svn-head";
     src = "/home/repos/emergent/";
@@ -151,11 +151,11 @@ let pp =
    JustStamp = "${builtins.readFile "${src}/.git/refs/heads/master"}";
    name = "julia-git-head";
  });
- sbcl = pkgs.sbcl.override (rec{
-   src = "/home/repos/sbcl/";
-   JustStamp = "${builtins.readFile "${src}/.git/refs/heads/master"}";
-   name = "sbcl-git-head";
- });
+ #sbcl = pkgs.sbcl.override (rec{
+ #  src = "/home/repos/sbcl/";
+ #  JustStamp = "${builtins.readFile "${src}/.git/refs/heads/master"}";
+ #  name = "sbcl-git-head";
+ #});
 #saneBackends = saneBackends.override {
 #   gt68xxFirmware = x: {
 #     fw = /var/lib/firmware/SBfw.usb ; 
@@ -203,5 +203,31 @@ let pp =
      echo "$nativeBuildInputs" > "$out/nix-support/build-inputs"
    '';
  });
+ TannerRogalsky-demoloops = stdenv.mkDerivation rec {
+   name = "TannerRogalsky-demoloops";
+   src = fetchFromGitHub {
+     owner = "TannerRogalsky";
+     repo = "Demoloops";
+     rev = "999972cc2056481175dd4c5b77e77d63bc58a00b";
+     sha256 = "1vi9np77xc3lgnhkgk2dfnra0wrs1vkizih7lvpchmrd0n12h642";
+     fetchSubmodules = true;
+   };
+   nativeBuildInputs = [cmake pkgconfig];
+   buildInputs = [SDL2 SDL2_image SDL2_ttf mesa_glu openal glew
+     bullet libvorbis];
+   preConfigure = ''
+     export BULLET_DIR="$PWD"
+     export NIX_CFLAGS_COMPILE="$NIX_CFLAGS_COMPILE -I${SDL2_ttf}/include/SDL2 -I${bullet}/include/bullet"
+     ln -s "${bullet}/lib/cmake/bullet/BulletConfig.cmake" BULLETConfig.cmake
+     sed -e '1i#include <stdexcept>' -i lib/demoloop-lib/src/graphics/canvas.cpp
+   '';
+   installPhase = ''
+     mkdir -p "$out"/{bin,lib,share/doc}
+     cp ../{README*,LICEN?E} "$out/share/doc"
+     cp loop* "$out"/bin
+     cp lib/demoloop-lib/libdemoloop-lib.so "$out"/lib
+   '';
+   enableParallelBuilding = true;
+ };
 }; in 
 pp
