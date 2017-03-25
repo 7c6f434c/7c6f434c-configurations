@@ -13,17 +13,15 @@ linkFarm "raskin-packages" ([
 		{name="vim"; path=customVim pkgs;}
 		{name="pandas"; path=pythonPackages.pandas;}
 		{name="libX11"; path=xorg.libX11;}
-		{name="gtkglext"; path=gnome.gtkglext;}
+		{name="gtkglext"; path=gnome2.gtkglext;}
 		] ++ (map justUse [
-			"openssl" 
-			"graphviz_2_0" "pipelight"
-			"libfixposix" "opencv"
+			"openssl" "pipelight" "libfixposix" "opencv"
 			"gmp" "mpfr" "fuse" "libffi"
 			"gsettings_desktop_schemas"
 
 			"cairo" "mesa" "freeglut" "postgresql" 
 			"sqlite" "mysql" "python" "libuuid"
-			"libev" "gtk" "glib" "pango" "gsl" 
+			"libev" "gtk3" "gtk2" "glib" "pango" "gsl" 
 			"ncurses"
 
 			"zlib"
@@ -32,8 +30,7 @@ linkFarm "raskin-packages" ([
 		(map ppUse [])
 		++ 
 		[
-		{name="dbus-services"; path=(symlinkJoin "dbus-services" 
-		  []);
+		{name="dbus-services"; path=(symlinkJoin {name="dbus-services"; paths=[];});
 		}
                 {
 		  name="glib-schemas"; 
@@ -41,11 +38,12 @@ linkFarm "raskin-packages" ([
 				  {
 				  inherit glib;
 				  schemasFiles = 
-				  (symlinkJoin "glib-schemas-raw" 
+				  (symlinkJoin {name="glib-schemas-raw" ;
+            paths=
 				   [
 				   pkgs.gtk3
 				   pkgs.gsettings_desktop_schemas
-				   ]);
+				   ];});
 				  }
 				  ''
 				    mkdir -p "$out"/share/glib-2.0/schemas

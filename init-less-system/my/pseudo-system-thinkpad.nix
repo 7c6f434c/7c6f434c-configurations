@@ -6,7 +6,8 @@ import ../generic/pseudo-system.nix {
     nixBuildCores = "4";
     nixBuildMaxJobs = "8";
     nixGcKeepOutputs = "true";
-    nixBinaryCaches = x.initial.nixBinaryCaches ++ [ "http://192.168.0.202:32062/" "http://127.0.0.1:32062/" ];
+    nixBinaryCaches = x.initial.nixBinaryCaches ++ 
+      [ "http://127.0.0.1:32062/" "http://127.0.0.1:32063/" "http://127.0.0.1:32064/" ];
     kernelToUse = rec {
           kernel-to-use = import ../../kernel-options.nix {pkgs = x.pkgs;};
           kernel = kernel-to-use.baseKernel.kernelPackages.kernel;
@@ -63,8 +64,7 @@ import ../generic/pseudo-system.nix {
     etcFonts = x.pkgs.runCommand "etc-fonts" { source = x.nixosEtcFonts {
     }; } ''
       mkdir -p "$out/conf.d"
-      ln -s "$source/conf.d"/*-default-fonts.conf "$out/conf.d/"
-      ln -s "$source/conf.d"/*-cache.conf "$out/conf.d/"
+      ln -s "$source/conf.d"/*.conf "$out/conf.d/"
       ln -s "$source/fonts.conf" "$out/"
     '';
     gettyConsoles = ["tty2" "tty3" "tty4" "tty5" "tty6"]; 
@@ -131,7 +131,7 @@ import ../generic/pseudo-system.nix {
     ) // { scriptName = "xorg${suffix}"; configName = "xorg${suffix}.conf"; });
     services = [
       (x.serviceDefinitions.openssh {enable = true;})
-      (x.serviceDefinitions.nix-serve {enable = true; port = 32062;})
+      (x.serviceDefinitions.nix-serve {enable = true; port = 32062; secretKeyFile = "/var/cert/nix/binary-cache/private.key";})
       (x.serviceDefinitions.postgresql {enable = true;})
       (x.serviceDefinitions.bind x.bindNixConfig)
       (x.serviceDefinitions.cron
@@ -139,7 +139,8 @@ import ../generic/pseudo-system.nix {
           {pkgs=null; config=null;}).cron.systemCronJobs;})
       (x.serviceDefinitions.cups {
         enable = true; gutenprint = true; drivers = with x.pkgs; [
-          hplip foo2zjs foomatic_filters ghostscript cups_filters samba
+          foo2zjs foomatic_filters ghostscript cups_filters samba
+          hplip
         ];})
       (x.serviceXorg "-all" {})
       (x.serviceXorg "-nv" {

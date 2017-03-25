@@ -60,7 +60,7 @@
     };
     printing = {
       enable = true;
-      drivers = [pkgs.hplip pkgs.foo2zjs pkgs.foomatic_filters 
+      drivers = [pkgs.foo2zjs pkgs.foomatic_filters 
 		];
     };
     mingetty = {
@@ -94,8 +94,6 @@
 	"5-59/30 * * * * root cd /root && nice -n 10 ionice -c 3 /home/raskin/src/sh/script/mtn-pending-changes > /root/.mtn-pending-changes-new ; mv /root/.mtn-pending-changes-new /root/.mtn-pending-changes "
 	"0-59/30 * * * * raskin export PATH=$PATH:/home/raskin/src/sh/script ; cd /home/raskin && nice -n 10 ionice -c 3 mtn-pending-changes > /home/raskin/.mtn-pending-changes-new ; mv /home/raskin/.mtn-pending-changes-new /home/raskin/.mtn-pending-changes ; cd rc && kill-gajim-passwords && purge-from-pending"
 	"30 2 * * * root /var/run/current-system/sw/bin/nix-instantiate /home/raskin/.nix-personal/personal.nix"
-	"45 2 * * * raskin cd /home/raskin && /home/raskin/src/sh/script/dev-sync && /home/raskin/src/sh/script/public-sync && /home/raskin/src/sh/script/gh-sync"
-	"15 3 * * * raskin export HOME=/home/raskin PATH=$PATH:/home/raskin/src/sh/script ; cd /home/raskin ; android-tether-enable ; ip a > /tmp/sync-tablet-ip-a.log; sync-tablet 192.168.42.129 &> /tmp/sync-tablet.log"
       ];
     };
     

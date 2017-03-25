@@ -36,6 +36,8 @@
       pkgs.lmmath
       pkgs.freefont_ttf
       pkgs.comic-neue
+      pkgs.iosevka
+      pkgs.symbola
 
       pkgs.noto-fonts
       pkgs.noto-fonts-cjk

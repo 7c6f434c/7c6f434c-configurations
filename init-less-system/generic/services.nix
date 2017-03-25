@@ -7,7 +7,7 @@ self: {
     name = "nix-serve";
     scriptCode = ''#! ${self.pkgs.stdenv.shell}
       grep '^nix-serve:' /etc/passwd || ${self.pkgs.shadow}/bin/useradd -r -s /run/current-system/sw/sbin/nologin -g nogroup nix-serve
-      su -s ${self.pkgs.stdenv.shell} nix-serve -c "NIX_REMOTE=daemon '${self.pkgs.nix-serve}/bin/nix-serve' --port ${toString cfg.port}"
+      su -s ${self.pkgs.stdenv.shell} nix-serve -c "NIX_REMOTE=daemon NIX_SECRET_KEY_FILE=${cfg.secretKeyFile} '${self.pkgs.nix-serve}/bin/nix-serve' --port ${toString cfg.port}"
     '';
   };
   postgresql = cfg: {

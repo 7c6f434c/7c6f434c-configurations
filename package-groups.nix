@@ -84,7 +84,7 @@ rec {
 			fpc lazarus
 			asymptote
 			gcc maxima guile racket
-			eprover coq cvc4
+			eprover coq cvc4 glucose
 			julia_05 openjdk8 apache-jena
 			mono octave nim ruby
       haskellPackages.ghc gfortran
@@ -114,11 +114,11 @@ rec {
 			xcalib xorg.xwd xdaliclock xvfb_run xorg.xev
       xorg.xinput xorg.xset xorg.xauth ratpoison
       xorg.xlsclients xorg.xwininfo xorg.xkill
-      myKDE.kdelibs xorg.xrdb xprintidle-ng
+      xorg.xrdb xprintidle-ng mlterm
 		];
 		consoleTools = [
 			remind expect pinentry fdupes mc debootstrap parallel
-			texinfoInteractive /*baseKernel.kernelPackages.sysdig*/
+			texinfoInteractive
       rhash
 		];
 		clientServer = [
@@ -157,7 +157,7 @@ rec {
 			elinks lynx links2
 		];
 		textCrunchers = [
-			xxdiff /*myKDE.kdiff3*/
+			xxdiff kdiff3
 		];
 		media = [
 			mplayer /*myKDE.kmplayer*/ timidity sox lame vlc ffmpeg espeak 
@@ -167,8 +167,8 @@ rec {
 			alsaLib cups alsaUtils
 			xsane udisks2 go-mtpfs
 			baseKernel.kernelPackages.kernel
-			pp.lcard_ltr_sdk
       multipath-tools
+      pulseaudioLight pavucontrol
 
       (bumblebee.override { useNvidia = false; })
       (lib.overrideDerivation xorg.xf86videointel (x: 
@@ -184,7 +184,7 @@ rec {
 			inkscape gimp imagemagick7Big vue dmtx graphviz
 			pdftk gnuplot openscad xfig zbar qrencode zxing
       quirc myKDE.kig drgeo potrace slic3r transfig
-      povray xournal
+      povray xournal fontforge-fonttools fontforge-gtk
 		];
 		graphicView = [
 			xpdf zathura evince djvulibre fbida ghostscript
@@ -220,7 +220,7 @@ rec {
 		
 		toys = [
 			fortune sgtpuzzles quantumminigolf liquidwar fsg golly n2048
-      xpilot-ng pkgs."2048-in-terminal" xmoto atanks lincity_ng
+      xpilot-ng pkgs."2048-in-terminal" atanks lincity_ng
       blobby pioneer xsok xaos
 		];
 
@@ -231,14 +231,13 @@ rec {
 			lxc firejail
 		];
     emulators = [
-      wineUnstable pipelight dosbox
+      wineUnstable dosbox
     ];
     nonNative = [
-      /*baseKernel.kernelPackages.virtualbox*/
     ];
     fonts = (import ./fonts.nix pkgs).fonts;
     icons = [kdeFrameworks.oxygen-icons5];
-    libraries = [ /*myKDE.kde_runtime*/ phonon 
+    libraries = [ phonon 
       phonon-backend-gstreamer
       lispPackages.command-line-arguments
       asdf

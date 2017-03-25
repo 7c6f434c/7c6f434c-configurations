@@ -187,6 +187,8 @@ xserver ALL= NOPASSWD: /var/run/current-system/sw/sbin/start xserver,\
 halt ALL= NOPASSWD: /var/run/current-system/sw/sbin/halt
       '';
     };
-    setuidPrograms = ["fbterm" "pmount" "pumount"];
+    wrappers.fbterm.source ="${pkgs.fbterm}/bin/fbterm";
+    wrappers.pmount.source ="${pkgs.pmount}/bin/pmount";
+    wrappers.pumount.source="${pkgs.pmount}/bin/pumount";
   };
 }
