@@ -231,6 +231,7 @@ let
 
       ln -sfT "/var/current-system" /run/current-system
       ln -sfT "$targetSystem" /var/current-system
+      ln -sfT "$targetSystem" /var/current-everescue-nix
     '';
     systemActivationScript = pkgs.writeScript "activate" self.systemActivationCommands;
     bootInitScript = ''
@@ -408,6 +409,10 @@ let
       # For copying to bootloader stash
       ln -s "${self.initrd.kernel}/bzImage" "$out/boot/for-bootloader/$(basename "${self.initrd.kernel}").linux.efi"
       ln -s "${self.initrd}/initrd" "$out/boot/for-bootloader/$(basename "${self.initrd}").initrd.efi"
+      "${./grub-print-entry.sh}" "${self.systemCaption}" \
+        "$out/boot/for-bootloader"/*.linux.efi "$out/boot/for-bootloader"/*.initrd.efi \
+        targetSystem="$out" BOOT_IMAGE="${self.initrd.kernel}" \
+        "$(cat "${self.kernelParametersFile}")" > "$out/boot/for-bootloader/grub.part.cfg"
 
       # NixOS compatibility for SystemTap
       ln -s "$out"/boot/kernel "$out"/kernel
@@ -419,6 +424,7 @@ let
 
       ln -s "${self.etc}" "$out"/global/etc-static
       ln -sf "/var/etc-mountpoint/$(basename "$out")" "$out/global/etc"
+      ln -sf "/var/etc-workdir/$(basename "$out")" "$out/global/etc-workdir"
       ln -s "$out/sw/bin/sh" "$out/global/bin/sh"
       ln -s "$out/sw/bin/env" "$out/global/usr/bin/env"
 
@@ -484,55 +490,52 @@ let
     extraGrubEntries = "";
     createGrubCfgCode = ''
       mkdir -p /boot/kernels
-      (
-      "${./grub-print-header.sh}" /boot
-      
-      echo "${self.extraGrubHeader}"
-
-      target="$(cd "$(dirname "$0")/.."; readlink -f "$(pwd)")"
-      tgtboot="$target/boot/for-bootloader"
-      cp "$tgtboot"/*.efi /boot/kernels/
-      name="$(cat "$target"/boot/system-caption), default"
-      "${./grub-print-entry.sh}" "$name" "$tgtboot"/*.linux.efi "$tgtboot"/*.initrd.efi \
-         targetSystem="$target" \
-         BOOT_IMAGE="$(readlink -f "$target/boot/kernel-package")" \
-         "$(cat "$target/boot/kernel-parameters")"
-
-      target="$(cd "/var/current-system"; readlink -f "$(pwd)")"
-      tgtboot="$target/boot/for-bootloader"
-      cp "$tgtboot"/*.efi /boot/kernels/
-      name="$(cat "$target"/boot/system-caption), latest activated"
-      "${./grub-print-entry.sh}" "$name" "$tgtboot"/*.linux.efi "$tgtboot"/*.initrd.efi \
-         targetSystem="$target" \
-         BOOT_IMAGE="$(readlink -f "$target/boot/kernel-package")"
-
-      target="$(cd "/run/booted-system"; readlink -f "$(pwd)")"
-      tgtboot="$target/boot/for-bootloader"
-      cp "$tgtboot"/*.efi /boot/kernels/
-      name="$(cat "$target"/boot/system-caption), latest booted"
-      "${./grub-print-entry.sh}" "$name" "$tgtboot"/*.linux.efi "$tgtboot"/*.initrd.efi \
-         targetSystem="$target" \
-         BOOT_IMAGE="$(readlink -f "$target/boot/kernel-package")"
-
-      for i in $(ls -d /nix/var/nix/profiles/everescue-nix-*-link | sort -k3n -t- | tac); do
-        n="$i"
-        n="''${n%-link}"
-        n="''${n##*-}"
-        target="$(cd "$i"; readlink -f "$(pwd)")"
-        tgtboot="$target/boot/for-bootloader"
-        cp "$tgtboot"/*.efi /boot/kernels/
-        name="$(cat "$target"/boot/system-caption), link $n"
-        "${./grub-print-entry.sh}" "$name" "$tgtboot"/*.linux.efi "$tgtboot"/*.initrd.efi \
-           targetSystem="$target" \
-           BOOT_IMAGE="$(readlink -f "$target/boot/kernel-package")"
-      done
-
-      echo "${self.extraGrubEntries}"
-
-      ) > /boot/grub/grub.cfg.new
+      grubHeader="$(${./grub-print-header.sh} /boot)"
       cp -f /boot/grub/grub.cfg{,.old}
       sync
       mv /boot/grub/grub.cfg{.new,}
+      sync
+
+      mkdir -p /boot/grub/fragments.new
+      for i in /nix/var/nix/profiles/*/ /run/booted-system/ /var/current-system/; do
+        test -e "$i/boot/for-bootloader/grub.part.cfg" && {
+          test -d "/boot/grub/fragments/$(basename "$i")" &&
+            mv "/boot/grub/fragments/$(basename "$i")" "/boot/grub/fragments.new/$(basename "$i")"
+        }
+      done
+      sync
+      rm -rf /boot/grub/fragments
+      mv /boot/grub/fragments.new /boot/grub/fragments
+      sync
+      for i in /boot/kernels/*.efi; do
+        grep "''${i#/boot}" /boot/grub/fragments/*/grub.part.cfg -m1 > /dev/null || rm "$i"
+      done
+      n=0
+      rm /boot/grub/fragment-index/*
+      mkdir -p /boot/grub/fragment-index/
+      for i in /var/current-system/ /run/booted-system/ /nix/var/nix/profiles/*-link/ ; do
+        test -e "$i/boot/for-bootloader/grub.part.cfg" && {
+          n=$((n+1))
+          echo "/boot/grub/fragments/$(basename "$i")" > /boot/grub/fragment-index/$(printf "%06d" $n)
+          cp -fL "$i/boot/for-bootloader/"/grub.part.cfg "/boot/grub/fragments/$(basename "$i")"/ 2>/dev/null
+          rm "/boot/grub/fragments/$(basename "$i")" 2> /dev/null
+          test -d "/boot/grub/fragments/$(basename "$i")" || {
+            mkdir "/boot/grub/fragments/$(basename "$i")"
+            cp -fL "$i/boot/for-bootloader/"/grub.part.cfg "/boot/grub/fragments/$(basename "$i")"/ 2>/dev/null
+            cp -L "$i/boot/for-bootloader/"/*.efi /boot/kernels/
+          }
+        }
+      done
+      sync
+      for i in /boot/grub/fragments/*; do
+        sed -re "s@^menuentry[^\"]*\"@&$(basename "$i") @"  "$i/grub.part.cfg" > "$i/grub.part.labeled.cfg"
+        ( echo "$grubHeader"; cat "$i/grub.part.labeled.cfg" ) > "$i/grub.one.cfg"
+      done
+      cp /boot/grub/grub.fragmented.cfg{,.old}
+      sync
+      ( echo "$grubHeader"; cat /boot/grub/fragment-index/* |
+          sed -e 's@$@/grub.part.labeled.cfg@' | xargs cat ) > /boot/grub/grub.fragmented.cfg
+      cp /boot/grub/grub{.fragmented,}.cfg
       sync
     '';
     createGrubCfgScript = pkgs.writeScript "create-grub-config" self.createGrubCfgCode;

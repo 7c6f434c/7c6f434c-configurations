@@ -50,6 +50,10 @@ mkswap /dev/ThinkPadMain/Swap
 swapon $( readlink -f /dev/ThinkPadMain/Swap ) 
 } &
 mount /dev/disk/by-label/NIXOS_EFI /new-root/boot &
+{
+mkdir /dev/pstore
+mount pstore -t pstore /dev/pstore
+} &
 
 while pgrep mount; do sleep 0.1; done
 

@@ -40,6 +40,7 @@ import ../generic/pseudo-system.nix {
       "usbhid" "hid-generic" "evdev"
       "psmouse" "mousedev" "usbhid" "hid_generic" "atkbd" "xtkbd"
       {name = "loop"; args = ["max_loop=16"];}
+      "efivarfs"
       "configs"
       "fbcon" "i915"
       "nouveau" "bbswitch"
@@ -52,13 +53,13 @@ import ../generic/pseudo-system.nix {
       "e1000e" "uvcvideo" "tpacpi" "thinkpad-acpi" "msr"
       "ac" "battery"
       "fuse" "tun"
-      "coretemp" "button" "acpi-cpufreq" "thermal" 
+      "coretemp" "button" "acpi-cpufreq" "thermal"
       "cpufreq-ondemand" "cpufreq-userspace"
       "snd-usb-audio" "snd-hda-intel index=1"
       "aesni-intel" "kvm-intel" "rtc-cmos"
       "rndis-host" "cdc-ether"
       "ax88179_178a" "smsc75xx" "asix"
-      "sdhci-pci" "mmc-block"
+      "sdhci-pci" "mmc-block" 
     ] ++ x.initial.linuxLateModules;
     fontPackages = (import ../../fonts.nix {inherit (x) pkgs;}).fonts;
     etcFonts = x.pkgs.runCommand "etc-fonts" { source = x.nixosEtcFonts {

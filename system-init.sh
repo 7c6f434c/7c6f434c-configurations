@@ -42,6 +42,9 @@ for i in "snd-usb-audio" "snd-hda-codec-conexant" "asus-nb-wmi"                \
 done
 
 mount fuse -t fusectl /sys/fs/fuse/connections/
+mkdir /dev/pstore
+mount -t pstore /dev/pstore
+mount -t efivarfs efivars /sys/firmware/efi/efivars
 
 mkdir -p /run/wpa_supplicant
 
