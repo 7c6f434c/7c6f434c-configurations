@@ -16,11 +16,12 @@ linkFarm "raskin-packages" ([
         linkedSystems = x.linkedSystems ++ ["clsql" "ironclad" "esrap-peg" 
           "md5" "sb-bsd-sockets"]; 
         nativeBuildInputs = x.nativeBuildInputs ++ (with lispPackages; 
-          [clsql ironclad esrap-peg md5]);
+          [clsql ironclad md5]) ++ (with lispPackages; [esrap-peg]);
       });
     }
 		{name="clx-truetype"; path=lispPackages.clx-truetype;}
 		{name="clx-xkeyboard"; path=lispPackages.clx-xkeyboard;}
+		{name="clwrapper"; path=lispPackages.clwrapper;}
 		{name="bordeaux-threads"; path=lispPackages.bordeaux-threads;}
     {name="gimp-resynthesizer"; path=gimpPlugins.resynthesizer;}
     {name="gimp-resynthesizer2"; path=gimpPlugins.resynthesizer2;}
