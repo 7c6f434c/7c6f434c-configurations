@@ -65,7 +65,8 @@ rec {
     autorun = false;
     enableTCP = true;
     virtualScreen = {x=3520; y=2200;};
-    layout = "us(altgr-intl),ru(common),gr(basic)";			
+    layout = "us,ru,gr";			
+    xkbVariant = "altgr-intl,common,basic";
     xkbOptions = "grp:caps_toggle, grp_led:caps, lv3:lwin_switch, terminate:ctrl_alt_bksp";	
   };
 
@@ -87,6 +88,7 @@ rec {
   services.nix-serve = {
     enable = true;
     port = 32062;
+    secretKeyFile = "/nix/var/nix/keys/nix-serve-key";
   };
 
   services.logind = {
@@ -118,13 +120,12 @@ rec {
 	    (import ../texlive-set.nix pkgs)
 	    mplayer lame sox ffmpeg julia_05 octave maxima openssl sqlite 
 	    gnumake wget /*sysdig*/ asymptote smbnetfs imagemagick7Big 
-      zbar
 	    quirc mono xvfb_run xorg.xauth xorg.xwininfo xorg.xkill
 	    xdotool x11vnc lynx inotifyTools ghostscript firefox 
 	    ratpoison evince xpdf ncdu fbterm nbd postgresql92 elinks
 	    dmenu2 slmenu libreoffice nmap pmount clisp fbida espeak
 	    wineUnstable emacs qemu p7zip rxvt_unicode edk2 OVMF keynav
-	    gparted parted glpk ccl file gfortran tesseract
+	    gparted parted glpk ccl file gfortran tesseract zbar nox
 	    ];
   };
 

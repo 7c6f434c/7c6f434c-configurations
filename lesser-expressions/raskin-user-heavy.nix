@@ -23,6 +23,6 @@ linkFarm "raskin-heavy-packages" ([
     path = (fullEnv "main-heavy-package-set"
       [
         libreoffice gimp ghostscript asymptote qemu chromium love imagemagick7
-        midori
+        midori vue
       ]);}
 ])

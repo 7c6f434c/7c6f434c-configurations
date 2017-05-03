@@ -19,6 +19,7 @@ linkFarm "raskin-packages" ([
           [clsql ironclad md5]) ++ (with lispPackages; [esrap-peg]);
       });
     }
+    {name = "gnome_themes_standard"; path = gnome3.gnome_themes_standard;}
 		{name="clx-truetype"; path=lispPackages.clx-truetype;}
 		{name="clx-xkeyboard"; path=lispPackages.clx-xkeyboard;}
 		{name="clwrapper"; path=lispPackages.clwrapper;}
@@ -28,7 +29,7 @@ linkFarm "raskin-packages" ([
 		]
 		++ 
 		(map justUse [
-		"gsettings_desktop_schemas"
+		"gsettings_desktop_schemas" "gtk3"
 		"fuse" "mysql" "openssl" "opencv" "postgresql" "sqlite"
 		"icedtea_web" "love_0_10" "love_0_9" "libpulseaudio"
 		])
