@@ -23,6 +23,7 @@ linkFarm "raskin-packages" ([
 		{name="clx-truetype"; path=lispPackages.clx-truetype;}
 		{name="clx-xkeyboard"; path=lispPackages.clx-xkeyboard;}
 		{name="clwrapper"; path=lispPackages.clwrapper;}
+		{name="python-mozilla-marionette"; path=pythonPackages.marionette-harness;}
 		{name="bordeaux-threads"; path=lispPackages.bordeaux-threads;}
     {name="gimp-resynthesizer"; path=gimpPlugins.resynthesizer;}
     {name="gimp-resynthesizer2"; path=gimpPlugins.resynthesizer2;}
