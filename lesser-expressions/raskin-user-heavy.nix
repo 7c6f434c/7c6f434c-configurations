@@ -24,6 +24,6 @@ linkFarm "raskin-heavy-packages" ([
       [
         libreoffice gimp ghostscript asymptote qemu chromium love imagemagick7
         midori vue gqview geeqie subversion espeak fossil mercurial djview
-        gnuplot mozlz4a lz4 maxima valgrind
+        gnuplot mozlz4a lz4 maxima valgrind pdftk
       ]);}
 ])
