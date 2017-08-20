@@ -107,7 +107,7 @@ rec {
   '';
   networking.firewall.enable = false;
 
-  hardware.enableAllFirmware = true;
+  hardware.enableRedistributableFirmware = true;
   #hardware.firmware = ["/var/lib/firmware"];
 
   environment = {

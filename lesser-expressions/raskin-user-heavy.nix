@@ -24,8 +24,8 @@ linkFarm "raskin-heavy-packages" ([
       [
         libreoffice gimp ghostscript asymptote qemu chromium love imagemagick7
         midori vue gqview geeqie subversion espeak fossil mercurial djview
-        gnuplot mozlz4a lz4 maxima valgrind pdftk /*lilypond*/ timidity OVMF
+        gnuplot mozlz4a lz4 maxima valgrind pdftk lilypond timidity OVMF
         gptfdisk dmidecode inkscape x11vnc tightvnc xdummy tcpdump wireshark
-        testdisk fdupes ntfs3g julia_05
+        testdisk fdupes ntfs3g julia_05 lazarus wineStaging
       ]);}
 ])
