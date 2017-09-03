@@ -21,7 +21,8 @@ linkFarm "raskin-packages" ([
     }
     {name = "gnome_themes_standard"; path = gnome3.gnome_themes_standard;}
 		{name="clx-truetype"; path=lispPackages.clx-truetype;}
-		{name="clx-xkeyboard"; path=lispPackages.clx-xkeyboard;}
+		{name="xkeyboard"; path=lispPackages.xkeyboard;}
+		{name="clx-xkeyboard"; path=lispPackages.xkeyboard;}
 		{name="clwrapper"; path=lispPackages.clwrapper;}
 		{name="python-mozilla-marionette"; path=pythonPackages.marionette-harness;}
 		{name="ipython"; path=pythonPackages.ipython;}
