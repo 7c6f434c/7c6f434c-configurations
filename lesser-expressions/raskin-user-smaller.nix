@@ -13,10 +13,10 @@ linkFarm "raskin-packages" ([
 		{name="mime"; path=shared_mime_info;}
     { name="query-fs"; 
       path = lib.overrideDerivation lispPackages.query-fs (x: {
-        linkedSystems = x.linkedSystems ++ ["clsql" "clsql-postgresql"
+        linkedSystems = x.linkedSystems ++ ["clsql" "clsql-postgresql" "clsql-sqlite3"
           "ironclad" "esrap-peg" "md5" "sb-bsd-sockets"]; 
         nativeBuildInputs = x.nativeBuildInputs ++ (with lispPackages; 
-          [clsql ironclad md5 clsql-postgresql]) ++ (with lispPackages; [esrap-peg]);
+          [clsql ironclad md5 clsql-postgresql clsql-sqlite3]) ++ (with lispPackages; [esrap-peg]);
       });
     }
     {name = "gnome_themes_standard"; path = gnome3.gnome_themes_standard;}
