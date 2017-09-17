@@ -82,7 +82,7 @@ rec {
 		  work_mem = 16MB
 		  shared_buffers = 1GB
 		  '';
-	  package = pkgs.postgresql92;
+	  package = pkgs.postgresql95;
   };
 
   services.nix-serve = {
@@ -122,7 +122,7 @@ rec {
 	    gnumake wget /*sysdig*/ asymptote smbnetfs imagemagick7Big 
 	    quirc mono xvfb_run xorg.xauth xorg.xwininfo xorg.xkill
 	    xdotool x11vnc lynx inotifyTools ghostscript firefox 
-	    ratpoison evince xpdf ncdu fbterm nbd postgresql92 elinks
+	    ratpoison evince xpdf ncdu fbterm nbd postgresql95 elinks
 	    dmenu2 slmenu libreoffice nmap pmount clisp fbida espeak
 	    wineUnstable emacs qemu p7zip rxvt_unicode edk2 OVMF keynav
 	    gparted parted glpk ccl file gfortran tesseract zbar nox
