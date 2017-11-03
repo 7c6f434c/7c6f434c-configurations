@@ -27,6 +27,6 @@ linkFarm "raskin-heavy-packages" ([
         gnuplot mozlz4a lz4 maxima valgrind pdftk lilypond timidity OVMF
         gptfdisk dmidecode inkscape x11vnc tightvnc xdummy tcpdump wireshark
         testdisk fdupes ntfs3g julia lazarus wineUnstable icewm youtube-dl
-        clasp-common-lisp vlc sshfs dmtx
+        clasp-common-lisp vlc sshfs dmtx glxinfo xorg.xdpyinfo xorg.xdriinfo
       ]);}
 ])
