@@ -63,6 +63,7 @@ rec {
   services.xserver = {
     enable = true;
     autorun = false;
+    plainX = true;
     enableTCP = true;
     virtualScreen = {x=3520; y=2200;};
     layout = "us,ru,gr";			
