@@ -17,7 +17,7 @@ in
 pkgs.texlive.combine {
   inherit(pkgs.texlive)
     scheme-medium collection-langcyrillic collection-genericrecommended
-    cm-super cm-unicode xcolor pgf beamer moderncv tipa disser 
+    cm-super cm-unicode xcolor pgf beamer moderncv tipa disser wrapfig 
     moderntimeline texinfo metafont multibib collection-fontutils
     epstopdf epspdfconversion epspdf algorithm2e relsize type1cm
     ucs todonotes xargs forloop pbox varwidth bigfoot environ trimspaces

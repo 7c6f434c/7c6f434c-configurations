@@ -19,7 +19,7 @@ rec {
     /*boot.kernelPackages.sysdig*/
     (pkgs.runCommand "firmware-rtl8821ae" {} ''
       mkdir -p "$out/lib/firmware/rtlwifi"
-      cp "${pkgs.firmwareLinuxNonfree}/lib/firmware/rtlwifi/rtl8821aefw.bin" "$out/lib/firmware/rtlwifi/"
+      cp "${pkgs.rtlwifi_new-firmware}/lib/firmware/rtlwifi/rtl8821aefw.bin" "$out/lib/firmware/rtlwifi/"
     '')
     ];
 
@@ -63,7 +63,6 @@ rec {
   services.xserver = {
     enable = true;
     autorun = false;
-    plainX = true;
     enableTCP = true;
     virtualScreen = {x=3520; y=2200;};
     layout = "us,ru,gr";			
@@ -89,7 +88,7 @@ rec {
   services.nix-serve = {
     enable = true;
     port = 32062;
-    secretKeyFile = "/nix/var/nix/keys/nix-serve-key";
+    secretKeyFile = "/nix/var/nmx/keys/nix-serve-key";
   };
 
   services.logind = {
@@ -108,8 +107,8 @@ rec {
   '';
   networking.firewall.enable = false;
 
-  hardware.enableRedistributableFirmware = true;
-  #hardware.firmware = ["/var/lib/firmware"];
+  #hardware.enableRedistributableFirmware = true;
+  hardware.firmware = [ pkgs.rtlwifi_new-firmware ];
 
   environment = {
     pathsToLink = ["/"];
@@ -127,6 +126,8 @@ rec {
 	    dmenu2 slmenu libreoffice nmap pmount clisp fbida espeak
 	    wineUnstable emacs qemu p7zip rxvt_unicode edk2 OVMF keynav
 	    gparted parted glpk ccl file gfortran tesseract zbar nox
+            xorg.xmodmap lispPackages.uiop lispPackages.stumpwm zathura
+            evince compton rofi mcabber expect
 	    ];
   };
 
@@ -192,5 +193,12 @@ halt ALL= NOPASSWD: /var/run/current-system/sw/sbin/halt
     wrappers.fbterm.source ="${pkgs.fbterm}/bin/fbterm";
     wrappers.pmount.source ="${pkgs.pmount}/bin/pmount";
     wrappers.pumount.source="${pkgs.pmount}/bin/pumount";
+  };
+  fonts = {
+          enableDefaultFonts = true;
+          fontconfig = {
+                  enable = true;
+                  hinting.autohint = true;
+          };
   };
 }

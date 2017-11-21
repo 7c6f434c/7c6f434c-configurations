@@ -47,6 +47,8 @@ rec {
     ${pkgs.eudev}/bin/udevadm hwdb -u -r "$out"
   '';
 
+  inherit modprobeConfig;
+
   modprobeConf = pkgs.writeText "modprobe.conf" (''
     blacklist evbug
   '' + modprobeConfig);
@@ -57,7 +59,7 @@ rec {
       (with pkgs; [
         (lowPrio busybox)
         kmod bashInteractive lvm2 cryptsetup coreutils
-        gnugrep gnused eudev strace utillinux
+        gnugrep gnused eudev strace utillinux e2fsprogs
       ])
       ++ (maybeCall tools pkgs);
     ignoreCollisions = true;
@@ -111,8 +113,8 @@ rec {
 
     mkdir /new-root
 
-    export targetSystem="$(cat /proc/cmdline | tr ' ' '\n' | grep '^targetSystem=' | sed -e 's/^targetSystem=//')"
-    export targetInit="$(cat /proc/cmdline | tr ' ' '\n' | grep '^init=' | sed -e 's/^init=//')"
+    test -z "$targetSystem" && export targetSystem="$(cat /proc/cmdline | tr ' ' '\n' | grep '^targetSystem=' | sed -e 's/^targetSystem=//')"
+    test -z "$targetInit" && export targetInit="$(cat /proc/cmdline | tr ' ' '\n' | grep '^init=' | sed -e 's/^init=//')"
     test -z "$targetInit" && targetInit="$targetSystem/bin/init"
 
     cat /proc/cmdline | tr ' ' '\n' | grep 'debug_premount=1' && sh -i
@@ -137,6 +139,9 @@ rec {
     mount --move /sys ./sys
     mount --move /dev ./dev
     mount --move /run ./run
+
+    mount -o bind,ro ./nix/store ./nix/store
+    mount -o bind,remount,ro ./nix/store ./nix/store
 
     echo "Ready for switch_root"
 
