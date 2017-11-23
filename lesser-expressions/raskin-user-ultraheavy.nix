@@ -18,9 +18,9 @@ fullEnv = name: packages:
     };
 in with pkgs;
 
-linkFarm "raskin-heavy-packages" ([
-  { name = "main-heavy-package-set";
-    path = (fullEnv "main-heavy-package-set"
+linkFarm "raskin-ultraheavy-packages" ([
+  { name = "main-ultraheavy-package-set";
+    path = (fullEnv "main-ultraheavy-package-set"
       [
         libreoffice chromium midori clasp-common-lisp
       ]);}
