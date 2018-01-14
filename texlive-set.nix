@@ -16,12 +16,14 @@ in
 
 pkgs.texlive.combine {
   inherit(pkgs.texlive)
-    scheme-medium collection-langcyrillic collection-genericrecommended
-    cm-super cm-unicode xcolor pgf beamer moderncv tipa disser wrapfig 
+    scheme-medium collection-langcyrillic 
+    cm-super cm-unicode xcolor pgf beamer moderncv tipa disser urlbst
     moderntimeline texinfo metafont multibib collection-fontutils
-    epstopdf epspdfconversion epspdf algorithm2e relsize type1cm
+    epstopdf epspdfconversion epspdf algorithm2e relsize type1cm logreq
     ucs todonotes xargs forloop pbox varwidth bigfoot environ trimspaces
     forest arydshln pgfopts elocalloc libertine mweights fontaxes
     totpages comment soul multirow threeparttable lastpage preprint
+    mnsymbol paralist animate media9 ocgx2 breakcites biblatex bibtex
+    xstring wrapfig ifoddpage inlinedef
     ;
 }
