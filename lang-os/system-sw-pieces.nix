@@ -1,0 +1,18 @@
+{
+  pkgs ? import <nixpkgs> {}
+}:
+{
+  corePackages = with pkgs; [
+    coreutils utillinux grub2_efi bashInteractive nix shadow
+    iproute openssh curl procps gnugrep gnused gptfdisk
+    cpio dhcp less nettools iw wpa_supplicant findutils
+    parted gzip bzip2 xz e2fsprogs dosfstools glibc gnutar 
+    psmisc pam kbd lynx fuse fuse3 ncurses acl eudev kmod git
+    strace efibootmgr gcc binutils
+  ];
+  allOutputNames = l: builtins.attrNames
+      (pkgs.lib.fold
+        (a: b: b //
+          (builtins.listToAttrs (map (x: {name = x; value = x;}) a.outputs or ["out"])))
+        {} l);
+}
