@@ -38,7 +38,8 @@ pkgs.runCommand "system-bin" {} ''
   script assemble-grub-config 'export grub_print_header="$basedir/grub-print-header"' '"${./assemble-grub-config.sh}" "$@"'
   script install-efi-grub 'target="''${1:-/boot}"; shift' \
     '"${grub_efi}/bin/grub-install" --efi-directory="$target" --target=x86_64-efi "$@"' \
-    'cp "$target/EFI/grub/grubx64.efi" "$target/EFI/BootX64.EFI"' 
+    'mkdir -p "$target/EFI/Boot"' \
+    'cp "$target/EFI/grub/grubx64.efi" "$target/EFI/Boot/BootX64.EFI"' 
 
   script modprobe 'export PATH="${pkgs.coreutils}/bin:${pkgs.kmod}/bin"' \
     'export targetSystem' \
@@ -61,7 +62,8 @@ pkgs.runCommand "system-bin" {} ''
     "${customSetup}" "$targetSystem"
 
     ln -sfT /var/current-system/ /run/current-system
-    ln -sfT "$targetSystem" /var/current-system
+    ln -sfT "$targetSystem" /var/current-system-new
+    mv -fT /var/current-system-new /var/current-system
   '
   script init '
     "$targetSystem"/bin/setup

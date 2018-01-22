@@ -15,4 +15,8 @@
         (a: b: b //
           (builtins.listToAttrs (map (x: {name = x; value = x;}) a.outputs or ["out"])))
         {} l);
+  cProgram = name: cfile: buildInputs: flags: pkgs.runCommandCC name { inherit buildInputs; } ''
+    mkdir -p "$out/bin"
+    cc "${cfile}" ${builtins.toString flags} -o "$out/bin/${name}"
+  '';
 }

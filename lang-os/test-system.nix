@@ -16,33 +16,30 @@ rec {
 
   swPieces = import ./system-sw-pieces.nix { inherit pkgs; };
   
-  lispServerHelpers = with pkgs.lispPackages; buildLispPackage {
-    inherit (pkgs) stdenv;
-    inherit clwrapper;
-    baseName = "server-helpers";
-    buildSystems = ["server-helpers"];
+  lispServerHelpers = import ./lisp-server-helpers.nix {
+    inherit pkgs;
     src = "" + ./lisp-server-helpers;
-    description = "Local library for Common Lisp system server";
-    deps = [iolib iterate local-time cl-ppcre bordeaux-threads];
-    overrides = x: {
-      postInstall = ''
-        NIX_LISP_PRELAUNCH_HOOK='nix_lisp_run_single_form "(asdf:perform (quote asdf:monolithic-compile-bundle-op) :server-helpers)"' "$out"/bin/*-lisp-launcher.sh ""
-      '';
-    };
+    deps = with pkgs.lispPackages; [
+      iolib iterate local-time cl-ppcre bordeaux-threads alexandria
+    ];
   };
 
-  systemParts = {
-    bin = import ./system-bin.nix {
-      initScript = ''
-        ${import ./system-lisp.nix { 
+  systemLisp = import ./system-lisp.nix { 
           deps = with pkgs.lispPackages; [
             lispServerHelpers
           ];
           code = ''(defvar *server-helpers-package* "${lispServerHelpers}") (load "${./system-lisp.lisp}")'';
-        }} &
-        ${import ./system-gerbil.nix { 
+        };
+
+  systemGerbil = import ./system-gerbil.nix { 
           deps = [];
-        }} &
+        };
+
+  systemParts = {
+    bin = import ./system-bin.nix {
+      initScript = ''
+        ${systemLisp} &
+        ${systemGerbil} &
         while true; do /bin/sh -i; done
       '';
     };
@@ -57,6 +54,9 @@ rec {
       name = "system-path";
       paths = swPieces.corePackages ++ (with pkgs; [
         vim monotone screen
+        (swPieces.cProgram "vtlock" ./c/vtlock.c [] [])
+        (swPieces.cProgram "file-lock" ./c/file-lock.c [] [])
+        (swPieces.cProgram "pty" ./c/pty.c [] [])
       ]) ++ (with stage1; [firmwareSet] ++ _kernelModulePackages);
       extraOutputsToInstall = swPieces.allOutputNames paths;
       ignoreCollisions = true;
