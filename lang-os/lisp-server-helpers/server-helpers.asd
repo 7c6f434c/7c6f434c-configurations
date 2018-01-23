@@ -10,5 +10,7 @@
    (:file "vt" :depends-on ("shell" "file-locks"))
    (:file "references")
    (:file "fbterm-requests" :depends-on ("vt" "file-locks"))
+   (:file "safe-read")
+   (:file "auth-data" :depends-on ("shell"))
    )
   )

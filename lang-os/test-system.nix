@@ -56,7 +56,7 @@ rec {
         vim monotone screen
         (swPieces.cProgram "vtlock" ./c/vtlock.c [] [])
         (swPieces.cProgram "file-lock" ./c/file-lock.c [] [])
-        (swPieces.cProgram "pty" ./c/pty.c [] [])
+        (swPieces.cProgram "in-pty" ./c/in-pty.c [] [])
       ]) ++ (with stage1; [firmwareSet] ++ _kernelModulePackages);
       extraOutputsToInstall = swPieces.allOutputNames paths;
       ignoreCollisions = true;
