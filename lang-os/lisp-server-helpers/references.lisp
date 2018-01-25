@@ -1,6 +1,6 @@
 (defpackage :references
   (:use :common-lisp)
-  (:export #:with-references))
+  (:export #:with-references #:with-reference))
 
 (in-package :references)
 

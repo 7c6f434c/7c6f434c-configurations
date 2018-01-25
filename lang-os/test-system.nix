@@ -21,6 +21,7 @@ rec {
     src = "" + ./lisp-server-helpers;
     deps = with pkgs.lispPackages; [
       iolib iterate local-time cl-ppcre bordeaux-threads alexandria
+      clsql clsql-sqlite3
     ];
   };
 

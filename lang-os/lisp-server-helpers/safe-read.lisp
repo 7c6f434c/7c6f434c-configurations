@@ -1,6 +1,8 @@
 (defpackage :safe-read
   (:use :common-lisp)
-  (:export :safe-read))
+  (:export
+    #:safe-read
+    #:check-safety))
 (in-package :safe-read)
 
 (define-condition unacceptable-symbol (simple-error)
