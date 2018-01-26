@@ -58,6 +58,7 @@ rec {
         (swPieces.cProgram "vtlock" ./c/vtlock.c [] [])
         (swPieces.cProgram "file-lock" ./c/file-lock.c [] [])
         (swPieces.cProgram "in-pty" ./c/in-pty.c [] [])
+        (swPieces.cProgram "numeric-su" ./c/numeric-su.c [] [])
       ]) ++ (with stage1; [firmwareSet] ++ _kernelModulePackages);
       extraOutputsToInstall = swPieces.allOutputNames paths;
       ignoreCollisions = true;

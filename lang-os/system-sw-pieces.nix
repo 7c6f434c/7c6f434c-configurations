@@ -17,6 +17,6 @@
         {} l);
   cProgram = name: cfile: buildInputs: flags: pkgs.runCommandCC name { inherit buildInputs; } ''
     mkdir -p "$out/bin"
-    cc "${cfile}" ${builtins.toString flags} -o "$out/bin/${name}"
+    cc "${cfile}" ${builtins.toString flags} -o "$out/bin/${name}" -Wall -Werror -Wpedantic
   '';
 }

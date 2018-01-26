@@ -1,6 +1,11 @@
 (defpackage :socket-command-server
-  (:use :common-lisp :references :safe-read)
+  (:use :common-lisp :references :safe-read :auth-data :fbterm-requests)
   (:export
+    #:eval-socket-runner
+    #:require-presence
+    #:require-uid
+    #:require-root
+    #:require-password
     ))
 (in-package :socket-command-server)
 
@@ -31,6 +36,102 @@
   (context &optional (reply "failed")) context (error reply))
 (defun socket-command-server-commands::finish
   (context) (funcall context :continue nil) nil)
+
+(defun socket-command-server-commands::request-uid-auth (context user)
+  (flet ((context (&rest args) (apply context args)))
+    (context :uid-auth-claimed-user user)
+    (context :uid-auth-challenge (create-file-challenge :users (list user)))
+    (context :uid-auth-challenge)))
+(defun socket-command-server-commands::with-uid-auth
+  (context answer form)
+  (flet
+    ((context (&rest args) (apply context args)))
+    (assert (verify-file-challenge (context :uid-auth-challenge) answer))
+    (context :uid-auth-verified-user (context :uid-auth-claimed-user))
+    (eval-command-form form context)))
+(defun socket-command-server-commands::with-presence-auth
+  (context prompt form timeout)
+  (flet
+    ((context (&rest args) (apply context args)))
+    (assert
+      (fbterm-request
+        (format
+          nil "Peer ~s wants to use a privileged invocation:~%~s~%It says:~%~s~%"
+          (context :peer) form prompt)
+        :timeout timeout))
+    (context :presence-auth-confirmed :weak)
+    (eval-command-form form context)
+    (context :presence-auth-confirmed nil)))
+(defun socket-command-server-commands::with-strong-presence-auth
+  (context prompt form timeout)
+  (flet
+    ((context (&rest args) (apply context args)))
+    (assert
+      (fbterm-request
+        (format
+          nil "Peer ~s wants to use a privileged invocation:~%~s~%It says:~%~s~%"
+          (context :peer) form prompt)
+        :pre-prompt
+        (format
+          nil "Peer ~s wants to use a privileged invocation:~%~s~%It says:~%~s~%Press Enter to allow"
+          (context :peer) form prompt)
+        :timeout timeout))
+    (context :presence-auth-confirmed :strong)
+    (eval-command-form form context)
+    (context :presence-auth-confirmed nil)))
+(defun socket-command-server-commands::with-password-auth
+  (context prompt form user timeout)
+  (flet
+    ((context (&rest args) (apply context args)))
+    (assert
+      (check-password
+        user
+        (fbterm-request
+          (format
+            nil "Peer ~s asks the ~s password for a privileged invocation:~%~s~%It says:~%~s~%"
+            (context :peer) user form prompt)
+          :pre-prompt
+          (format
+            nil "Peer ~s asks the ~s password for a privileged invocation:~%~s~%It says:~%~s~%"
+            (context :peer) user form prompt)
+          :timeout timeout :hide-entry t)))
+    (context :presence-auth-confirmed :strong)
+    (context :password-auth-user user)
+    (eval-command-form form context)
+    (context :password-auth-user nil)
+    (context :presence-auth-confirmed nil)
+    ))
+
+(defun socket-command-server-commands::request-string
+  (context prompt timeout)
+  (let
+    ((res 
+       (fbterm-request
+         (format
+           nil "Peer ~s asks to answer a question.~%It says:~%~s~%"
+           (funcall context :peer) prompt)
+         :pre-prompt
+         (format
+           nil "Peer ~s asks to answer a question.~%It says:~%~s~%"
+           (funcall context :peer) prompt)
+         :timeout timeout :hide-entry nil)))
+    (assert res)
+    res))
+(defun socket-command-server-commands::request-secret
+  (context prompt timeout)
+  (let
+    ((res 
+       (fbterm-request
+         (format
+           nil "Peer ~s asks to enter a secret.~%It says:~%~s~%"
+           (funcall context :peer) prompt)
+         :pre-prompt
+         (format
+           nil "Peer ~s asks to enter a secret.~%It says:~%~s~%"
+           (funcall context :peer) prompt)
+         :timeout timeout :hide-entry t)))
+    (assert res)
+    res))
 
 (defun eval-socket-connection-handler (stream peer)
   (with-reference 
@@ -80,3 +181,68 @@
                   (close accepted-socket)))
               :name (format nil "Connection handler for ~a" peer)))))
       (close socket))))
+
+(defun require-presence (context)
+  (assert
+    (or (funcall context :presence-auth-confirmed)
+        (funcall context :password-auth-user))))
+
+(defun require-uid (context user)
+  (assert
+    (or (equal user (funcall context :uid-auth-verified-user))
+        (equal user (funcall context :password-auth-user)))))
+
+(defun require-root (context)
+  (require-uid context "root"))
+
+(defun require-password (context user)
+  (assert (equal user (funcall context :password-auth-user))))
+
+(defun socket-command-server-commands::close-received-fds (context)
+  (loop
+    for fd in
+    (funcall context :fd-socket-received-fs)
+    do (ignore-errors (iolib/syscalls:close fd)))
+  (funcall context :fd-socket-fd-plist)
+  (funcall context :fd-socket-received-fs nil))
+(defun socket-command-server-commands::fd-socket (context)
+  (or
+    (funcall context :fd-socket)
+    (let*
+      ((key (format nil "~36r" (random (expt 36 20))))
+       (socket-address (concatenate 'string (string #\Null) key)))
+      (funcall
+        context :fd-socket
+        (iolib:make-socket
+          :connect :passive :address-family :local :type :datagram
+          :local-filename socket-address))
+      (socket-command-server-commands::close-received-fds context)
+      key)))
+(defun socket-command-server-commands::receive-fd (context tag)
+  (let*
+    ((fd (iolib/sockets:receive-file-descriptor
+           (funcall context :fd-socket))))
+    (funcall context :fd-socket-received-fs
+             (cons fd (funcall context :fd-socket-received-fs)))
+    (funcall context :fd-socket-fd-plist
+             (append
+               (list (intern (string-upcase tag) :keyword) fd)
+               (funcall context :fd-socket-fd-plist)))
+    fd))
+
+(defun socket-command-server-commands::set-brightness (context n)
+  (unless (ignore-errors (require-root context) t)
+    (require-presence context))
+  (let*
+    ((f
+       (loop
+         for name in
+         (list "intel_backlight" "acpi_backlight" "acpi_backlight0" "nv_backlight" "radeon_backlight")
+         for file := (format nil "/sys/class/backlight/~a/brightness" name)
+         when (probe-file file) return file
+         finally (return (first (directory "/sys/class/backlight/*/brightness"))))))
+    (alexandria:write-string-into-file (format nil "~a" n) f)))
+(defun socket-command-server-commands::system-shutdown (context)
+  (unless (ignore-errors (require-root context) t)
+    (require-presence context))
+  (uiop:run-program (list "kill" "-USR1" "1")))

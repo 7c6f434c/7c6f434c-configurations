@@ -4,7 +4,9 @@
     #:*global-sqlite-location*
     #:with-global-sqlite
     #:simple-global-value
+    #:simple-global-value-id
     #:complex-global-value
+    #:complex-global-value-by-id
     ))
 (in-package :global-sqlite)
 
@@ -53,7 +55,7 @@
       name
       (cons
         (list (clsql:sql-expression :attribute :id)
-              (clsql:sql-expression :type :serial))
+              (clsql:sql-expression :type (clsql:sql-expression :string "INTEGER PRIMARY KEY AUTOINCREMENT")))
         fields))
     t))
 
@@ -118,7 +120,20 @@
           (clsql:sql-expression :attribute :key)
           name)))))
 
-(defun complex-global-value (kind name fields types &optional new-values)
+(defun simple-global-value-id (name)
+  (caar
+    (clsql:select
+      (clsql:sql-expression :attribute :id)
+      :from
+      (clsql:sql-expression :table :simple-values)
+      :where
+      (clsql:sql-operation 
+        '=
+        (clsql:sql-expression :attribute :key)
+        name))))
+
+(defun complex-global-value
+  (kind name fields types &optional new-values no-update)
   (ensure-table 
     kind
     (cons
@@ -168,15 +183,16 @@
              ))))
       (if new-values
         (if old-values
-          (clsql:update-records
-            (clsql:sql-expression :table kind)
-            :where
-            (clsql:sql-operation '= (clsql:sql-expression :attribute :key) name)
-            :attributes
-            (loop
-              for f in fields 
-              collect (clsql:sql-expression :attribute f))
-            :values new-values)
+          (unless no-update
+            (clsql:update-records
+              (clsql:sql-expression :table kind)
+              :where
+              (clsql:sql-operation '= (clsql:sql-expression :attribute :key) name)
+              :attributes
+              (loop
+                for f in fields 
+                collect (clsql:sql-expression :attribute f))
+              :values new-values))
           (clsql:insert-records
             :into (clsql:sql-expression :table kind)
             :attributes
@@ -187,3 +203,17 @@
                 collect (clsql:sql-expression :attribute f)))
             :values (cons name new-values)))
         (car old-values)))))
+
+(defun complex-global-value-by-id (kind id fields)
+  (apply
+    'clsql:select
+    (append
+      (loop
+        for f in fields 
+        collect (clsql:sql-expression :attribute f))
+      (list :from (clsql:sql-expression :table kind)
+            :where
+            (clsql:sql-operation
+              '=
+              (clsql:sql-expression :attribute :id)
+              id)))))

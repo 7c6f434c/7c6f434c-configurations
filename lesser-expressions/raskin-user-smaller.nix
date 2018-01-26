@@ -35,7 +35,7 @@ linkFarm "raskin-packages" ([
 		"gsettings_desktop_schemas" "gtk3"
 		"fuse" "mysql" "openssl" "opencv" "postgresql" "sqlite"
 		"icedtea_web" "love_0_10" "love_0_9" "libpulseaudio"
-                "xfig" "transfig" "wgetpaste" "gdmap"
+                "xfig" "transfig" "wgetpaste" "gdmap" "netcat"
 		])
     ++
     (map (justUseMult "out") [

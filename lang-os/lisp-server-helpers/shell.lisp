@@ -6,6 +6,8 @@
     #:run-program-return-success
     #:which
     #:program-output-lines
+    #:*line-break-regexpr*
+    #:add-command-env
     ))
 
 (in-package :shell)
@@ -35,6 +37,13 @@
     (list "which" cmd)
     :output '(:string :stripped t)))
 
+(defparameter *line-break-regexpr*
+  (format nil "(~a|~a|~a~a|~a~a)"
+          #\Return
+          #\Newline
+          #\Return #\Newline
+          #\Newline #\Return))
+
 (defun program-output-lines (command &key
                                      ignore-error-status
                                      input-string input-file input-stdin)
@@ -53,6 +62,28 @@
     stderr
     (values
       (cl-ppcre:split
-        (format nil "(~a|~a|~a~a|~a~a)" #\Return #\Newline #\Return #\Newline #\Newline #\Return)
+        *line-break-regexpr*
         stdout)
       result)))
+
+(defun add-command-env (command env)
+  (let*
+    ((prefix
+       `("env"
+         ,@(loop
+             for e in env
+             for k :=
+             (etypecase e
+               (string e)
+               (list (first e)))
+             for v :=
+             (etypecase e
+               (string (uiop:getenv k))
+               (list (second e)))
+             when (null v) collect "-u"
+             when (null v) collect (escape-for-shell k)
+             when v collect (escape-for-shell (format nil "~a=~a" k v)))
+         "--")))
+    (etypecase command
+      (string `(,@prefix "sh" "-c" ,command))
+      (list `(,@prefix ,@command)))))

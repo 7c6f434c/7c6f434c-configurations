@@ -13,7 +13,7 @@ int main(int argc, char ** argv, char ** envp)
 	int fd, fd2, ptn, bit;
 	char ptname[100];
 	char readbuf[1025], writebuf[1025];
-	size_t readc, writec;
+	size_t readc, forwardc, writec;
 	pid_t readpid,writepid,shellpid;
 	int exitstatus;
 
@@ -29,21 +29,6 @@ int main(int argc, char ** argv, char ** envp)
 	chmod(ptname, 0620);
 	fd2=open(ptname, O_RDWR);
 
-	if (!(readpid=fork())){
-		while(1) {
-			readc=read(0, readbuf, 1024);
-			write(fd, readbuf, readc);
-			if (! readc) close(fd);
-		}
-	}
-
-	if (!(writepid=fork())){
-		while(1) {
-			writec=read(fd, writebuf, 1024);
-			write(1, writebuf, writec);
-		}
-	}
-
 	if (!(shellpid=fork())){
 		dup2(fd2,0);
 		dup2(fd2,1);
@@ -55,10 +40,40 @@ int main(int argc, char ** argv, char ** envp)
 		execvp(argv[1], argv+1);
 	}
 
+	if (!(readpid=fork())){
+                readc = -1;
+                forwardc = -1;
+		while(readc && forwardc) {
+			readc=read(0, readbuf, 1024);
+                        forwardc = write(fd, readbuf, readc);
+		}
+                close(0);
+                close(fd);
+                kill(shellpid,SIGHUP);
+                while(1){}
+	}
+
+	if (!(writepid=fork())){
+                writec = -1;
+                forwardc = -1;
+		while(writec && forwardc) {
+			writec=read(fd, writebuf, 1024);
+			forwardc = write(1, writebuf, writec);
+		}
+                close(fd);
+                close(1);
+                kill(shellpid,SIGPIPE);
+                while(1){}
+	}
+
 	waitpid(shellpid, &exitstatus, 0);
 
 	kill (readpid, SIGTERM);
 	kill (writepid, SIGTERM);
+	kill (readpid, SIGKILL);
+	kill (writepid, SIGKILL);
+	kill (readpid, SIGCONT);
+	kill (writepid, SIGCONT);
 
 	return WEXITSTATUS(exitstatus);
 }

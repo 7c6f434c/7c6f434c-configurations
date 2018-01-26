@@ -113,4 +113,7 @@ pkgs.runCommand "system-bin" {} ''
     'test -d "$target/$targetSystem" || "$targetSystem/bin/push-closures-into-prepared-chroot" "$target" "$targetSystem"' \
     'chroot "$target" "$targetSystem/bin/set-as-current"' \
     'chroot "$target" "$targetSystem/bin/switch"'
+
+  script spawn-getty '"${./spawn-getty.sh}" "$@"'
+  script use-console '"${./use-console.sh}" "$@"'
 ''
