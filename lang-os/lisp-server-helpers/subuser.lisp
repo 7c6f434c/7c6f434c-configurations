@@ -70,7 +70,9 @@
       (assert (equal user owner))
       (uiop:run-program `("pkill" "-u" ,(format nil "~a" uid) "-KILL")))))
 
-(defun run-as-subuser (user uid command)
+(defun run-as-subuser (user uid command &key environment
+                            stdin-fd stdout-fd stderr-fd
+                            pty wait slurp-stdout)
   (assert
     (equal
       user 
@@ -79,5 +81,19 @@
           ()
           (complex-global-value-by-id
             :subusers (- uid *subuser-uid-shift*) `(:owner))))))
-  (uiop:run-program
-    `(,*numeric-su-helper* ,(format nil "~a" uid) "0" ,@command)))
+  (let*
+    ((process
+       (iolib/os:create-process
+         `(,*numeric-su-helper*
+            ,(format nil "~a" uid) "0"
+            ,@(add-command-env command environment))
+         :stdin (or stdin-fd :null)
+         :stdout (or stdout-fd (when slurp-stdout :pipe) :null)
+         :stderr (or stderr-fd :null)
+         :pty pty :current-directory "/" :new-session pty)))
+  (if (or wait slurp-stdout) (iolib/os:process-status process)
+    (bordeaux-threads:make-thread
+      (lambda () (iolib/os:process-status process :wait t))
+      :name "Process reaper"))
+  (when slurp-stdout
+    (iolib/os::slurp-char-stream (iolib/os:process-stdout process)))))

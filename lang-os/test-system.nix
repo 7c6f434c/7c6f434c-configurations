@@ -36,11 +36,18 @@ rec {
           deps = [];
         };
 
+  loopStarter = command: pkgs.writeScript "loop-starter" ''
+          trap : 1 2 3 13 14 15
+          while true; do
+                ${command}
+          done
+  '';
+
   systemParts = {
     bin = import ./system-bin.nix {
       initScript = ''
-        ${systemLisp} &
-        ${systemGerbil} &
+        ${loopStarter "/run/current-system/services/language-daemon/system-lisp"} &
+        ${loopStarter "/run/current-system/services/language-daemon/system-gerbil"} &
         while true; do /bin/sh -i; done
       '';
     };
@@ -59,6 +66,7 @@ rec {
         (swPieces.cProgram "file-lock" ./c/file-lock.c [] [])
         (swPieces.cProgram "in-pty" ./c/in-pty.c [] [])
         (swPieces.cProgram "numeric-su" ./c/numeric-su.c [] [])
+        lispServerHelpers
       ]) ++ (with stage1; [firmwareSet] ++ _kernelModulePackages);
       extraOutputsToInstall = swPieces.allOutputNames paths;
       ignoreCollisions = true;
@@ -72,6 +80,11 @@ rec {
           ${pkgs.eudev}/bin/udevadm trigger --action add
           ${pkgs.eudev}/bin/udevadm settle
         '';
+      "nix-daemon" = pkgs.writeScript "nix-daemon" ''
+        ${pkgs.nix}/bin/nix-daemon
+      '';
+      "language-daemon/system-lisp" = systemLisp;
+      "language-daemon/system-gerbil" = systemGerbil;
     };
   };
   systemInstance = import ./system-instance.nix {

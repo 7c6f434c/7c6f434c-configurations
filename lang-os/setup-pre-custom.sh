@@ -27,6 +27,9 @@ targetSystem="$1";
             mount --bind /nix/store /var/auth/nix/store
             mkdir -p /var/auth/home
             mount --bind /home /var/auth/home
+            mkdir -p /var/auth/run
+            mount --bind /run /var/auth/run
+            ln -sfT /run/current-system/global/bin /var/auth/bin
     }
     ln -sfT "$(readlink -f /etc/pam.d)" /var/auth/etc/pam.d
 
@@ -56,6 +59,9 @@ targetSystem="$1";
 
     ln -sf /var/current-system /nix/var/nix/gcroots/
     ln -sf /var/latest-booted-system /nix/var/nix/gcroots/
+
+    mkdir -p /nix/var/nix/profiles/per-user/
+    chmod a+rwxt /nix/var/nix/profiles/per-user/
 
     "$targetSystem"/bin/modprobe af-packet
     ip link set lo up

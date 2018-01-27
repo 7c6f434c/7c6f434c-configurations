@@ -5,8 +5,6 @@
   , deps ? []
 }:
 pkgs.writeScript "system-lisp-launcher" ''
-  trap : 1 2 3 13 14 15
-  while true; do
     (
       ${
         pkgs.lib.concatMapStrings 
@@ -15,5 +13,4 @@ pkgs.writeScript "system-lisp-launcher" ''
       }
       NIX_LISP_ASDF_LOAD='(require :asdf)' NIX_LISP_PRELAUNCH_HOOK="nix_lisp_run_single_form '(load \"${pkgs.writeText "system-lisp-script.lisp" code}\")'" NIX_LISP_COMMAND="${pkgs.sbcl}/bin/sbcl" NIX_LISP_EARLY_OPTIONS="$NIX_LISP_EARLY_OPTIONS --noinform" ${pkgs.lispPackages.clwrapper}/bin/common-lisp.sh < /dev/null &>/dev/${tty}
     )
-  done
 ''

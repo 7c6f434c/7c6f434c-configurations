@@ -1,8 +1,11 @@
 (asdf:defsystem
   :server-helpers
   :depends-on
-  (:iolib :uiop :iterate :cl-ppcre :bordeaux-threads :local-time alexandria
-          :clsql :clsql-sqlite3)
+  (
+   :iolib :iolib/os
+   :uiop :iterate :cl-ppcre :bordeaux-threads :local-time alexandria
+   :clsql :clsql-sqlite3
+   )
   :serial nil
   :components
   (

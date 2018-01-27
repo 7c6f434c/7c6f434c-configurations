@@ -13,7 +13,7 @@ pkgs.runCommand "setuid-set" {} ''
           ''
             mkdir -p \"$wrapper_dir\"
             cp \"$out/canonical-wrapper\" \"$wrapper_dir/${x.name}\"
-            echo \"${x.src}\" >  \"$wrapper_dir/${x.name}.real\"
+            echo -n \"${x.src}\" >  \"$wrapper_dir/${x.name}.real\"
             chown ${x.owner or "0"}:${x.group or "0"} \"$wrapper_dir/${x.name}\"
             ${pkgs.lib.optionalString x.setuid or false ''chmod u+s \"$wrapper_dir/${x.name}\"''}
             ${pkgs.lib.optionalString x.setgid or false ''chmod g+s \"$wrapper_dir/${x.name}\"''}

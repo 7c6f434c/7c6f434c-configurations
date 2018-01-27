@@ -5,8 +5,6 @@
   , deps ? []
 }:
 pkgs.writeScript "system-gerbil-launcher" ''
-  trap : 1 2 3 13 14 15
-  while true; do
     (
       ${
         pkgs.lib.concatMapStrings 
@@ -15,5 +13,4 @@ pkgs.writeScript "system-gerbil-launcher" ''
       }
       "${pkgs.gerbil}/bin/gxi" -e '(load "${pkgs.writeText "system-gerbil-script.scm" code}")' < /dev/null &>/dev/${tty}
     )
-  done
 ''

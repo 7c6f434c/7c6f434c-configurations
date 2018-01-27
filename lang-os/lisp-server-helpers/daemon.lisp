@@ -4,6 +4,8 @@
     #:file-used
     #:console-used
     #:periodically
+    #:daemon-with-logging
+    #:system-service
     ))
 (in-package :daemon)
 
@@ -78,3 +80,9 @@
       'uiop:run-program "setsid" command
       :output *standard-output* :error-output *error-output*
       :input "/dev/null" options)))
+
+(defun system-service (log service)
+  (daemon-with-logging 
+    log
+    (list
+      (format nil "/run/current-system/services/~a" service))))
