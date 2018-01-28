@@ -34,6 +34,9 @@ rec {
 
   systemGerbil = import ./system-gerbil.nix { 
           deps = [];
+	  code = ''
+             (load "${./system-gerbil.scm}")
+          '';
         };
 
   loopStarter = command: pkgs.writeScript "loop-starter" ''
@@ -48,13 +51,16 @@ rec {
       initScript = ''
         ${loopStarter "/run/current-system/services/language-daemon/system-lisp"} &
         ${loopStarter "/run/current-system/services/language-daemon/system-gerbil"} &
-        while true; do /bin/sh -i; done
+        chvt 2
+      '';
+      setupScript = ''
+        mkdir -p /var/lib/cups /var/lib/ssh /var/empty
       '';
     };
     global = import ./system-global.nix {inherit systemEtc;};
     setuid = import ./system-setuid.nix {
       setuidPrograms = [
-        { name = "su"; src="${pkgs.shadow}/bin/su"; setuid=true; }
+        { name = "su"; src="${pkgs.shadow.su}/bin/su"; setuid=true; }
         { name = "unix_chkpwd"; src="${pkgs.pam}/bin/unix_chkpwd.orig"; setuid=true; }
       ];
     };
@@ -62,6 +68,7 @@ rec {
       name = "system-path";
       paths = swPieces.corePackages ++ (with pkgs; [
         vim monotone screen
+        sbcl gerbil
         (swPieces.cProgram "vtlock" ./c/vtlock.c [] [])
         (swPieces.cProgram "file-lock" ./c/file-lock.c [] [])
         (swPieces.cProgram "in-pty" ./c/in-pty.c [] [])
@@ -106,7 +113,9 @@ rec {
       (etcPieces.timeEtc "UTC")
       (etcPieces.namesEtc "localhost")
       (etcPieces.authEtc {
-        security.pam.services = {};
+        security.pam.services = {
+          sshd = {};
+        };
         environment.sessionVariables = sessionVariables;
       })
       (etcPieces.deeplinkAttrset "etc-udev" 
@@ -132,6 +141,8 @@ rec {
         (fromNixOS.etcSelectPrefix "nix/" {}))
       (etcPieces.deeplinkAttrset "etc-cups"
         {"cups" = "/var/lib/cups";})
+      (etcPieces.deeplinkAttrset "etc-openssh"
+        {"ssh" = "/var/lib/ssh";})
     ];
     pathsToLink = ["/"];
   };

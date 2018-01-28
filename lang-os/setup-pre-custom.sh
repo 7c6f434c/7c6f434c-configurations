@@ -9,13 +9,13 @@ targetSystem="$1";
     for i in passwd group shadow gshadow; do
             test -e /var/auth/etc/$i || cat /etc/$i > /var/auth/etc/$i
     done
-    grep root /var/auth/etc/passwd || {
+    grep root /var/auth/etc/passwd >/dev/null || {
             echo "root:x:0:0:System administrator:/root:/run/current-system/sw/bin/bash" >> /var/auth/etc/passwd
             echo "sshd:x:1:65534:SSH privilege separation user:/var/empty:/run/current-system/sw/bin/nologin" >> /var/auth/etc/passwd
             echo "nobody:x:65534:65534:Unprivileged account:/var/empty:/run/current-system/sw/bin/nologin" >> /var/auth/etc/passwd
             echo "nixbld1:x:30001:30000:Nix build user 1:/var/empty:/run/current-system/sw/bin/nologin" >> /var/auth/etc/passwd
     }
-    grep nixbld /var/auth/etc/group || {
+    grep nixbld /var/auth/etc/group >/dev/null || {
             echo "root:x:0:" >> /var/auth/etc/group
             echo "wheel:x:1:" >> /var/auth/etc/group
             echo "users:x:100:" >> /var/auth/etc/group
@@ -29,6 +29,8 @@ targetSystem="$1";
             mount --bind /home /var/auth/home
             mkdir -p /var/auth/run
             mount --bind /run /var/auth/run
+            mkdir -p /var/auth/var
+            mount --bind /run /var/auth/var
             ln -sfT /run/current-system/global/bin /var/auth/bin
     }
     ln -sfT "$(readlink -f /etc/pam.d)" /var/auth/etc/pam.d
@@ -61,7 +63,8 @@ targetSystem="$1";
     ln -sf /var/latest-booted-system /nix/var/nix/gcroots/
 
     mkdir -p /nix/var/nix/profiles/per-user/
-    chmod a+rwxt /nix/var/nix/profiles/per-user/
+    mkdir -p /nix/var/nix/profiles/per-user/root/channels
+    mkdir -p /nix/var/nix/gcroots/per-user/
 
     "$targetSystem"/bin/modprobe af-packet
     ip link set lo up

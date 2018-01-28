@@ -75,9 +75,9 @@
   (with-logging
     ((format 
        nil "~a/~a"
-       name (cl-ppcre:regex-replace-all "^.*/" command "")))
+       name (cl-ppcre:regex-replace-all "^.*/" (first command) "")))
     (apply 
-      'uiop:run-program "setsid" command
+      'uiop:run-program (cons "setsid" command)
       :output *standard-output* :error-output *error-output*
       :input "/dev/null" options)))
 

@@ -34,8 +34,13 @@
     (uiop:run-program
       (list "env" "NIX_REMOTE=daemon"
             "nix-store" "--check-validity" "/run/current-system/")))
-  (system-service
-    "daemon/nix-daemon" "nix-daemon"))
+  (system-service "daemon/nix-daemon" "nix-daemon"))
+
+(unless
+  (run-program-return-success
+    (uiop:run-program
+      (list "socat" "stdio" "tcp-connect:127.0.0.1:22")))
+  (system-service "daemon/ssh" "from-nixos/openssh"))
 
 (sleep 5)
 

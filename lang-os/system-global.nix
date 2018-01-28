@@ -6,6 +6,6 @@ pkgs.runCommand "system-global" {} ''
   cd "$out"
   ln -s "${systemEtc}" etc
   mkdir -p bin usr/bin
-  ln -s "${pkgs.bashInteractive}/bin/sh" "bin/sh"
+  ln -s "${pkgs.bash}/bin/sh" "bin/sh"
   ln -s "${pkgs.coreutils}/bin/env" "usr/bin/env"
 ''

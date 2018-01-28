@@ -2,8 +2,6 @@
 rec {
   fromNixOS = import ./use-from-nixos.nix {inherit pkgs nixos;};
 
-  pam = import ./pam.nix {inherit pkgs fromNixOS;};
-
   deeplinkAttrset = name: entries: (pkgs.runCommand name {} ''
     mkdir -p "$out"
     cd "$out"
@@ -82,7 +80,7 @@ rec {
       (fromNixOS.etcSelectPrefix "pam.d/" config) //
       shadowAuth.entries //
       (fromNixOS.etcSelectComponents
-        ["login.defs" "profile"] config) //
+        ["login.defs" "profile" "bashrc"] config) //
       {}
   );
 }
