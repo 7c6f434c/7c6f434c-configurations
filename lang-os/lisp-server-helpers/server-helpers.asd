@@ -2,7 +2,7 @@
   :server-helpers
   :depends-on
   (
-   :iolib :iolib/os
+   :iolib :iolib/os :iolib/syscalls
    :uiop :iterate :cl-ppcre :bordeaux-threads :local-time alexandria
    :clsql :clsql-sqlite3
    )
@@ -21,6 +21,7 @@
    (:file "daemon" :depends-on ("shell" "timestamp"))
    (:file "global-sqlite")
    (:file "nix" :depends-on ("shell"))
+   (:file "unix-users")
    (:file "socket-command-server" :depends-on ("safe-read" "references" "auth-data" "fbterm-requests"))
    (:file "subuser" :depends-on ("shell" "timestamp" "global-sqlite"))
    )

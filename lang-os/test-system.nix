@@ -15,7 +15,9 @@ rec {
   };
 
   swPieces = import ./system-sw-pieces.nix { inherit pkgs; };
-  
+ 
+  postgresql-package = pkgs.postgresql95;
+ 
   lispServerHelpers = import ./lisp-server-helpers.nix {
     inherit pkgs;
     src = "" + ./lisp-server-helpers;
@@ -45,6 +47,49 @@ rec {
                 ${command}
           done
   '';
+  
+  NixOSXConfig = {
+             fonts.fonts = [];
+             hardware.opengl.driSupport = true;
+             hardware.opengl.driSupport32Bit = true;
+             hardware.opengl.enable = true;
+             services.xserver = {
+               enableTCP = true;
+               enable = true;
+               exportConfiguration = true;
+               inputClassSections = [
+                   ''
+                     Identifier "Keyboard catchall evdev"
+                     MatchIsKeyboard "on"
+                     Option "XkbRules" "base"
+                     Option "XkbModel" "pc105"
+                     Option "XkbLayout" "us"
+                     Option "XkbOptions" "grp:caps_toggle, grp_led:caps, terminate:ctrl_alt_bksp"
+                     Option "XkbVariant" ""
+                     Driver "evdev"
+                   ''
+                   ''
+                     Identifier "Mouse catchall evdev"
+                     MatchIsPointer "on"
+                     Driver "evdev"
+                   ''
+               ];
+         
+               layout = "us";			
+               xkbOptions = "grp:caps_toggle, grp_led:caps, terminate:ctrl_alt_bksp";
+               enableCtrlAltBackspace = true;
+         
+               libinput = {
+                 enable = true;
+		 scrollMethod = "edge";
+               };
+         
+               deviceSection = ''
+                 Option "DRI" "3"
+               '';
+	     };
+	};
+  NixOSWithX = nixos {configuration = NixOSXConfig;};
 
   systemParts = {
     bin = import ./system-bin.nix {
@@ -54,7 +99,8 @@ rec {
         chvt 2
       '';
       setupScript = ''
-        mkdir -p /var/lib/cups /var/lib/ssh /var/empty
+        targetSystem="$1"
+        mkdir -p /var/lib/cups /var/lib/ssh /var/lib/bind /var/empty
       '';
     };
     global = import ./system-global.nix {inherit systemEtc;};
@@ -67,8 +113,9 @@ rec {
     sw = pkgs.buildEnv rec {
       name = "system-path";
       paths = swPieces.corePackages ++ (with pkgs; [
-        vim monotone screen
+        vim monotone screen rxvt_unicode
         sbcl gerbil
+	postgresql-package
         (swPieces.cProgram "vtlock" ./c/vtlock.c [] [])
         (swPieces.cProgram "file-lock" ./c/file-lock.c [] [])
         (swPieces.cProgram "in-pty" ./c/in-pty.c [] [])
@@ -82,6 +129,44 @@ rec {
     services = etcPieces.deeplinkAttrset "system-services" {
       "from-nixos/openssh" = fromNixOS.serviceScript "sshd"
         {services.openssh.enable = true;};
+      "from-nixos/postgresql" = fromNixOS.serviceScript "postgresql"
+        { services.postgresql.enable = true;
+          services.postgresql.package = postgresql-package; };
+      "from-nixos/cups" = fromNixOS.serviceScript "cups" {
+         services.printing = {
+           enable = true;
+	   gutenprint = true;
+	   drivers = with pkgs; [
+	     foo2zjs foomatic_filters ghostscript cups_filters samba hplip
+	   ];
+         };
+	 systemd.services.cups.serviceConfig.ExecStart = ''
+	     ${pkgs.cups.out}/bin/cupsd -f
+	   '';
+      };
+      "from-nixos/bind" = fromNixOS.serviceScript "bind" {
+        services.bind = {
+	  enable = true;
+	  ipv4Only = false;
+	  cacheNetworks = [
+	    "127.0.0.0/24"
+	    "::1/128"
+	    "localhost"
+	    "192.168.0.0/16"
+	  ];
+	  zones = [];
+	  extraConfig = ''
+	    logging { category default { default_stderr; }; };
+	  '';
+	};
+      };
+      "from-nixos/xorg" = pkgs.writeScript "xorg-start" ''
+	    ln -Tfs "${NixOSWithX.config.hardware.opengl.package or "/"}" /run/opengl-driver
+	    ln -Tfs "${NixOSWithX.config.hardware.opengl.package32 or "/"}" /run/opengl-driver-32
+	    export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/run/opengl-driver/lib:/run/opengl-driver-32/lib"
+
+	    ${pkgs.xorg.xorgserver}/bin/Xorg vt"$((7+''${1:-0}))" :"''${1:-0}" -logfile "/var/log/X.''${1:-0}.log" -config /etc/X11/xorg.conf
+      '';
       "udevd" = pkgs.writeScript "udevd" ''
           ${pkgs.eudev}/bin/udevd &
           ${pkgs.eudev}/bin/udevadm trigger --action add
@@ -143,6 +228,10 @@ rec {
         {"cups" = "/var/lib/cups";})
       (etcPieces.deeplinkAttrset "etc-openssh"
         {"ssh" = "/var/lib/ssh";})
+      (etcPieces.deeplinkAttrset "etc-bind"
+        {"bind" = "/var/lib/bind";})
+      (etcPieces.deeplinkAttrset "etc-xorg"
+        (fromNixOS.etcSelectComponent "X11/xorg.conf" NixOSXConfig))
     ];
     pathsToLink = ["/"];
   };

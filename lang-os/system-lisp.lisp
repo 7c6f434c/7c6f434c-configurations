@@ -3,9 +3,11 @@
     (load (format nil "~a/lib/common-lisp/server-helpers/server-helpers--all-systems.fasl" *server-helpers-package*))))
 
 (use-package :shell)
+(use-package :network)
 (use-package :socket-command-server)
 (use-package :subuser)
 (use-package :daemon)
+(use-package :unix-users)
 
 (format t "Starting the Common Lisp system daemon at ~a~%" (local-time:now))
 
@@ -36,11 +38,38 @@
             "nix-store" "--check-validity" "/run/current-system/")))
   (system-service "daemon/nix-daemon" "nix-daemon"))
 
+(ensure-daemon-user "postgresql")
+(ensure-daemon-user "named")
+(grant-to-user "named" "/var/lib/bind/")
+(grant-to-group "named" "/var/lib/bind/")
+(ensure-daemon-user "cups")
+(ensure-daemon-group "lp")
+(grant-to-user "cups" "/var/lib/cups/")
+(grant-to-group "lp" "/var/lib/cups/")
+
+(unless
+  (port-open-p 22)
+  (system-service "daemon/ssh" "from-nixos/openssh"))
+
 (unless
   (run-program-return-success
     (uiop:run-program
-      (list "socat" "stdio" "tcp-connect:127.0.0.1:22")))
-  (system-service "daemon/ssh" "from-nixos/openssh"))
+      (list "pgrep" "-x" "udevd")))
+  (system-service "daemon/udevd" "udevd"))
+
+(unless
+  (port-open-p 631)
+  (system-service "daemon/cups" "from-nixos/cups"))
+
+(unless
+  (port-open-p 53)
+  (system-service "daemon/bind" "from-nixos/bind"))
+
+(unless
+  (port-open-p 5432)
+  (daemon-with-logging 
+    "daemon/postgresql"
+    (list "su" "postgres" "-s" "/bin/sh" "-c" "env -i /run/current-system/services/from-nixos/postgresql")))
 
 (sleep 5)
 

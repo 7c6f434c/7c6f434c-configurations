@@ -88,7 +88,7 @@ rec {
   services.nix-serve = {
     enable = true;
     port = 32062;
-    secretKeyFile = "/nix/var/nmx/keys/nix-serve-key";
+    secretKeyFile = "/nix/var/nix/keys/nix-serve-key";
   };
 
   services.logind = {

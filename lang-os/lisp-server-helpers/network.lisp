@@ -7,6 +7,7 @@
     #:enable-ip-link
     #:disable-ip-link
     #:run-link-dhclient
+    #:port-open-p
     ))
 (in-package :network)
 
@@ -139,3 +140,9 @@
   (run-program-return-success
     (uiop:run-program
       (list "dhclient" "-1" interface))))
+
+(defun port-open-p (port &key (host "127.0.0.1"))
+  (ignore-errors
+    (iolib/sockets:make-socket
+      :remote-host host :remote-port port)
+    t))
