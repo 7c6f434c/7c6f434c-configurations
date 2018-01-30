@@ -1,13 +1,13 @@
 (with-open-file (*error-output* "/dev/null" :direction :output :if-exists :overwrite)
   (with-open-file (*trace-output* "/dev/null" :direction :output :if-exists :overwrite)
-    (load (format nil "~a/lib/common-lisp/server-helpers/server-helpers--all-systems.fasl" *server-helpers-package*))))
+    (load (format nil "~a/lib/common-lisp/lisp-os-helpers/lisp-os-helpers--all-systems.fasl" *lisp-os-helpers-package*))))
 
-(use-package :shell)
-(use-package :network)
-(use-package :socket-command-server)
-(use-package :subuser)
-(use-package :daemon)
-(use-package :unix-users)
+(use-package :lisp-os-helpers/shell)
+(use-package :lisp-os-helpers/network)
+(use-package :lisp-os-helpers/socket-command-server)
+(use-package :lisp-os-helpers/subuser)
+(use-package :lisp-os-helpers/daemon)
+(use-package :lisp-os-helpers/unix-users)
 
 (format t "Starting the Common Lisp system daemon at ~a~%" (local-time:now))
 
@@ -28,7 +28,7 @@
 (defparameter
   *socket-main-thread*
   (bordeaux-threads:make-thread
-    (lambda () (eval-socket-runner "/run/system-lisp-socket"))
+    (lambda () (eval-socket-runner *system-lisp-socket*))
     :name "System lisp daemon socket command evaluator"))
 
 (unless

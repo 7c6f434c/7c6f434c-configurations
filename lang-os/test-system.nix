@@ -18,20 +18,20 @@ rec {
  
   postgresql-package = pkgs.postgresql95;
  
-  lispServerHelpers = import ./lisp-server-helpers.nix {
+  lispOsHelpers = import ./lisp-os-helpers.nix {
     inherit pkgs;
-    src = "" + ./lisp-server-helpers;
+    src = "" + ./lisp-os-helpers;
     deps = with pkgs.lispPackages; [
-      iolib iterate local-time cl-ppcre bordeaux-threads alexandria
+      iolib iterate local-time cl-ppcre bordeaux-threads alexandria trivial-backtrace
       clsql clsql-sqlite3
     ];
   };
 
   systemLisp = import ./system-lisp.nix { 
           deps = with pkgs.lispPackages; [
-            lispServerHelpers
+            lispOsHelpers
           ];
-          code = ''(defvar *server-helpers-package* "${lispServerHelpers}") (load "${./system-lisp.lisp}")'';
+          code = ''(defvar *lisp-os-helpers-package* "${lispOsHelpers}") (load "${./system-lisp.lisp}")'';
         };
 
   systemGerbil = import ./system-gerbil.nix { 
@@ -113,14 +113,15 @@ rec {
     sw = pkgs.buildEnv rec {
       name = "system-path";
       paths = swPieces.corePackages ++ (with pkgs; [
+        glibcLocales
         vim monotone screen rxvt_unicode
-        sbcl gerbil
+        sbcl lispPackages.clwrapper lispPackages.uiop asdf gerbil
 	postgresql-package
         (swPieces.cProgram "vtlock" ./c/vtlock.c [] [])
         (swPieces.cProgram "file-lock" ./c/file-lock.c [] [])
         (swPieces.cProgram "in-pty" ./c/in-pty.c [] [])
         (swPieces.cProgram "numeric-su" ./c/numeric-su.c [] [])
-        lispServerHelpers
+        lispOsHelpers
       ]) ++ (with stage1; [firmwareSet] ++ _kernelModulePackages);
       extraOutputsToInstall = swPieces.allOutputNames paths;
       ignoreCollisions = true;
