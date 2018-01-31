@@ -8,11 +8,11 @@
 
 (defun read-eval-print ()
   (handler-case (format t "~s~%" (eval (read)))
-    (t (e)
-       (format *error-output* "~%~%~a~%" e)
-       (trivial-backtrace:print-backtrace-to-stream *error-output*)
-       (format *error-output* "~a~%" e))))
+    (error (e)
+	   (format *error-output* "~%~%~a~%" e)
+	   (trivial-backtrace:print-backtrace-to-stream *error-output*)
+	   (format *error-output* "~a~%" e))))
 
-(defun package-rep (package)
-  (use-package package)
+(defun package-rep (&rest packages)
+  (loop for package in packages do (use-package package))
   (read-eval-print))

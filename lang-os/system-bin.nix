@@ -114,6 +114,8 @@ pkgs.runCommand "system-bin" {} ''
     'chroot "$target" "$targetSystem/bin/set-as-current"' \
     'chroot "$target" "$targetSystem/bin/switch"'
 
+  script update-self-from-expression '"$(nix-build --no-out-link -A systemInstance "$@")/bin/switch"'
+
   script spawn-getty '"${./spawn-getty.sh}" "$@"'
   script use-console '"${./use-console.sh}" "$@"'
 ''

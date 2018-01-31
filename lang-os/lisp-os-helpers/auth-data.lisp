@@ -17,15 +17,20 @@
      (command 
        (if (= uid 0)
          (list
-           pty-helper "su" "nobody" "-s" "/bin/sh" "-c"
-           (format nil "su ~a -s /bin/sh -c true" user))
-         (list pty-helper "su" user "-s" "/bin/sh" "-c" "true")))
+           pty-helper "env" "LANG=C" "LC_ALL=C" "su" "nobody" "-s" "/bin/sh" "-c"
+           (format nil "/run/wrappers/bin/su ~a -s /bin/sh -c true" user))
+         (list pty-helper "env" "LANG=C" "LC_ALL=C" "/run/wrappers/bin/su" user "-s" "/bin/sh" "-c" "true")))
      (su-process (uiop:launch-program command :input :stream :output :stream))
      (su-in (uiop:process-info-input su-process))
      (su-out (uiop:process-info-output su-process)))
-    (read-char su-out)
-    (format su-in "~a~%" password)
-    (close su-in)
+    (loop
+      for c := (read-char su-out nil)
+      for s := (string c)
+      then (if (find c '(#\Newline #\Return))
+	     "" (concatenate 'string s (string c)))
+      while (and c (not (equal s "Password:"))))
+    (ignore-errors (format su-in "~a~%" password)
+		   (close su-in))
     (prog1
       (= 0 (uiop:wait-process su-process))
       (close su-out))))

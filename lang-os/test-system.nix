@@ -6,7 +6,7 @@ rec {
     mountScript = ''
       modprobe atkbd
 
-      mount /dev/sda2 /new-root
+      mount /dev/sda3 /new-root
       mount /dev/sda1 /new-root/boot
     '';
     firmwarePackages = pkgs: [];
@@ -119,7 +119,7 @@ rec {
 	postgresql-package
         (swPieces.cProgram "vtlock" ./c/vtlock.c [] [])
         (swPieces.cProgram "file-lock" ./c/file-lock.c [] [])
-        (swPieces.cProgram "in-pty" ./c/in-pty.c [] [])
+        (swPieces.cProgram "in-pty" ./c/in-pty.c [] ["-lutil"])
         (swPieces.cProgram "numeric-su" ./c/numeric-su.c [] [])
         lispOsHelpers
       ]) ++ (with stage1; [firmwareSet] ++ _kernelModulePackages);
@@ -214,7 +214,7 @@ rec {
           "pki/tls/certs/ca-bundle.crt" =  "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
         })
       (etcPieces.deeplinkAttrset "etc-fonts"
-       (fromNixOS.etcSelectPrefix "fonts/" {
+       (fromNixOS.etcSelectComponent "fonts" {
           fonts = {
             enableDefaultFonts = true;
             fontconfig = {

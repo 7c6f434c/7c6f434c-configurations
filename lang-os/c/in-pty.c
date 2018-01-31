@@ -7,73 +7,82 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <signal.h>
+#include <string.h>
+#include <errno.h>
+#include <pty.h>
+#include <stdlib.h>
+
+pid_t readpid=0,writepid=0,shellpid=0;
+
+void sigforward(int sig){
+	if(shellpid){
+		kill(shellpid,sig);
+	}
+}
 
 int main(int argc, char ** argv, char ** envp)
 {
-	int fd, fd2, ptn, bit;
-	char ptname[100];
+	int fd;
 	char readbuf[1025], writebuf[1025];
-	size_t readc, forwardc, writec;
-	pid_t readpid,writepid,shellpid;
+	signed long int readc, forwardc, writec;
 	int exitstatus;
 
-	fd=open("/dev/ptmx", O_RDWR);
-
-	ioctl(fd, TIOCGPTN, &ptn);
-	
-	bit=0;
-	ioctl(fd, TIOCSPTLCK, &bit);
-
-	snprintf(ptname, 99, "/dev/pts/%d", ptn);
-
-	chmod(ptname, 0620);
-	fd2=open(ptname, O_RDWR);
-
-	if (!(shellpid=fork())){
-		dup2(fd2,0);
-		dup2(fd2,1);
-		dup2(fd2,2);
-
-		setpgrp();
-		setsid();
-
+	if(!(shellpid=forkpty(&fd, NULL, NULL, NULL))){
 		execvp(argv[1], argv+1);
 	}
 
 	if (!(readpid=fork())){
-                readc = -1;
-                forwardc = -1;
-		while(readc && forwardc) {
+		readc = 1;
+		forwardc = 1;
+		while(readc>0 && forwardc>0) {
 			readc=read(0, readbuf, 1024);
-                        forwardc = write(fd, readbuf, readc);
+			if(readc>0) {
+				forwardc = write(fd, readbuf, readc);
+			} else {
+				readbuf[0] = '\4';
+				forwardc = write(fd, readbuf, 1);
+			}
 		}
-                close(0);
-                close(fd);
-                kill(shellpid,SIGHUP);
-                while(1){}
+		close(0);
+		close(fd);
+		exit(0);
 	}
 
 	if (!(writepid=fork())){
-                writec = -1;
-                forwardc = -1;
-		while(writec && forwardc) {
+                writec = 1;
+                forwardc = 1;
+		while(writec>=0 && forwardc>0) {
 			writec=read(fd, writebuf, 1024);
-			forwardc = write(1, writebuf, writec);
+			if(writec>0) {
+				do {
+					forwardc = write(1, writebuf, writec);
+				} while(forwardc==-1 && 
+						(errno == EAGAIN ||
+						 errno == EWOULDBLOCK));
+			}else{
+				if(errno == EAGAIN || errno == EWOULDBLOCK){
+					writec = 0;
+				}
+				forwardc = 1;
+			}
+			
 		}
                 close(fd);
                 close(1);
-                kill(shellpid,SIGPIPE);
-                while(1){}
+		exit(0);
 	}
+
+	signal(SIGTERM, &sigforward);
+	signal(SIGINT, &sigforward);
+	signal(SIGQUIT, &sigforward);
+	signal(SIGHUP, &sigforward);
+	signal(SIGPIPE, &sigforward);
 
 	waitpid(shellpid, &exitstatus, 0);
 
-	kill (readpid, SIGTERM);
-	kill (writepid, SIGTERM);
-	kill (readpid, SIGKILL);
-	kill (writepid, SIGKILL);
-	kill (readpid, SIGCONT);
-	kill (writepid, SIGCONT);
+	kill(readpid, SIGTERM);
+	waitpid(readpid, NULL, 0);
+	waitpid(writepid, NULL, 0);
 
 	return WEXITSTATUS(exitstatus);
 }

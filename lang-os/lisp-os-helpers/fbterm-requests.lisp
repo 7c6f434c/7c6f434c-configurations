@@ -53,10 +53,11 @@
            (format
              nil
              "
-             sayintr() { echo interrupt > ~a ; } ; trap sayintr 2;
+             sayintr() { echo interrupt > ~a ; exit 1; } ; trap sayintr 2;
              echo ~a;
-             read -t ~a ~a x || echo fail > ~a;
-             echo \"$x\" >~a
+             IFS= read -r -t ~a ~a x || echo fail > ~a;
+             echo \"$x\" >~a;
+	     true
              "
              (escape-for-shell (namestring failure-path))
              (escape-for-shell prompt)
@@ -66,12 +67,13 @@
              (escape-for-shell (namestring value-path))
              ))
          (run-success
-           (run-fbterm
-             vtdev (list "sh" "-c" script) 
-             :ignore-error-status t
-             :fbterm-settings fbterm-settings
-             :fb-device fb-device
-             ))
+	   (run-program-return-success
+	     (run-fbterm
+	       vtdev (list "sh" "-c" script) 
+	       :ignore-error-status t
+	       :fbterm-settings fbterm-settings
+	       :fb-device fb-device
+	       )))
          (complaint
            (string-right-trim '(#\Newline #\Return) 
                               (alexandria:read-file-into-string failure-path)))

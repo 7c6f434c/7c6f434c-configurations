@@ -65,10 +65,6 @@
 (defun get-current-user-name ()
   (iolib/syscalls:getpwuid (iolib/syscalls:getuid)))
 
-(defun take-reply-value (reply)
-  (assert (equal "value" (first reply)))
-  (second reply))
-
 (defun with-uid-auth (form &key (socket *ambient-system-socket*) user)
   (let*
     ((user (or user (get-current-user-name)))

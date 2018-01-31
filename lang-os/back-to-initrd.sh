@@ -1,4 +1,7 @@
 #!/bin/sh
+
+trap : 15
+
 export PATH=/run/current-system/sw/bin
 cd /
 mkdir /initrd
@@ -29,12 +32,14 @@ cat << EOF >> post-pivot
 
   mountpoint /new-root
 
-  /bin/sh "$(basename "$1")"
+  /bin/sh "$(basename "$1")" < /dev/tty1 &> /dev/tty1
 
   while true; do /bin/sh -i; done
 EOF
 chmod a+x post-pivot
 export PATH=/run/current-system/sw/bin:/init-tools/bin:/busybox/bin
+
+trap : 15 2 3 6
 
 kill -15 -1
 sleep 1
