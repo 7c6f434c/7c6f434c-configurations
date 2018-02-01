@@ -5,6 +5,7 @@
   (:export
     #:eval-socket-runner
     #:require-presence
+    #:context-uid
     #:require-uid
     #:require-root
     #:require-password
@@ -229,10 +230,14 @@
         (funcall context :password-auth-user))
     (error "User presence has not been confirmed")))
 
+(defun context-uid (context)
+  (or 
+    (funcall context :password-auth-user)
+    (funcall context :uid-auth-verified-user)))
+
 (defun require-uid (context user)
   (unless
-    (or (equal user (funcall context :uid-auth-verified-user))
-        (equal user (funcall context :password-auth-user)))
+    (equal user (context-uid context))
     (error "Expected UID or password authentication for user ~a" user)))
 
 (defun require-root (context)

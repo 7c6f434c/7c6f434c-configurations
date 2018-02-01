@@ -5,6 +5,9 @@
     :lisp-os-helpers/shell
     )
   (:export
+    #:! #:!! #:& #:&& #:>> #:$ #:$=
+    #:editor #:periodically
+    #:cd #:ls #:ls* #:ps
     ))
 (in-package :lisp-os-helpers/user-abbreviations)
 
@@ -16,8 +19,8 @@
       (loop
 	for c across s
 	for pending-this := nil then pending-next
-	for pending-next := nil then (and (not pending-this) (equal c #\_))
-	collect (if (equal invert pending-this)
+	for pending-next := (and (not pending-this) (equal c #\_))
+	if (not pending-next) collect (if (equal invert pending-this)
 		  (string-downcase c) (string-upcase c)))))
   (defun to-string (e)
     (etypecase e
@@ -27,20 +30,42 @@
       (symbol (underscore-to-capitals (symbol-name e) :invert nil))
       (pathname (namestring e))
       (number (format nil "~a" e))))
+  (defun run-program-argument-code (s)
+    (cond
+      ((null s) s)
+      ((and (symbolp s) (equal (elt (symbol-name s) 0) #\/))
+       (underscore-to-capitals (symbol-name s)))
+      ((and (listp s) (equal (first s) :string)
+	    (symbolp (second s)))
+       `',s)
+      ((and (listp s) (equal (first s) :string))
+       `(make-string-input-stream ,(second s)))
+      ((keywordp s) s)
+      ((pathnamep s) s)
+      (t s)))
+  (defun to-environment-string (e)
+    (cond
+      ((listp e) e)
+      (t (to-string e))
+      ))
   (defun split-command (l)
     (let*
-      ((command nil) (arguments nil))
+      ((command nil) (arguments nil) (environment nil))
       (loop
 	for e in l
 	for lt on l
 	for parameter := nil then parameter-next
-	for parameter-next := (and (not parameter) (keywordp e))
+	for parameter-next := (and (not parameter) (not environment-entry) (keywordp e))
+	for environment-entry := nil then environment-next
+	for environment-next := (equal e :=)
 	do
 	(if parameter
-	  (cond
-	    ((and (symbolp e) (equal #\/ (elt (symbol-name e) 0)))
-	     (push (underscore-to-capitals (symbol-name e)) arguments))
-	    (t (push e arguments)))
+	  (if environment-entry
+	    (push (if (listp e)
+		    (cons 'list (mapcar 'to-environment-string e))
+		    (to-environment-string e))
+		  environment)
+	    (push (run-program-argument-code e) arguments))
 	  (etypecase e
 	    (keyword (case e
 		       ((:>) (push :output arguments))
@@ -48,8 +73,9 @@
 		       ((:<) (push :input arguments))
 		       ((:&>) 
 			(push :output arguments)
-			(push (second lt) arguments)
+			(push (run-program-argument-code (second lt)) arguments)
 			(push ::error-output arguments))
+		       (:=)
 		       (t (push e arguments))))
 	    ((or string symbol number pathname null)
 	     (push (to-string e) command))
@@ -68,12 +94,16 @@
 		   (setf command (append (reverse scommand) command)
 			 arguments (apply (reverse sarguments) arguments))))
 		(t (push e arguments)))))))
-      (values (reverse command) (reverse arguments)))))
+      (values (reverse command) (reverse arguments) (reverse environment)))))
 
 (defmacro ! (&rest data)
   (multiple-value-bind
-    (command arguments) (split-command data)
-    `(uiop:run-program (list ,@command) :ignore-error-status t ,@arguments)))
+    (command arguments environment) (split-command data)
+    `(uiop:run-program
+       ,(if environment `(add-command-env (list ,@command) (list ,@environment))
+	  `(list ,@command))
+       :ignore-error-status t ,@arguments
+       :output t :error-output t :input t :pty nil)))
 
 (defmacro & (&rest data)
   (multiple-value-bind
@@ -81,7 +111,7 @@
     `(uiop:launch-program (list ,@command) ,@arguments)))
 
 (defmacro !! (&rest data)
-  `(! screen ,@data))
+  `(! screen ,@data :&> nil :< nil))
 
 (defmacro
   >>-impl (bangs &key stream)
@@ -128,7 +158,7 @@
   (setf (uiop:getenv (to-string name)) (to-string value)))
 
 (defun editor (&optional filename)
-  (!! (or ($ :visual) ($ :editor)) filename))
+  (!! (or ($ :visual) ($ :editor)) (identity filename)))
 
 (defun cd (&optional dir)
   (uiop:chdir (or dir ($ "HOME")))

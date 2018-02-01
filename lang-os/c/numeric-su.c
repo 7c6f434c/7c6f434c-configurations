@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <assert.h>
+#include <grp.h>
 
 int main ( int argc, char**argv){
         assert(argc>3);
@@ -13,6 +14,8 @@ int main ( int argc, char**argv){
 
         assert(setgid(gid)==0);
         assert(setregid(gid,gid)==0);
+
+	assert(setgroups(0,NULL)==0);
 
         assert(setuid(uid)==0);
         assert(setreuid(uid,uid)==0);

@@ -30,6 +30,7 @@
            for p in packages
            when (eq (find-symbol (string form) p) form)
            return t)
+	 (format t "~s~%" (list form packages (null form)))
          (error
            (make-condition
              'unacceptable-symbol
@@ -38,7 +39,7 @@
     form))
 
 (defun safe-read
-  (source packages)
+  (source packages &key forbid-nil)
   (if (stringp source)
     (with-input-from-string (s source)
       (safe-read s packages))
@@ -46,6 +47,8 @@
       ((*read-eval* nil)
        (packages (remove nil (mapcar 'find-package packages)))
        (*package* (if packages (first packages) (make-package (format nil "~36r" (random (expt 36 40))))))
-       (form (check-safety (read source) packages)))
+       (form (progn (unless (or packages forbid-nil)
+		      (import (list nil) *package*))
+		    (check-safety (read source) packages))))
       (unless packages (delete-package *package*))
       form)))

@@ -9,6 +9,7 @@
     parted gzip bzip2 xz e2fsprogs dosfstools glibc gnutar 
     psmisc pam kbd lynx fuse fuse3 ncurses acl eudev kmod git
     strace efibootmgr gcc binutils socat rlwrap fbterm which
+    sqlite
   ];
   allOutputNames = l: builtins.attrNames
       (pkgs.lib.fold

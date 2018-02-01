@@ -30,7 +30,9 @@ targetSystem="$1";
             mkdir -p /var/auth/run
             mount --bind /run /var/auth/run
             mkdir -p /var/auth/var
-            mount --bind /run /var/auth/var
+            mount --bind /var /var/auth/var
+            mkdir -p /var/auth/proc
+            mount --bind /proc /var/auth/proc
             ln -sfT /run/current-system/global/bin /var/auth/bin
     }
     ln -sfT "$(readlink -f /etc/pam.d)" /var/auth/etc/pam.d

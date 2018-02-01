@@ -55,7 +55,7 @@
       name
       (cons
         (list (clsql:sql-expression :attribute :id)
-              (clsql:sql-expression :type (clsql:sql-expression :string "INTEGER PRIMARY KEY AUTOINCREMENT")))
+              "INTEGER PRIMARY KEY AUTOINCREMENT")
         fields))
     t))
 
@@ -71,10 +71,10 @@
       (list
         (list
           (clsql:sql-expression :attribute :key)
-          (clsql:sql-expression :type :varchar))
+          "varchar")
         (list
           (clsql:sql-expression :attribute :value)
-          (clsql:sql-expression :type :varchar))
+          "varchar")
         ))
     (ensure-field-index :simple-values :key :unique t))
   (if new-value-p
@@ -139,14 +139,14 @@
     (cons
       (list
         (clsql:sql-expression :attribute :key)
-        (clsql:sql-expression :type :varchar))
+        "varchar")
       (loop 
         for f in fields
         for tt in types
         collect
         (list
           (clsql:sql-expression :attribute f)
-          (clsql:sql-expression :type tt)))))
+          (format nil "~a" tt)))))
   (ensure-field-index kind :key :unique t)
   (unless
     (ignore-errors
@@ -205,15 +205,16 @@
         (car old-values)))))
 
 (defun complex-global-value-by-id (kind id fields)
-  (apply
-    'clsql:select
-    (append
-      (loop
-        for f in fields 
-        collect (clsql:sql-expression :attribute f))
-      (list :from (clsql:sql-expression :table kind)
-            :where
-            (clsql:sql-operation
-              '=
-              (clsql:sql-expression :attribute :id)
-              id)))))
+  (first
+    (apply
+      'clsql:select
+      (append
+	(loop
+	  for f in fields 
+	  collect (clsql:sql-expression :attribute f))
+	(list :from (clsql:sql-expression :table kind)
+	      :where
+	      (clsql:sql-operation
+		'=
+		(clsql:sql-expression :attribute :id)
+		id))))))

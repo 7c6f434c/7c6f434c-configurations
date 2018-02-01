@@ -81,9 +81,9 @@
                (string (uiop:getenv k))
                (list (second e)))
              when (null v) collect "-u"
-             when (null v) collect (escape-for-shell k)
-             when v collect (escape-for-shell (format nil "~a=~a" k v)))
-         "--")))
+             when (null v) collect k
+             when v collect (format nil "~a=~a" k v))
+         )))
     (etypecase command
       (string `(,@prefix "sh" "-c" ,command))
       (list `(,@prefix ,@command)))))

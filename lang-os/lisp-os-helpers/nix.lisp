@@ -36,7 +36,7 @@
                    marker marker
                    marker)))
          "with import <nixpkgs> {}; "))
-     (full-expression (format nil "~a~a" expression source-expression)))
+     (full-expression (format nil "~a~a" source-expression expression)))
     full-expression))
 
 (defun nix-instantiate-raw
@@ -51,7 +51,10 @@
        (or nix-path 
            (and
              (or nix-path-prefix nix-path-suffix)
-             (append nix-path-prefix nix-path-env nix-path-suffix))))
+             (append
+	       (alexandria:ensure-list nix-path-prefix)
+	       nix-path-env
+	       (alexandria:ensure-list nix-path-suffix)))))
      (expression
        (nix-expression
          name
@@ -63,12 +66,13 @@
      (command
        (if nix-new-path
          (add-command-env
-           nix-command `(("NIX_PATH" ,nix-new-path)))
+           nix-command `(("NIX_PATH" ,(format nil "~{~a~#[~:;:~]~}" nix-new-path))))
          nix-command))
-     (command (if extra-env (add-command-env command extra-env)))
+     (command (if extra-env (add-command-env command extra-env) command))
      )
-    (uiop:run-program command :output '(:string :stripped t)
-                      :error-output t)))
+    (uiop:run-program
+      command :output '(:string :stripped t)
+      :error-output t)))
 
 (defun nix-instantiate (&rest args)
   (cl-ppcre:split *line-break-regexpr* (apply 'nix-instantiate-raw args)))
@@ -90,7 +94,7 @@
      (command (add-command-env command extra-env)))
     (uiop:run-program command :output `(:string :stripped t))))
 
-(defun nix-build (name &rest args &key out-link)
+(defun nix-build (name &rest args &key out-link &allow-other-keys)
   out-link
   (let*
     ((derivations

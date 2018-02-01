@@ -6,6 +6,8 @@
     #:timestamp-nsec
     #:timestamp-nsec-base36
     #:timestamp-base63
+    #:*recency-epoch*
+    #:timestamp-usec-recent-base36
     ))
 (in-package :lisp-os-helpers/timestamp)
 
@@ -58,3 +60,19 @@
      (n (+ nsecs (* secs (expt 10 9))))
      )
     (format-number-with n *base63-alphabet* 11)))
+
+(defparameter *recency-epoch* "2017-01-01")
+
+(defun timestamp-usec-recent-base36 ()
+  (let*
+    (
+     (tnow (local-time:now))
+     (t-epoch (local-time:parse-timestring *recency-epoch*))
+     (secs (- (local-time:timestamp-to-unix tnow)
+              (local-time:timestamp-to-unix t-epoch)))
+     (nsecs (local-time:nsec-of tnow))
+     (usecs (truncate nsecs (expt 10 6)))
+     (n (+ usecs (* secs (expt 10 6))))
+     )
+    (string-downcase (format nil "~36,10,'0r" (truncate n)))))
+
