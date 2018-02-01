@@ -98,7 +98,7 @@
 	    (complex-global-value-by-id
 	      :subusers (- uid *subuser-uid-shift*) `(:owner))
 	    (complex-global-value
-	      :subusers (iolib/syscalls:getpwuid uid) `(:owner))
+	      :subusers (iolib/syscalls:getpwuid uid) `(:owner) nil)
 	    )))))
   (let*
     ((process

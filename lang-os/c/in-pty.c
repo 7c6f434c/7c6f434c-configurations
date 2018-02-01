@@ -45,7 +45,7 @@ int main(int argc, char ** argv, char ** envp)
 		}
 		close(0);
 		close(fd);
-		exit(0);
+		while(1) { sleep(1024);}
 	}
 
 	if (!(writepid=fork())){

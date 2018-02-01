@@ -47,8 +47,9 @@ pkgs.runCommand "system-bin" {} ''
     'MODULE_DIR="/run/booted-system/boot/kernel-modules/lib/modules" modprobe "$@" ||' \
     'false'
   script back-to-initrd '/bin/sh "${./back-to-initrd.sh}"'
-  script poweroff '/bin/sh "${./back-to-initrd.sh}" "${pkgs.writeScript "poweroff-f" "poweroff -f"}"'
-  script reboot '/bin/sh "${./back-to-initrd.sh}" "${pkgs.writeScript "reboot-f" "reboot -f"}"'
+  script start-shutdown 'test -n "$1" && ln -sfT "$1" /run/post-backpivot-command; kill -USR1 1'
+  script poweroff '/bin/sh "/run/current-system/bin/start-shutdown" "${pkgs.writeScript "poweroff-f" "poweroff -f"}"'
+  script reboot '/bin/sh "/run/current-system/bin/start-shutdown" "${pkgs.writeScript "reboot-f" "reboot -f"}"'
 
   script setup '
     export PATH="$PATH:$targetSystem/sw/bin:${pkgs.coreutils}/bin"

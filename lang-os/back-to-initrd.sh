@@ -9,6 +9,13 @@ mount initramfs -t tmpfs initrd
 cd initrd
 gunzip < /run/current-system/boot/initrd | cpio -i
 mkdir new-root tmp
+
+test -e /run/post-backpivot-command && {
+        cat /run/post-backpivot-command > post-backpivot-command
+        chmod a+x post-backpivot-command
+        rm /run/post-backpivot-command
+}
+
 echo "#!/bin/sh" >> post-pivot
 cat << EOF >> post-pivot
   cp "/new-root/$1" .
@@ -32,7 +39,8 @@ cat << EOF >> post-pivot
 
   mountpoint /new-root
 
-  /bin/sh "$(basename "$1")" < /dev/tty1 &> /dev/tty1
+  test -n "$1" && /bin/sh "$(basename "$1")" < /dev/tty1 &> /dev/tty1
+  test -e ./post-backpivot-command && ./post-backpivot-command < /dev/tty1 &> /dev/tty1
 
   while true; do /bin/sh -i; done
 EOF

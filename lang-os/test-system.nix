@@ -114,7 +114,7 @@ rec {
       name = "system-path";
       paths = swPieces.corePackages ++ (with pkgs; [
         glibcLocales
-        vim monotone screen rxvt_unicode
+        vim monotone screen rxvt_unicode xorg.xprop
         sbcl lispPackages.clwrapper lispPackages.uiop asdf gerbil
 	postgresql-package
         (swPieces.cProgram "vtlock" ./c/vtlock.c [] [])

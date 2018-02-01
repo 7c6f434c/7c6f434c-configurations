@@ -55,6 +55,11 @@
   (context &optional (reply "failed")) context (error reply))
 (defun socket-command-server-commands::finish (context)
   (funcall context :continue nil) "")
+(defun socket-command-server-commands::list
+  (context &rest entries)
+  (loop
+    for e in entries
+    collect (take-reply-value (eval-command-form e context))))
 
 (defun socket-command-server-commands::request-uid-auth (context user)
   (flet ((context (&rest args) (apply context args)))

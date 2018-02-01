@@ -16,7 +16,7 @@
 (unless *socket-main-thread-preexisting*
   (format t "Starting the Common Lisp system daemon at ~a~%" (local-time:now)))
 
-(defvar *vt-spawners* (make-array 12))
+(defvar *vt-spawners* (make-array 12 :initial-element nil))
 
 (loop
   for vtn from 2 to 6 do
@@ -61,27 +61,28 @@
 
 (unless
   (port-open-p 22)
-  (system-service "daemon/ssh" "from-nixos/openssh"))
+  (system-service "" "from-nixos/openssh"))
 
 (unless
   (run-program-return-success
     (uiop:run-program
       (list "pgrep" "-x" "udevd")))
-  (system-service "daemon/udevd" "udevd"))
+  (system-service "" "udevd"))
 
 (unless
   (port-open-p 631)
-  (system-service "daemon/cups" "from-nixos/cups"))
+  (system-service "" "from-nixos/cups"))
 
 (unless
   (port-open-p 53)
-  (system-service "daemon/bind" "from-nixos/bind"))
+  (system-service "" "from-nixos/bind"))
 
 (unless
   (port-open-p 5432)
   (daemon-with-logging 
     "daemon/postgresql"
-    (list "su" "postgres" "-s" "/bin/sh" "-c" "env -i /run/current-system/services/from-nixos/postgresql")))
+    (list "su" "postgres" "-s" "/bin/sh" "-c"
+	  "env -i /run/current-system/services/from-nixos/postgresql")))
 
 (defun socket-command-server-commands::load (context path)
   (require-root context)
@@ -89,9 +90,80 @@
 (defun socket-command-server-commands::eval (context code)
   (require-root context)
   (eval (read-from-string code)))
+(defun socket-command-server-commands::run (context &rest command)
+  (require-root context)
+  (uiop:run-program command))
 (defun socket-command-server-commands::quit (context)
   (require-presence context)
   (quit))
+
+(defun socket-command-server-commands::restart-udevd (context)
+  (require-presence context)
+  (if
+    (ignore-errors (uiop:run-program (list "udevadm" "control" "--exit")))
+    (progn
+      (system-service "" "udevd")
+      "OK")
+    (error "Stopping udevd failed")
+    ))
+
+(defun socket-command-server-commands::restart-openssh (context)
+  (require-presence context)
+  (if
+    (ignore-errors (kill-by-executable "sshd"))
+    (progn
+      (system-service "" "from-nixos/openssh")
+      "OK")
+    (error "Stopping openssh failed")))
+
+(defun socket-command-server-commands::restart-cups (context)
+  (require-presence context)
+  (if
+    (ignore-errors (kill-by-log "daemon/cups"))
+    (progn
+      (system-service "" "from-nixos/cups")
+      "OK")
+    (error "Stopping cupsd failed")))
+
+(defun socket-command-server-commands::restart-bind (context)
+  (require-presence context)
+  (if (ignore-errors (kill-by-log "daemon/bind"))
+    (progn
+      (system-service "" "from-nixos/bind")
+      "OK")
+    (error "Stopping bind failed")))
+
+(defun socket-command-server-commands::restart-postgresql (context)
+  (require-presence context)
+  (if (ignore-errors (kill-by-log "daemon/postgresql"))
+    (progn
+      (daemon-with-logging 
+	"daemon/postgresql" 
+	(list
+	  "su" "postgres" "-s" "/bin/sh" "-c"
+	  "env -i /run/current-system/services/from-nixos/postgresql"))
+      "OK")
+    (error "Stopping postgresql failed")))
+
+(defun socket-command-server-commands::start-x (context &optional (display 0))
+  (require-presence context)
+  (let*
+    ((test-command
+       (list
+	 "env"
+	 (format nil "DISPLAY=:~d" display)
+	 "xprop" "-root")
+       ))
+    (when
+      (run-program-return-success (uiop:run-program test-command))
+      (error "There is already a display at ~a" display))
+    (system-service display "from-nixos/xorg" (format nil "~a" display))
+    (loop
+      for ping from 1 to 100
+      while (not (run-program-return-success
+		   (uiop:run-program test-command)))
+      do (sleep 0.3))
+    (format nil "~a" display)))
 
 (unless
   *socket-main-thread-preexisting*
