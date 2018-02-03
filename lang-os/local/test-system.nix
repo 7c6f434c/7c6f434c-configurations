@@ -5,7 +5,7 @@ rec {
   stage1 = import ../fat-initramfs.nix {
     mountScript = ''
       modprobe atkbd
-      ${./mount-partitions.sh}
+      sh ${./mount-partitions.sh}
     '';
     firmwarePackages = pkgs: [];
     modprobeConfig = builtins.readFile ./modprobe.conf;
