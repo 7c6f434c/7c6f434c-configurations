@@ -48,7 +48,7 @@
     (uiop:run-program
       (list "env" "NIX_REMOTE=daemon"
             "nix-store" "--check-validity" "/run/current-system/")))
-  (system-service "daemon/nix-daemon" "nix-daemon"))
+  (system-service "" "nix-daemon"))
 
 (ensure-daemon-user "postgres")
 (ensure-daemon-user "named")
@@ -148,6 +148,14 @@
 	  "env -i /run/current-system/services/from-nixos/postgresql"))
       "OK")
     (error "Stopping postgresql failed")))
+
+(defun socket-command-server-commands::restart-nix-daemon (context)
+  (require-presence context)
+  (if (ignore-errors (kill-by-log "daemon/nix-daemon"))
+    (progn
+      (system-service "" "nix-daemon")
+      "OK")
+    (error "Stopping nix-daemon failed")))
 
 (defun socket-command-server-commands::start-x (context &optional (display 0))
   (require-presence context)

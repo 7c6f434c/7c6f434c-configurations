@@ -224,7 +224,11 @@ rec {
           };
         }))
       (etcPieces.deeplinkAttrset "etc-nix"
-        (fromNixOS.etcSelectPrefix "nix/" {}))
+        (fromNixOS.etcSelectPrefix "nix/" {
+          nix = {
+            useSandbox = true;
+          };
+        }))
       (etcPieces.deeplinkAttrset "etc-cups"
         {"cups" = "/var/lib/cups";})
       (etcPieces.deeplinkAttrset "etc-openssh"
