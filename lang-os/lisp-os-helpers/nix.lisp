@@ -6,6 +6,8 @@
     #:nix-eval
     #:nix-realise
     #:nix-build
+    #:nix-shell
+    #:nix-shell-for-packages
     ))
 (in-package :lisp-os-helpers/nix)
 
@@ -28,10 +30,10 @@
                   nil
                   "let
                       imported_~a = import ~s; 
-                      true_~a = if (builtins,isFunction imported_~a) then 
+                      true_~a = if (builtins.isFunction imported_~a) then 
                                    imported_~a {} else imported_~a; 
                    in with true_~a; "
-                   marker nix-file
+                   marker (namestring (truename nix-file))
                    marker     marker
                    marker marker
                    marker)))
@@ -100,3 +102,10 @@
     ((derivations
        (apply 'nix-instantiate name :allow-other-keys t args)))
     (apply 'nix-realise derivations :allow-other-keys t args)))
+
+(defun nix-shell (command &rest arguments)
+  (uiop:run-program
+    `("nix-shell" "--run" ,(collapse-command command) ,@ arguments)))
+
+(defun nix-shell-for-packages (command &rest arguments)
+  (apply 'nix-shell command "-p" arguments))

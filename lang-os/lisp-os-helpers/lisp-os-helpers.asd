@@ -27,5 +27,6 @@
    (:file "socket-command-client" :depends-on ("safe-read" "socket-command-server"))
    (:file "read-eval-print-once")
    (:file "user-abbreviations" :depends-on ("shell" "socket-command-client"))
+   (:file "socket-command-definitions" :depends-on ("socket-command-server" "subuser" "daemon"))
    )
   )

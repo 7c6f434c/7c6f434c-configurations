@@ -5,7 +5,7 @@ rec {
   stage1 = import ../fat-initramfs.nix {
     mountScript = ''
       modprobe atkbd
-      sh ${./mount-partitions.sh}
+      ${./mount-partitions.sh}
     '';
     firmwarePackages = pkgs: [];
     modprobeConfig = builtins.readFile ./modprobe.conf;
@@ -117,6 +117,8 @@ rec {
         vim monotone screen rxvt_unicode xorg.xprop
         sbcl lispPackages.clwrapper lispPackages.uiop asdf gerbil
 	postgresql-package
+        nsjail
+        lispPackages.stumpwm
         (swPieces.cProgram "vtlock" ../c/vtlock.c [] [])
         (swPieces.cProgram "file-lock" ../c/file-lock.c [] [])
         (swPieces.cProgram "in-pty" ../c/in-pty.c [] ["-lutil"])

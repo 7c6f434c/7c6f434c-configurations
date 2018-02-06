@@ -126,7 +126,6 @@
 	     (context :peer) (context :uid-auth-verified-user) user form prompt)
 	   :timeout timeout :hide-entry t)
 	 ))
-      (format t "Received password: ~s~%" password)
       (unless
 	(check-password user password)
 	(error "Correct password for user ~a not received" user)))

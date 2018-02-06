@@ -8,7 +8,7 @@ for i in "$LISP_OS_HELPERS_PACKAGE/lib/common-lisp-settings"/*-path-config.sh; d
 	source "$i";
 done
 
-rlwrap common-lisp.sh --eval \
+"$(dirname "$0")"/rlwrap-user-shell.sh common-lisp.sh --eval \
    '(defvar *lisp-os-helpers-package* 
           (uiop:getenv "LISP_OS_HELPERS_PACKAGE"))' \
    --load "$USER_LISP_SHELL_RC" "$@"

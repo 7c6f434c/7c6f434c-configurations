@@ -8,6 +8,7 @@
     #:program-output-lines
     #:*line-break-regexpr*
     #:add-command-env
+    #:collapse-command
     ))
 
 (in-package :lisp-os-helpers/shell)
@@ -66,10 +67,10 @@
         stdout)
       result)))
 
-(defun add-command-env (command env)
+(defun add-command-env (command env &key (env-helper "env"))
   (let*
     ((prefix
-       `("env"
+       `(,env-helper
          ,@(loop
              for e in env
              for k :=
@@ -87,3 +88,7 @@
     (etypecase command
       (string `(,@prefix "sh" "-c" ,command))
       (list `(,@prefix ,@command)))))
+
+(defun collapse-command (command)
+  (if (stringp command) command
+    (format nil "~{~a ~}" (mapcar 'escape-for-shell command))))

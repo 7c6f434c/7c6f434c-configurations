@@ -8,6 +8,8 @@
 (use-package :lisp-os-helpers/subuser)
 (use-package :lisp-os-helpers/daemon)
 (use-package :lisp-os-helpers/unix-users)
+(use-package :lisp-os-helpers/vt)
+(use-package :lisp-os-helpers/socket-command-definitions)
 
 (defvar *socket-main-thread* nil)
 
@@ -84,15 +86,9 @@
     (list "su" "postgres" "-s" "/bin/sh" "-c"
 	  "env -i /run/current-system/services/from-nixos/postgresql")))
 
-(defun socket-command-server-commands::load (context path)
-  (require-root context)
-  (load path) "OK")
-(defun socket-command-server-commands::eval (context code)
-  (require-root context)
-  (eval (read-from-string code)))
 (defun socket-command-server-commands::run (context &rest command)
   (require-root context)
-  (uiop:run-program command))
+  (uiop:run-program command :output "/dev/tty62" :error-output "/dev/tty62"))
 (defun socket-command-server-commands::run-pipe (context input &rest command)
   (require-root context)
   (with-input-from-string (s input)
@@ -157,79 +153,6 @@
       "OK")
     (error "Stopping nix-daemon failed")))
 
-(defun socket-command-server-commands::start-x (context &optional (display 0))
-  (require-presence context)
-  (let*
-    ((test-command
-       (list
-	 "env"
-	 (format nil "DISPLAY=:~d" display)
-	 "xprop" "-root")
-       ))
-    (when
-      (run-program-return-success (uiop:run-program test-command))
-      (error "There is already a display at ~a" display))
-    (system-service display "from-nixos/xorg" (format nil "~a" display))
-    (loop
-      for ping from 1 to 100
-      while (not (run-program-return-success
-		   (uiop:run-program test-command)))
-      do (sleep 0.3))
-    (format nil "~a" display)))
-
-(defun socket-command-server-commands::run-as-subuser
-  (context name command environment options)
-  (let
-    ((value
-       (apply 
-	 'run-as-subuser (context-uid context) command
-	 :name (when (> (length name) 0) name)
-	 :environment environment
-	 (loop
-	   for o in options
-	   if (equalp o "pty") append (list :pty t)
-	   if (equalp o "wait") append (list :wait t)
-	   if (equalp o "slay") append (list :slay t)
-	   if (equalp o "slurp") append (list :slurp-stdout t)
-	   if (equalp o "slurp-output") append (list :slurp-stdout t)
-	   if (equalp o "slurp-stdout") append (list :slurp-stdout t)
-	   if (and (listp o) (equalp (first o) "feed-stdin"))
-	   append (list :feed-stdin (second o))
-	   ))))
-    (if (typep value 'iolib/os:process) "OK" value)))
-
-(defun socket-command-server-commands::add-persistent-subuser (context name home)
-  (subuser-uid
-    (context-uid context) 
-    :name name :passwd-entry t
-    :home (when (> (length home) 0) home)))
-
-(defun socket-command-server-commands::drop-persistent-subuser (context name)
-  (drop-subuser (context-uid context) :name name))
-
-(defun socket-command-server-commands::subuser-uid (context name)
-  (select-subuser (context-uid context) :name name))
-
-(defun do-grab-device (user subuser device)
-  (unless
-    (or
-      (gethash (list user :owner) *user-info*)
-      )
-    (error "User ~a is not allowed to device grab ~s" user device))
-  (uiop:run-program
-    (list
-      "setfacl" "-m"
-      (format nil "u:~a~a:rw"
-	      user (when subuser (format nil ".~a" subuser)))
-      device)))
-
-(defun socket-command-server-commands::grab-devices (context devices &optional subuser)
-  (loop
-    with user := (context-uid context)
-    for d in devices
-    do (do-grab-device user subuser d))
-  "OK")
-
 (defun socket-command-server-commands::dhclient (context interface &optional copy-resolv)
   (assert
     (or
@@ -250,6 +173,25 @@
       (gethash (list (context-uid context) :owner) *user-info*)))
   (require-presence context)
   (add-ip-address interface address netmask-length))
+
+(defun socket-command-server-commands::rebuild-from-path
+  (context path &optional nix-path)
+  (require-presence context)
+  (require-root context)
+  (assert
+    (or
+      (ignore-errors (require-root context) t)
+      (gethash (list (context-uid context) :owner) *user-info*)))
+  (uiop:run-program
+    `("/run/current-system/bin/update-self-from-expression"
+      ,path
+      ,@(when nix-path `("-I" ,nix-path)))))
+
+(defun start-x-allowed-p (context display)
+  (require-presence context))
+
+(defun grab-device-allowed-p (user subuser device)
+  (gethash (list user :owner) *user-info*))
 
 (unless
   *socket-main-thread-preexisting*

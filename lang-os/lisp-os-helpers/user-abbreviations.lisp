@@ -8,8 +8,34 @@
     #:! #:!! #:& #:&& #:>> #:$ #:$=
     #:editor #:periodically
     #:cd #:ls #:ls* #:ps
+    #:build-shell
     ))
 (in-package :lisp-os-helpers/user-abbreviations)
+
+(defun build-shell (output)
+  (setf cffi:*foreign-library-directories*
+	(cffi::explode-path-environment-variable
+	  "NIX_LISP_LD_LIBRARY_PATH"))
+  (loop
+    with libpath :=
+    (uiop:split-string
+      (uiop:getenv "NIX_LISP_LD_LIBRARY_PATH")
+      :separator ":")
+    for l in sb-alien::*shared-objects*
+    for ns := (sb-alien::shared-object-namestring l)
+    do (and (> (length ns) 0) (not (equal (elt ns 0) "/"))
+	    (let*
+	      ((prefix (find-if
+			 (lambda (s)
+			   (probe-file (format nil "~a/~a" s ns)))
+			 libpath))
+	       (fullpath (and prefix (format nil "~a/~a" prefix ns))))
+	      (when fullpath
+		(setf
+		  (sb-alien::shared-object-namestring l) fullpath
+		  (sb-alien::shared-object-pathname l)
+		  (probe-file fullpath))))))
+  (sb-ext:save-lisp-and-die output :executable t))
 
 (eval-when
   (:compile-toplevel :load-toplevel :execute)
@@ -93,7 +119,7 @@
 		   (split-command e)
 		   (setf command (append (reverse scommand) command)
 			 arguments (apply (reverse sarguments) arguments))))
-		(t (push e arguments)))))))
+		(t (push e command)))))))
       (values (reverse command) (reverse arguments) (reverse environment)))))
 
 (defmacro ! (&rest data)
@@ -111,7 +137,7 @@
     `(uiop:launch-program (list ,@command) ,@arguments)))
 
 (defmacro !! (&rest data)
-  `(! screen ,@data :&> nil :< nil))
+  `(! screen -_X screen ,@data :&> nil :< nil))
 
 (defmacro
   >>-impl (bangs &key stream)
@@ -154,11 +180,13 @@
 	  (with-output-to-string (,stream)
 	    (! :> ,stream ,@(cdr args))))))))
 
-(defun $= (name value)
-  (setf (uiop:getenv (to-string name)) (to-string value)))
+(defmacro $= (name value)
+  `(setf (uiop:getenv ,(to-string name)) ,(to-string value)))
 
 (defun editor (&optional filename)
-  (!! (or ($ :visual) ($ :editor)) (identity filename)))
+  (when (or ($ :visual) ($ :editor))
+    (!! (or ($ :visual) ($ :editor)) (identity filename))
+    t))
 
 (defun cd (&optional dir)
   (uiop:chdir (or dir ($ "HOME")))
