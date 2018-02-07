@@ -200,7 +200,7 @@
 	 for cpp := (or (second cp) lpp :tcp)
 	 for socket := (format nil "~a/~a" tmpdir nt)
 	 for listen := (if (equalp (string lpp) "tcp")
-			 (format nil "tcp-listen:~a" lpn)
+			 (format nil "tcp-listen:~a,forever" lpn)
 			 (format nil "udp-listen:~a" lpn))
 	 for connect := (if (equalp (string cpp) "tcp")
 			  (format nil "tcp-connect:~a:~a" host cpn)

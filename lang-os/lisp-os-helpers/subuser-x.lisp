@@ -96,21 +96,34 @@
 	   ("PYTHONPATH" ,(or pythonpath *marionette-python-path*))
 	   ("PATH" ,(or pythonpath *marionette-search-path*))
 	   )))
-     )))
+     (launch-marionette-socat
+       (list
+	 "socat"
+	 (format nil "unix-listen:~a,forever,fork" socket)
+	 (format nil "exec:~{~a' '~}" (mapcar 'escape-for-shell launch-marionette-with-env))
+	 ))
+     )
+    launch-marionette-socat))
 
 (defun firefox-command (&key firefox-path
 			     (display 0)
 			     home profile profile-template
-			     (marionette t) (marionette-port 2828)
-			     (marionette-socket nil))
+			     (marionette-port 2828) (marionette-socket nil))
   (ensure-firefox-path)
   (ensure-marionette-python-path)
   (ensure-marionette-search-path)
   (let*
     ((main-command
        (add-command-env
+	 (list
+	   (or firefox-path *firefox-path*)
+	   "--profile"
+	   profile)
 	 `(("DISPLAY" ,(format nil ":~a" display))
-	   ("PATH" ,(uiop:getenv "PATH")))
+	   ("PATH" ,(uiop:getenv "PATH"))
+	   ("HOME" ,(or home (uiop:run-program
+			       (list "mktemp" "-d")
+			       :output '(:string :stripped t)))))
 
 (defun
   subuser-command-with-x
