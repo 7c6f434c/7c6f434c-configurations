@@ -5,7 +5,7 @@ rec {
   stage1 = import ../fat-initramfs.nix {
     mountScript = ''
       modprobe atkbd
-      ${./mount-partitions.sh}
+      sh ${./mount-partitions.sh}
     '';
     firmwarePackages = pkgs: [];
     modprobeConfig = builtins.readFile ./modprobe.conf;
@@ -140,7 +140,8 @@ rec {
            enable = true;
 	   gutenprint = true;
 	   drivers = with pkgs; [
-	     foo2zjs foomatic_filters ghostscript cups_filters samba hplip
+	     foo2zjs foomatic_filters ghostscript cups_filters samba
+             /* hplip */
 	   ];
          };
 	 systemd.services.cups.serviceConfig.ExecStart = ''

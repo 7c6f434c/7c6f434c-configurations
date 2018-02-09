@@ -144,7 +144,7 @@ binary-caches = http://cache.nixos.org http://192.168.0.203:32062/
 trusted-binary-caches = http://cache.nixos.org http://192.168.0.203:32062/
     ";
     requireSignedBinaryCaches = false;
-    package = pkgs.nix.out; 
+    package = pkgs.nixUnstable.out; 
   };
 
   security = {
