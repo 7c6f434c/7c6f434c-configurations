@@ -86,7 +86,7 @@
     :nix-args (append nix-args (list "--eval-only"))
     args))
 
-(defun nix-realise (derivations &key nix-args extra-env out-link)
+(defun nix-realise (derivations &key nix-args extra-env out-link error-output)
   (let*
     ((command `("nix-store" "-r"
                 ,@(if out-link
@@ -94,14 +94,17 @@
                 ,@(if (stringp derivations)
                     (list derivations) derivations) ,@nix-args))
      (command (add-command-env command extra-env)))
-    (uiop:run-program command :output `(:string :stripped t))))
+    (uiop:run-program command :output `(:string :stripped t)
+		      :error-output error-output)))
 
-(defun nix-build (name &rest args &key out-link &allow-other-keys)
+(defun nix-build (name &rest args &key out-link nix-realise-error-output
+		       &allow-other-keys)
   out-link
   (let*
     ((derivations
        (apply 'nix-instantiate name :allow-other-keys t args)))
-    (apply 'nix-realise derivations :allow-other-keys t args)))
+    (apply 'nix-realise derivations :allow-other-keys t
+	   :error-output nix-realise-error-output args)))
 
 (defun nix-shell (command &rest arguments)
   (uiop:run-program

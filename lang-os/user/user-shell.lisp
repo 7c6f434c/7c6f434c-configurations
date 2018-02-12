@@ -23,6 +23,8 @@
 (defun loadrc () (load *rc-path*))
 (defun edrc () (editor *rc-path*))
 
+#+sbcl(push 'editor sb-ext:*ed-functions*)
+
 (defmacro defun-export (name args &rest code)
   `(progn
      (defun ,name ,args ,@code)
@@ -113,4 +115,12 @@
 	"Change VT"
 	`(chvt ,vtn)))))
 
-#+sbcl(push 'editor sb-ext:*ed-functions*)
+(defun-export
+  sudo::dhclient (interface &optional copy-resolv)
+  (with-system-socket
+    ()
+    (ask-server
+      (with-uid-auth
+	(with-presence-auth
+	  "Activate network"
+	  `(dhclient ,interface ,copy-resolv))))))

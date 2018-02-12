@@ -71,7 +71,7 @@
       (t s)))
   (defun to-environment-string (e)
     (cond
-      ((listp e) e)
+      ((listp e) `(string ,e))
       (t (to-string e))
       ))
   (defun split-command (l)
@@ -162,7 +162,7 @@
 
 (defmacro $ (&rest args)
   (cond
-    ((= 1 (length args)) `(uiop:getenv ,(to-string (first args))))
+    ((= 1 (length args)) `(uiop:getenv ,(to-environment-string (first args))))
     ((and (symbolp (second args)) 
 	  (equal ">>" (symbol-name (second args))) 
 	  (null (first args)))
@@ -181,7 +181,8 @@
 	    (! :> ,stream ,@(cdr args))))))))
 
 (defmacro $= (name value)
-  `(setf (uiop:getenv ,(to-string name)) ,(to-string value)))
+  `(setf (uiop:getenv ,(to-environment-string name))
+	 ,(to-environment-string value)))
 
 (defun editor (&optional filename)
   (when (or ($ :visual) ($ :editor))
