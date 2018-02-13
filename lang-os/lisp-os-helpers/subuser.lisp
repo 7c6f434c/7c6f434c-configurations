@@ -163,7 +163,8 @@
 	   "-B" "/dev/null" "-B" "/dev/full" "-B" "/dev/zero"
 	   "-B" "/dev/random" "-B" "/dev/urandom"
 	   "-R" "/bin" "-R" "/usr" "-R" "/nix/store"
-	   "-R" "/var/current-system" "-R" "/run/current-system"))
+	   "-R" "/var/current-system" "-R" "/run/current-system"
+           "-R" "/run/wrappers/bin/fusermount"))
      ,@(loop
 	 for m in mounts
 	 for type := (subseq (reverse (string-upcase (first m))) 0 1)

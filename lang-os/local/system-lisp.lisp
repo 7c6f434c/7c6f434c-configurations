@@ -188,7 +188,7 @@
       ,@(when nix-path `("-I" ,nix-path)))))
 
 (defun start-x-allowed-p (context display)
-  (require-presence context))
+  (require-presence context) t)
 
 (defun grab-device-allowed-p (user subuser device)
   (gethash (list user :owner) *user-info*))

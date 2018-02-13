@@ -4,7 +4,7 @@
   (
    :iolib :iolib/os :iolib/syscalls
    :uiop :iterate :cl-ppcre :bordeaux-threads :local-time alexandria :trivial-backtrace
-   :clsql :clsql-sqlite3
+   :clsql :clsql-sqlite3 :parenscript :drakma :cl-html-parse
    )
   :serial nil
   :components
@@ -27,6 +27,9 @@
    (:file "socket-command-client" :depends-on ("safe-read" "socket-command-server"))
    (:file "read-eval-print-once")
    (:file "user-abbreviations" :depends-on ("shell" "socket-command-client"))
-   (:file "socket-command-definitions" :depends-on ("socket-command-server" "subuser" "daemon"))
+   (:file "socket-command-definitions" :depends-on ("socket-command-server" "subuser" "daemon" "shell" "vt"))
+   (:file "subuser-x" :depends-on ("shell" "nix" "timestamp" "socket-command-client"))
+   (:file "marionette" :depends-on ("subuser-x"))
+   (:file "plain-web" :depends-on ())
    )
   )

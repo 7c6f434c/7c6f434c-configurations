@@ -9,6 +9,9 @@
     #:with-strong-presence-auth
     #:with-password-auth
     #:with-system-socket
+    #:with-fd-tags
+    #:*ambient-system-socket*
+    #:send-fd-over-unix-socket
     ))
 (in-package :lisp-os-helpers/socket-command-client)
 
@@ -41,12 +44,12 @@
       for reply := (read-from-server stream)
       while (not (equal (second reply) marker)))))
 
-(defun ask-server (form &key (stream *ambient-system-socket*))
+(defun ask-server (form &key (socket *ambient-system-socket*))
   (let
-    ((stream (coerce-to-socket-stream stream)))
-    (skip-server-messages stream)
-    (send-to-server stream form)
-    (read-from-server stream)))
+    ((socket (coerce-to-socket-stream socket)))
+    (skip-server-messages socket)
+    (send-to-server socket form)
+    (read-from-server socket)))
 
 (defun coerce-to-socket-stream (socket)
   (etypecase socket
@@ -69,7 +72,7 @@
   (let*
     ((user (or user (get-current-user-name)))
      (socket (coerce-to-socket-stream socket))
-     (challenge (take-reply-value (ask-server `(request-uid-auth ,user) :stream socket)))
+     (challenge (take-reply-value (ask-server `(request-uid-auth ,user) :socket socket)))
      (answer (with-open-file (f challenge) (read-line f nil nil))))
     `(with-uid-auth ,answer ,form)))
 
@@ -79,3 +82,26 @@
   `(with-strong-presence-auth ,prompt ,form ,timeout))
 (defun with-password-auth (prompt form &key user (timeout 15))
   `(with-password-auth ,prompt ,form ,(or user (get-current-user-name)) ,timeout))
+
+(defun send-fd-over-unix-socket (path fd)
+  (let*
+    ((socket (iolib:make-socket
+               :connect :active :address-family :local :type :datagram
+               :remote-filename path)))
+    (unwind-protect
+      (iolib/sockets:send-file-descriptor socket fd)
+      (close socket))))
+
+(defun with-fd-tags (tags form &key (socket *ambient-system-socket*))
+  (loop
+    with fd-socket := (second (ask-server `(fd-socket) :socket socket))
+    for pair in tags
+    for tag := (first pair)
+    for fd := (second pair)
+    do (send-fd-over-unix-socket
+         (concatenate 'string (string #\Null) fd-socket)
+         fd)
+    do (ask-server `(receive-fd ,tag)))
+  `(prog1
+     ,form
+     (close-received-fds)))

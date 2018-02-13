@@ -1,0 +1,51 @@
+if test -n "$FIREFOX_PROFILE"; then
+  if test -n "/nix/store/bag4g2q2bmc3fxiwh30b02bkz3726sj6-firefox-initialised-profile"; then
+    _FIREFOX_PROFILE="$(mktemp -d)"
+    _FIREFOX_PROFILE_KILL="$_FIREFOX_PROFILE"
+    "/nix/store/wf9rb2d1skc64yf05mynfg35wj9kpl38-unionfs-fuse-2.0/bin/unionfs" "$FIREFOX_PROFILE=RW:/nix/store/bag4g2q2bmc3fxiwh30b02bkz3726sj6-firefox-initialised-profile=RO" "$_FIREFOX_PROFILE"
+  else
+    _FIREFOX_PROFILE="$FIREFOX_PROFILE"
+    _FIREFOX_PROFILE_KILL=
+  fi
+else
+  if test -n "/nix/store/bag4g2q2bmc3fxiwh30b02bkz3726sj6-firefox-initialised-profile"; then
+    _FIREFOX_PROFILE="$(mktemp -d)"
+    _FIREFOX_PROFILE_KILL="$_FIREFOX_PROFILE"
+    mkdir "$_FIREFOX_PROFILE"/mount
+    mkdir "$_FIREFOX_PROFILE"/store
+    "/nix/store/wf9rb2d1skc64yf05mynfg35wj9kpl38-unionfs-fuse-2.0/bin/unionfs" "$_FIREFOX_PROFILE/store=RW:/nix/store/bag4g2q2bmc3fxiwh30b02bkz3726sj6-firefox-initialised-profile=RO" "$_FIREFOX_PROFILE/mount"
+    _FIREFOX_PROFILE="$_FIREFOX_PROFILE/mount"
+  else
+    _FIREFOX_PROFILE="$(mktemp -d)"
+    _FIREFOX_PROFILE_KILL="$_FIREFOX_PROFILE"
+  fi
+fi
+
+if test -n "$MARIONETTE_SOCKET"; then
+  export MARIONETTE_PORT="${MARIONETTE_PORT:-2828}"
+  (
+    source "/nix/store/r8vdx77igmjs2wffzgcijni7n7npsdpb-marionette-env"
+    socat unix-listen:"$MARIONETTE_SOCKET",forever,fork exec:'python -c '"'"'from marionette_driver.marionette import Marionette;
+import os;
+session = Marionette();
+session.port = int(os.getenv("MARIONETTE_PORT" or 2828));
+session.start_session();
+'"'"';'
+  )
+fi
+
+if test -n "$MARIONETTE_PORT"; then
+  sed -e '/marionette[.]defaultPrefs[.]port/d' -i "$_FIREFOX_PROFILE/prefs.js"
+  echo "user_pref(\"marionette.defaultPrefs.port\",\"$MARIONETTE_PORT\");" >> "$_FIREFOX_PROFILE/prefs.js"
+  "/nix/store/gz4zcdd2qhhwgb5i5550xw46qsccqy8g-firefox-58.0.2/bin/firefox" --profile "$_FIREFOX_PROFILE" --new-instance --marionette "$@"
+else
+  "/nix/store/gz4zcdd2qhhwgb5i5550xw46qsccqy8g-firefox-58.0.2/bin/firefox" --profile "$_FIREFOX_PROFILE" --new-instance "$@"
+fi
+if test -n "$_FIREFOX_PROFILE_KILL"; then
+  rm -rf "$_FIREFOX_PROFILE_KILL"
+fi
+if test -n "$MARIONETTE_SOCKET"; then
+  "/nix/store/h4vp5bfk6grx76333781kmyhpcyc2ml4-psmisc-23.1/bin/fuser" "$MARIONETTE_SOCKET"
+  rm -f "$MARIONETTE_SOCKET"
+fi
+

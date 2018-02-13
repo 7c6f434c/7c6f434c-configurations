@@ -61,6 +61,21 @@
   (loop
     for e in entries
     collect (take-reply-value (eval-command-form e context))))
+(defun socket-command-server-commands::progn
+  (context &rest entries)
+  (loop
+    with result := nil
+    for e in entries
+    do (setf result (take-reply-value (eval-command-form e context)))
+    finally (return result)))
+(defun socket-command-server-commands::prog1
+  (context &rest entries)
+  (loop
+    with result :=
+    (take-reply-value (eval-command-form (first entries) context))
+    for e in (rest entries)
+    do (setf result (take-reply-value (eval-command-form e context)))
+    finally (return result)))
 
 (defun socket-command-server-commands::request-uid-auth (context user)
   (flet ((context (&rest args) (apply context args)))
@@ -83,7 +98,7 @@
     (unless
       (fbterm-request
 	(format
-	  nil "Peer ~s (UID ~s) wants to use a privileged invocation:~%~s~%It says:~%~s~%"
+	  nil "Peer ~s (UID ~s) wants to use a privileged invocation:~%~s~%It says:~%~s~%Press Enter to allow"
 	  (context :peer) (context :uid-auth-verified-user) form prompt)
 	:timeout timeout)
       (error "User confirmation has not been received"))
@@ -98,11 +113,11 @@
     (unless
       (fbterm-request
 	(format
-	  nil "Peer ~s (UID ~s) wants to use a privileged invocation:~%~s~%It says:~%~s~%"
+	  nil "Peer ~s (UID ~s) wants to use a privileged invocation:~%~s~%It says:~%~s~%Press Enter to allow"
 	  (context :peer) (context :uid-auth-verified-user) form prompt)
 	:pre-prompt
 	(format
-	  nil "Peer ~s (UID ~s) wants to use a privileged invocation:~%~s~%It says:~%~s~%Press Enter to allow"
+	  nil "Peer ~s (UID ~s) wants to use a privileged invocation:~%~s~%It says:~%~s~%"
 	  (context :peer)  (context :uid-auth-verified-user) form prompt)
 	:timeout timeout)
       (error "User confirmation has not been received"))

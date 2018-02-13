@@ -207,15 +207,6 @@
     (mapcar 'to-string
             (uiop:subdirectories (to-string (or name (uiop:getcwd)))))))
 
-(defun send-fd-over-unix-socket (path fd)
-  (let*
-    ((socket (iolib:make-socket
-               :connect :active :address-family :local :type :datagram
-               :remote-filename path)))
-    (unwind-protect
-      (iolib/sockets:send-file-descriptor socket fd)
-      (close socket))))
-
 (defmacro && (&rest args)
   `(bordeaux-threads:make-thread
      (lambda () ,@args)

@@ -21,7 +21,7 @@ rec {
     src = "" + ../lisp-os-helpers;
     deps = with pkgs.lispPackages; [
       iolib iterate local-time cl-ppcre bordeaux-threads alexandria trivial-backtrace
-      clsql clsql-sqlite3
+      clsql clsql-sqlite3 parenscript drakma cl-html-parse
     ];
   };
 
@@ -108,6 +108,7 @@ rec {
       setuidPrograms = [
         { name = "su"; src="${pkgs.shadow.su}/bin/su"; setuid=true; }
         { name = "unix_chkpwd"; src="${pkgs.pam}/bin/unix_chkpwd.orig"; setuid=true; }
+        { name = "fusermount"; src="${pkgs.fuse}/bin/fusermount"; setuid=true; }
       ];
     };
     sw = pkgs.buildEnv rec {

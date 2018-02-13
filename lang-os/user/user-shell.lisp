@@ -17,6 +17,7 @@
 (use-package :lisp-os-helpers/socket-command-client)
 (use-package :lisp-os-helpers/shell)
 (use-package :lisp-os-helpers/nix)
+(use-package :lisp-os-helpers/subuser-x)
 
 (defpackage :sudo (:use))
 
@@ -124,3 +125,10 @@
 	(with-presence-auth
 	  "Activate network"
 	  `(dhclient ,interface ,copy-resolv))))))
+
+(reset-firefox-launcher :nix-path (list ($ :home))
+			:nix-wrapper-file (format nil "~a/lang-os/wrapped-firefox-launcher.nix"
+						  ($ :home))
+			:profile-contents
+			(format nil "~a/lang-os/user/firefox-profile-skel/"
+				($ :home)))

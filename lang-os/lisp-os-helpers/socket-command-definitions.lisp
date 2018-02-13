@@ -2,9 +2,13 @@
   (:use :common-lisp
 	:lisp-os-helpers/shell
 	:lisp-os-helpers/subuser
-	:lisp-os-helpers/daemon)
+	:lisp-os-helpers/daemon
+	:lisp-os-helpers/socket-command-server
+	:lisp-os-helpers/vt
+	)
   (:export
     #:start-x-allowed-p
+    #:grab-device-allowed-p
     ))
 (in-package :lisp-os-helpers/socket-command-definitions)
 
@@ -88,6 +92,21 @@
 		      ))
 	   if (and (listp o) (equalp (first o) "netns"))
 	   append (list :netns t :netns-ports-out (second o))
+           if (and (listp o) (equalp (first o) "stdin-fd"))
+           append (list :stdin-fd
+                        (getf
+                          (funcall context :fd-socket-fd-plist )
+                          (intern (string-upcase (second o)) :keyword)))
+           if (and (listp o) (equalp (first o) "stdout-fd"))
+           append (list :stdout-fd
+                        (getf
+                          (funcall context :fd-socket-fd-plist )
+                          (intern (string-upcase (second o)) :keyword)))
+           if (and (listp o) (equalp (first o) "stderr-fd"))
+           append (list :stderr-fd
+                        (getf
+                          (funcall context :fd-socket-fd-plist )
+                          (intern (string-upcase (second o)) :keyword)))
 	   ))))
     (if (typep value 'iolib/os:process) "OK" value)))
 
@@ -100,8 +119,10 @@
 (defun socket-command-server-commands::drop-persistent-subuser (context name)
   (drop-subuser (context-uid context) :name name))
 
-(defun socket-command-server-commands::subuser-uid (context name)
+(defun socket-command-server-commands::select-subuser (context name)
   (select-subuser (context-uid context) :name name))
+(defun socket-command-server-commands::subuser-uid (context name)
+  (subuser-uid (context-uid context) :name name :passwd-entry nil))
 
 (defun socket-command-server-commands::chown-subuser (context path name)
   (chown-subuser (context-uid context) path
