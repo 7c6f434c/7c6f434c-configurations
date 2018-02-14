@@ -70,6 +70,7 @@ targetSystem="$1";
 
     "$targetSystem"/bin/modprobe af-packet
     ip link set lo up
+    "$targetSystem"/bin/modprobe fuse
 
     bootedSystem="$(cat /proc/cmdline | tr " " "\\n" | grep targetSystem= | tr "=" "\\n" | tail -n 1)"
 

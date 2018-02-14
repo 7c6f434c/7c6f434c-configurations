@@ -9,6 +9,7 @@
   :serial nil
   :components
   (
+   (:file "util")
    (:file "shell")
    (:file "file-locks")
    (:file "vt" :depends-on ("shell" "file-locks"))
@@ -23,11 +24,11 @@
    (:file "nix" :depends-on ("shell"))
    (:file "unix-users")
    (:file "socket-command-server" :depends-on ("safe-read" "references" "auth-data" "fbterm-requests"))
-   (:file "subuser" :depends-on ("shell" "timestamp" "global-sqlite"))
+   (:file "subuser" :depends-on ("shell" "timestamp" "global-sqlite" "util"))
    (:file "socket-command-client" :depends-on ("safe-read" "socket-command-server"))
    (:file "read-eval-print-once")
    (:file "user-abbreviations" :depends-on ("shell" "socket-command-client"))
-   (:file "socket-command-definitions" :depends-on ("socket-command-server" "subuser" "daemon" "shell" "vt"))
+   (:file "socket-command-definitions" :depends-on ("socket-command-server" "subuser" "daemon" "shell" "vt" "util"))
    (:file "subuser-x" :depends-on ("shell" "nix" "timestamp" "socket-command-client"))
    (:file "marionette" :depends-on ("subuser-x"))
    (:file "plain-web" :depends-on ())

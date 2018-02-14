@@ -8,6 +8,7 @@
     #:slay-subuser
     #:chown-subuser
     #:run-as-subuser
+    #:nsjail-mount-allowed
     ))
 (in-package :lisp-os-helpers/subuser)
 
@@ -149,30 +150,60 @@
      ,(format nil "~a" gid)
      ,@ command))
 
+(defun-weak
+  nsjail-mount-allowed (from to type)
+  (and
+    (or
+      (alexandria:starts-with-subseq "/home/" target)
+      (alexandria:starts-with-subseq "/tmp/" target)
+      )
+    (or
+      (alexandria:starts-with-subseq "/home/" internal-target)
+      (alexandria:starts-with-subseq "/tmp/" internal-target)
+      )
+    ))
+
 (defun add-command-nsjail
   (command uid &key
 	   (gid 65534) (network nil)
 	   mounts skip-default-mounts
 	   (proc-rw t) 
-	   (internal-uid uid) (internal-gid gid))
+	   (internal-uid uid) (internal-gid gid)
+           fake-passwd
+           skip-mount-check)
   `(,*nsjail-helper*
      "-q" "-u" , (format nil "~a:~a" internal-uid uid)
      ,@(when gid `("-g" ,(format nil "~a:~a" internal-gid gid)))
      ,@(unless skip-default-mounts
 	 `("-R" "/etc/ssl" "-R" "/etc/resolv.conf" "-T" "/tmp"
 	   "-B" "/dev/null" "-B" "/dev/full" "-B" "/dev/zero"
-	   "-B" "/dev/random" "-B" "/dev/urandom"
+	   "-B" "/dev/random" "-B" "/dev/urandom" "-B" "/dev/fuse"
 	   "-R" "/bin" "-R" "/usr" "-R" "/nix/store"
-	   "-R" "/var/current-system" "-R" "/run/current-system"
-           "-R" "/run/wrappers/bin/fusermount"))
+	   "-R" "/var/current-system" "-R" "/run/current-system"))
+     ,@(when fake-passwd
+         (ensure-directories-exist "/tmp/system-lisp/subuser-passwd/")
+         (with-open-file 
+           (f (format nil 
+                      "/tmp/system-lisp/subuser-passwd/~a" uid)
+              :direction :output :if-exists :supersede)
+           (format f ".~a:x:~a:~a::/:/bin/sh~%"
+                   uid uid gid))
+         (list "-R" "/tmp/system-lisp/subuser-passwd/~a"))
      ,@(loop
 	 for m in mounts
 	 for type := (subseq (reverse (string-upcase (first m))) 0 1)
 	 for target := (second m)
 	 for internal-target := (or (third m) target)
+         for target-refernce := (if (equalp type "T") target
+                                  (format nil "~a:~a" target internal-target))
+         unless (or
+                  skip-mount-check 
+                  (nsjail-mount-allowed target internal-target type))
+         do (error "Forbidden mount for nsjail: ~s on ~s with type ~s"
+                   target internal-target type)
 	 when (find type '("B" "R" "T") :test 'equal)
 	 collect (concatenate 'string "-" type)
-	 collect (format nil "~a:~a" target internal-target))
+	 collect target-reference)
      ,@(when proc-rw `("--proc_rw"))
      ,@(when network `("-N"))
      "--"

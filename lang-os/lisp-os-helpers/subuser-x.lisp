@@ -56,26 +56,42 @@
 		  collect
 		  (cond
 		    ((and (listp o) (equalp (string (first o)) "nsjail"))
-		     (cons
-		       "nsjail"
+		     (append
+		       (list "nsjail")
 		       (loop
-			 for oo in (rest o)
-			 collect
-			 (cond
-			   ((and (listp oo)
-				 (equalp (string (first oo)) "mounts"))
-			    (list
-			      "mounts"
-			      (append
-				(second oo)
-				(list (list "-B" x-socket x-socket)))))
-			   (t oo)))))
+                         with result := nil
+                         with mounts-seen := nil
+                         for oo in (rest o)
+                         do
+                         (push
+                           (cond
+                             ((and (listp oo)
+                                   (equalp (string (first oo)) "mounts"))
+                              (setf mounts-seen t)
+                              (list
+                                "mounts"
+                                (append
+                                  (second oo)
+                                  (list (list "-B" x-socket x-socket)))))
+                             (t oo))
+                           result)
+                         finally
+                         (progn
+                           (unless mounts-seen
+                             (push (list "mounts"
+                                         (list (list "-B" x-socket x-socket))
+                                         result)))
+                           (return (reverse result))))))
 		    (t o))))))))))
 
 (defun reset-firefox-launcher (&key profile-contents nix-path nix-wrapper-file)
   (setf *firefox-profile-contents* profile-contents)
   (setf *firefox-launcher*
-	(nix-build "firefoxLauncher" :nix-file nix-wrapper-file :nix-path nix-path)))
+	(format nil
+		"~a/bin/~a"
+		(nix-build "firefoxLauncher"
+			   :nix-file nix-wrapper-file :nix-path nix-path)
+		"firefox-launcher")))
 
 (defun firefox-pref-value-js (value)
   (cond
@@ -89,7 +105,8 @@
   (arguments &key display prefs
 	     environment marionette-socket home profile-storage name
 	     (firefox-launcher *firefox-launcher*) (slay t) (wait t)
-	     (netns t) network-ports pass-stderr mounts system-socket)
+	     (netns t) network-ports pass-stderr mounts system-socket
+	     (path "/var/current-system/sw/bin"))
   (with-system-socket
     (system-socket)
     (when pass-stderr
@@ -118,6 +135,7 @@
 		for value := (second value)
 		for representation :=
 		(firefox-pref-value-js value))))
+	  ("PATH" ,path)
 	  )
 	:options
 	`(

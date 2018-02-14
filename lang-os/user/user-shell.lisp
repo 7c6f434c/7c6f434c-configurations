@@ -1,4 +1,6 @@
 (defun load-helpers ()
+  (require :sb-posix)
+  (require :sb-bsd-sockets)
   (with-open-file (*error-output* "/dev/null" :direction :output :if-exists :overwrite)
     (with-open-file (*trace-output* "/dev/null" :direction :output :if-exists :overwrite)
       (load (format nil "~a/lib/common-lisp/lisp-os-helpers/lisp-os-helpers--all-systems.fasl" *lisp-os-helpers-package*)))))

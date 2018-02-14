@@ -1,6 +1,19 @@
-(with-open-file (*error-output* "/dev/null" :direction :output :if-exists :overwrite)
-  (with-open-file (*trace-output* "/dev/null" :direction :output :if-exists :overwrite)
-    (load (format nil "~a/lib/common-lisp/lisp-os-helpers/lisp-os-helpers--all-systems.fasl" *lisp-os-helpers-package*))))
+(defvar *socket-main-thread* nil)
+
+(defparameter *socket-main-thread-preexisting* *socket-main-thread*)
+
+(format t "~s~%Preexisting socket: ~s~%Helpers: ~s~%"
+        "Initialising Common Lisp system daemon"
+        *socket-main-thread-preexisting*
+        *lisp-os-helpers-package*)
+
+(unless
+  (ignore-errors
+    (with-open-file (*error-output* "/dev/null" :direction :output :if-exists :overwrite)
+      (with-open-file (*trace-output* "/dev/null" :direction :output :if-exists :overwrite)
+        (load (format nil "~a/lib/common-lisp/lisp-os-helpers/lisp-os-helpers--all-systems.fasl" *lisp-os-helpers-package*))))
+    t)
+  (load (format nil "~a/lib/common-lisp/lisp-os-helpers/lisp-os-helpers--all-systems.fasl" *lisp-os-helpers-package*)))
 
 (use-package :lisp-os-helpers/shell)
 (use-package :lisp-os-helpers/network)
@@ -10,10 +23,6 @@
 (use-package :lisp-os-helpers/unix-users)
 (use-package :lisp-os-helpers/vt)
 (use-package :lisp-os-helpers/socket-command-definitions)
-
-(defvar *socket-main-thread* nil)
-
-(defparameter *socket-main-thread-preexisting* *socket-main-thread*)
 
 (unless *socket-main-thread-preexisting*
   (format t "Starting the Common Lisp system daemon at ~a~%" (local-time:now)))

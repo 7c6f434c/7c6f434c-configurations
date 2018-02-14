@@ -12,6 +12,7 @@
     #:with-fd-tags
     #:*ambient-system-socket*
     #:send-fd-over-unix-socket
+    #:take-reply-value
     ))
 (in-package :lisp-os-helpers/socket-command-client)
 

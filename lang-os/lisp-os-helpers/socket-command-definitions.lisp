@@ -5,16 +5,13 @@
 	:lisp-os-helpers/daemon
 	:lisp-os-helpers/socket-command-server
 	:lisp-os-helpers/vt
+	:lisp-os-helpers/util
 	)
   (:export
     #:start-x-allowed-p
     #:grab-device-allowed-p
     ))
 (in-package :lisp-os-helpers/socket-command-definitions)
-
-(defmacro defun-weak (name args &rest body)
-  `(unless (fboundp ',name)
-     (defun ,name ,args ,@body)))
 
 (defun socket-command-server-commands::load (context path)
   (require-root context)
