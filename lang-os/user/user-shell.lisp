@@ -20,6 +20,7 @@
 (use-package :lisp-os-helpers/shell)
 (use-package :lisp-os-helpers/nix)
 (use-package :lisp-os-helpers/subuser-x)
+(use-package :lisp-os-helpers/timestamp)
 
 (defpackage :sudo (:use))
 
@@ -98,6 +99,15 @@
 	"Arbitrary command execution is requested"
 	`(run ,@ command)
 	:user "root"))))
+
+(defun-export
+  sudo::load (path)
+  (with-system-socket
+    ()
+    (ask-server
+      (with-password-auth
+	"Arbitrary Lisp code load is requested"
+	`(load ,path) :user "root"))))
 
 (defmacro
   !su (&rest data)

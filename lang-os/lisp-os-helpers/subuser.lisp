@@ -1,6 +1,7 @@
 (defpackage :lisp-os-helpers/subuser
   (:use :common-lisp
-	:lisp-os-helpers/shell :lisp-os-helpers/global-sqlite :lisp-os-helpers/timestamp)
+	:lisp-os-helpers/shell :lisp-os-helpers/global-sqlite
+        :lisp-os-helpers/timestamp :lisp-os-helpers/util)
   (:export
     #:subuser-uid
     #:select-subuser
@@ -8,7 +9,7 @@
     #:slay-subuser
     #:chown-subuser
     #:run-as-subuser
-    #:nsjail-mount-allowed
+    #:nsjail-mount-allowed-p
     ))
 (in-package :lisp-os-helpers/subuser)
 
@@ -151,7 +152,7 @@
      ,@ command))
 
 (defun-weak
-  nsjail-mount-allowed (from to type)
+  nsjail-mount-allowed-p (from to type)
   (and
     (or
       (alexandria:starts-with-subseq "/home/" target)
@@ -188,17 +189,17 @@
               :direction :output :if-exists :supersede)
            (format f ".~a:x:~a:~a::/:/bin/sh~%"
                    uid uid gid))
-         (list "-R" "/tmp/system-lisp/subuser-passwd/~a"))
+         (list "-R" (format nil "/tmp/system-lisp/subuser-passwd/~a:/etc/passwd" uid)))
      ,@(loop
 	 for m in mounts
 	 for type := (subseq (reverse (string-upcase (first m))) 0 1)
 	 for target := (second m)
 	 for internal-target := (or (third m) target)
-         for target-refernce := (if (equalp type "T") target
+         for target-reference := (if (equalp type "T") target
                                   (format nil "~a:~a" target internal-target))
          unless (or
                   skip-mount-check 
-                  (nsjail-mount-allowed target internal-target type))
+                  (nsjail-mount-allowed-p target internal-target type))
          do (error "Forbidden mount for nsjail: ~s on ~s with type ~s"
                    target internal-target type)
 	 when (find type '("B" "R" "T") :test 'equal)
@@ -206,10 +207,11 @@
 	 collect target-reference)
      ,@(when proc-rw `("--proc_rw"))
      ,@(when network `("-N"))
+     "-E" "PATH="
      "--"
      ,@ command))
 
-(defun add-command-netns (command &key ports-out 
+(defun add-command-netns (command &key ports-out uid gid
 				  (path "/var/current-system/sw/bin"))
   (let* 
     ((*print-right-margin* (expt 10 9))
@@ -255,7 +257,7 @@
        (list
 	 "/bin/sh" "-c"
 	 (format
-	   nil "~a ; ~{ ~a & ~} sleep 0.3; ~a"
+	   nil "~a ; ~{ ~a & ~} sleep 0.3; ~a; exit_value=$?; pkill -INT -P $$; exit $exit_value"
 	   (collapse-command lo-up-command)
 	   (mapcar 'collapse-command listen-commands)
 	   inner-unshare)))
@@ -263,12 +265,13 @@
      (result
        (list
 	 "/bin/sh" "-c"
-	 (format nil "export PATH=\"${PATH:-~a}\"; ~a; ~{~a & ~} ~a; exit_value=$?; ~a; exit $exit_value"
+	 (format nil "test -n \"$PATH\" || export PATH=~a; ~a; ~{~a & ~} ~a; exit_value=$?; ~a; pkill -INT -P $$; exit $exit_value"
 		 (escape-for-shell path)
 		 (collapse-command mkdir-command)
 		 (mapcar 'collapse-command connect-commands)
 		 (collapse-command outer-unshare)
 		 (collapse-command clean-dir-command)))))
+    (iolib/syscalls:lchown tmpdir uid gid)
     result))
 
 (defun run-as-subuser (user command &key uid (gid 65534) name environment
@@ -290,16 +293,19 @@
      (command-to-wrap command-with-env)
      (command-to-wrap
        (if netns
-	 (add-command-netns command-to-wrap :ports-out netns-ports-out)
+	 (add-command-netns 
+	   command-to-wrap :ports-out netns-ports-out
+	   :uid uid :gid gid)
 	 command-to-wrap))
-     (wrapped-command
+     (command-to-wrap
        (cond
 	 (nsjail
 	   (apply
 	     'add-command-nsjail
 	     command-to-wrap uid :gid gid
 	     nsjail-settings))
-	 (t (add-command-numeric-su command uid :gid gid))))
+	 (t (add-command-numeric-su command-to-wrap uid :gid gid))))
+     (wrapped-command command-to-wrap)
      (process
        (iolib/os:create-process
 	 wrapped-command

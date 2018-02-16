@@ -84,6 +84,8 @@
 		      if (equalp oo "no-network") append (list :network nil)
 		      if (equalp oo "skip-default-mounts") append (list :skip-default-mounts t)
 		      if (equalp oo "proc-rw") append (list :proc-rw t)
+		      if (equalp oo "proc-ro") append (list :proc-rw nil)
+		      if (equalp oo "fake-passwd") append (list :fake-passwd t)
 		      if (and (listp oo) (equalp (first oo) "mounts"))
 		      append (list :mounts (second oo))
 		      ))
@@ -134,8 +136,8 @@
   (uiop:run-program
     (list
       "setfacl" "-m"
-      (format nil "u:~a~a:rw"
-	      user (when subuser (format nil ".~a" subuser)))
+      (format nil "u:~a:rw"
+	      (if subuser (subuser-uid user :name subuser) user ))
       device)))
 
 (defun socket-command-server-commands::grab-devices (context devices &optional subuser)

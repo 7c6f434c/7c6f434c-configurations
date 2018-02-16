@@ -200,7 +200,31 @@
   (require-presence context) t)
 
 (defun grab-device-allowed-p (user subuser device)
-  (gethash (list user :owner) *user-info*))
+  (and
+    (gethash (list user :owner) *user-info*)
+    (or
+      (alexandria:starts-with-subseq "/dev/snd/" device)
+      (alexandria:starts-with-subseq "/dev/dri/" device)
+      (alexandria:starts-with-subseq "/dev/fb" device)
+      (alexandria:starts-with-subseq "/dev/video" device)
+      (equal "/dev/fuse" device)
+      (equal "/dev/kvm" device)
+      )))
+
+(defun nsjail-mount-allowed-p (from to type)
+  (or
+    (equal type "T")
+    (equal from to)
+    (and
+      (or
+        (alexandria:starts-with-subseq "/home/" target)
+        (alexandria:starts-with-subseq "/tmp/" target)
+        )
+      (or
+        (alexandria:starts-with-subseq "/home/" internal-target)
+        (alexandria:starts-with-subseq "/tmp/" internal-target)
+        ))
+    ))
 
 (unless
   *socket-main-thread-preexisting*

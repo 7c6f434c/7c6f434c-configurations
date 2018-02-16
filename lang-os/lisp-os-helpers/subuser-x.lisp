@@ -20,7 +20,7 @@
   subuser-command-with-x
   (command 
     &key
-    display
+    display setup
     name environment options system-socket)
   (let*
     ((display
@@ -41,6 +41,12 @@
     (uiop:run-program
       (list "setfacl" "-m" (format nil "u:~a:rw" uid)
 	    x-socket))
+    (when setup
+      (funcall
+	setup
+	:allow-other-keys t
+	:name name :uid uid
+	:display display :x-socket x-socket :system-socket system-socket))
     (with-system-socket
       (system-socket)
       (take-reply-value
@@ -78,9 +84,9 @@
                          finally
                          (progn
                            (unless mounts-seen
-                             (push (list "mounts"
-                                         (list (list "-B" x-socket x-socket))
-                                         result)))
+			     (push (list "mounts"
+					 (list (list "-B" x-socket x-socket)))
+				   result))
                            (return (reverse result))))))
 		    (t o))))))))))
 

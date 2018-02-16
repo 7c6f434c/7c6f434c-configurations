@@ -45,7 +45,7 @@
       (loop
 	for c across s
 	for pending-this := nil then pending-next
-	for pending-next := (and (not pending-this) (equal c #\_))
+	for pending-next := (and (not pending-this) (equal c #\^))
 	if (not pending-next) collect (if (equal invert pending-this)
 		  (string-downcase c) (string-upcase c)))))
   (defun to-string (e)
