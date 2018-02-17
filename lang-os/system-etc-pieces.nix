@@ -69,12 +69,16 @@ rec {
   mountEtc = deeplinkAttrset "etc-mount" {
         fstab = "/dev/null";
         mtab = "/proc/mounts";
+        "fuse.conf" = pkgs.writeText "fuse.conf" ''
+          user_allow_other
+        '';
       };
   namesEtc = hostname: deeplinkAttrset "names-etc" (
      (fromNixOS.etcSelectComponents
              ["hostname" "hosts" "nsswitch.conf"]
              {networking.hostName="localhost";})
-     // resolvEtc.entries // ianaEtc.entries
+     // resolvEtc.entries // ianaEtc.entries //
+     { "machine-id" = "/var/etc/machine-id"; }
      );
   authEtc = config: deeplinkAttrset "auth-etc" (
       (fromNixOS.etcSelectPrefix "pam.d/" config) //

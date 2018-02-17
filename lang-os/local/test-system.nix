@@ -118,7 +118,7 @@ rec {
         vim monotone screen rxvt_unicode xorg.xprop
         sbcl lispPackages.clwrapper lispPackages.uiop asdf gerbil
 	postgresql-package
-        nsjail
+        nsjail unionfs-fuse
         lispPackages.stumpwm
         (swPieces.cProgram "vtlock" ../c/vtlock.c [] [])
         (swPieces.cProgram "file-lock" ../c/file-lock.c [] [])

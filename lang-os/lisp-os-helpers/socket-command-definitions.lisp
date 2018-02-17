@@ -85,6 +85,7 @@
 		      if (equalp oo "skip-default-mounts") append (list :skip-default-mounts t)
 		      if (equalp oo "proc-rw") append (list :proc-rw t)
 		      if (equalp oo "proc-ro") append (list :proc-rw nil)
+		      if (equalp oo "full-dev") append (list :full-dev t)
 		      if (equalp oo "fake-passwd") append (list :fake-passwd t)
 		      if (and (listp oo) (equalp (first oo) "mounts"))
 		      append (list :mounts (second oo))

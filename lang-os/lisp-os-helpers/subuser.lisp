@@ -168,40 +168,62 @@
   (command uid &key
 	   (gid 65534) (network nil)
 	   mounts skip-default-mounts
-	   (proc-rw t) 
+	   (proc-rw t)
 	   (internal-uid uid) (internal-gid gid)
            fake-passwd
-           skip-mount-check)
+           skip-mount-check
+	   full-dev
+	   (rlimit-as "max") (rlimit-core "0") (rlimit-cpu "max")
+	   (rlimit-fsize "max") (rlimit-nofile "max")
+	   (rlimit-nproc "max") (rlimit-stack "max")
+	   )
   `(,*nsjail-helper*
      "-q" "-u" , (format nil "~a:~a" internal-uid uid)
+     "--rlimit_as"     ,rlimit-as
+     "--rlimit_core"   ,rlimit-core
+     "--rlimit_cpu"    ,rlimit-cpu
+     "--rlimit_fsize"  ,rlimit-fsize
+     "--rlimit_nofile" ,rlimit-nofile
+     "--rlimit_nproc"  ,rlimit-nproc
+     "--rlimit_stack"  ,rlimit-stack
      ,@(when gid `("-g" ,(format nil "~a:~a" internal-gid gid)))
      ,@(unless skip-default-mounts
-	 `("-R" "/etc/ssl" "-R" "/etc/resolv.conf" "-T" "/tmp"
-	   "-B" "/dev/null" "-B" "/dev/full" "-B" "/dev/zero"
-	   "-B" "/dev/random" "-B" "/dev/urandom" "-B" "/dev/fuse"
+	 `(
+	   "-R" "/etc/ssl" "-R" "/etc/resolv.conf" "-R" "/etc/machine-id"
+	   "-T" "/tmp"
+	   ,@(unless full-dev
+	       `("-B" "/dev/null" "-B" "/dev/full" "-B" "/dev/zero"
+		 "-B" "/dev/random" "-B" "/dev/urandom"
+		 "-B" "/dev/shm"
+		 ))
 	   "-R" "/bin" "-R" "/usr" "-R" "/nix/store"
-	   "-R" "/var/current-system" "-R" "/run/current-system"))
+	   "-R" "/var/current-system" "-R" "/run/current-system"
+	   "-R" "/run/opengl-driver/" "-R" "/run/opengl-driver-32/"
+	   "-R" "/etc/fonts"
+	   ))
+     ,@(when full-dev `("-B" "/dev/" "-B" "/dev/shm"))
      ,@(when fake-passwd
-         (ensure-directories-exist "/tmp/system-lisp/subuser-passwd/")
-         (with-open-file 
-           (f (format nil 
-                      "/tmp/system-lisp/subuser-passwd/~a" uid)
-              :direction :output :if-exists :supersede)
-           (format f ".~a:x:~a:~a::/:/bin/sh~%"
-                   uid uid gid))
-         (list "-R" (format nil "/tmp/system-lisp/subuser-passwd/~a:/etc/passwd" uid)))
+	 (ensure-directories-exist "/tmp/system-lisp/subuser-passwd/")
+	 (with-open-file 
+	   (f (format nil 
+		      "/tmp/system-lisp/subuser-passwd/~a" uid)
+	      :direction :output :if-exists :supersede)
+	   (format f ".~a:x:~a:~a::/:/bin/sh~%" uid uid gid)
+	   (format f ".~a:x:~a:~a::/:/bin/sh~%" 65534 65534 65534)
+	   )
+	 (list "-R" (format nil "/tmp/system-lisp/subuser-passwd/~a:/etc/passwd" uid)))
      ,@(loop
 	 for m in mounts
 	 for type := (subseq (reverse (string-upcase (first m))) 0 1)
 	 for target := (second m)
 	 for internal-target := (or (third m) target)
-         for target-reference := (if (equalp type "T") target
-                                  (format nil "~a:~a" target internal-target))
-         unless (or
-                  skip-mount-check 
-                  (nsjail-mount-allowed-p target internal-target type))
-         do (error "Forbidden mount for nsjail: ~s on ~s with type ~s"
-                   target internal-target type)
+	 for target-reference := (if (equalp type "T") target
+				   (format nil "~a:~a" target internal-target))
+	 unless (or
+		  skip-mount-check 
+		  (nsjail-mount-allowed-p target internal-target type))
+	 do (error "Forbidden mount for nsjail: ~s on ~s with type ~s"
+		   target internal-target type)
 	 when (find type '("B" "R" "T") :test 'equal)
 	 collect (concatenate 'string "-" type)
 	 collect target-reference)

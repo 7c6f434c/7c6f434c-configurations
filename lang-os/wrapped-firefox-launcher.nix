@@ -24,27 +24,11 @@ rec {
   '';
   combineProfileScript = ''
     if test -n "$FIREFOX_PROFILE"; then
-      if test -n "${baseProfile}"; then
-        _FIREFOX_PROFILE="$(mktemp -d)"
-        _FIREFOX_PROFILE_KILL="$_FIREFOX_PROFILE"
-        "${unionfsCmd}" "$FIREFOX_PROFILE=RW:${baseProfile}=RO" "$_FIREFOX_PROFILE"
-      else
-        _FIREFOX_PROFILE="$FIREFOX_PROFILE"
-        _FIREFOX_PROFILE_KILL=
-      fi
+      _FIREFOX_PROFILE="$FIREFOX_PROFILE"
     else
-      if test -n "${baseProfile}"; then
-        _FIREFOX_PROFILE="$(mktemp -d)"
-        _FIREFOX_PROFILE_KILL="$_FIREFOX_PROFILE"
-        mkdir "$_FIREFOX_PROFILE"/mount
-        mkdir "$_FIREFOX_PROFILE"/store
-        "${unionfsCmd}" "$_FIREFOX_PROFILE/store=RW:${baseProfile}=RO" "$_FIREFOX_PROFILE/mount"
-        _FIREFOX_PROFILE="$_FIREFOX_PROFILE/mount"
-      else
-        _FIREFOX_PROFILE="$(mktemp -d)"
-        _FIREFOX_PROFILE_KILL="$_FIREFOX_PROFILE"
-      fi
+      _FIREFOX_PROFILE="$(mktemp -d)"
     fi
+    test -n "${baseProfile}" && yes n | cp -riT "${baseProfile}" "$_FIREFOX_PROFILE"
   '';
   homeScript = ''
     if test -z "$HOME"; then
@@ -64,10 +48,6 @@ rec {
     fi
   '';
   cleanupScript = ''
-    /run/wrappers/bin/fusermount -u "$_FIREFOX_PROFILE"
-    if test -n "$_FIREFOX_PROFILE_KILL"; then
-      rm -rf "$_FIREFOX_PROFILE_KILL"
-    fi
     if test -n "$_HOME_KILL"; then
       rm -rf "$_HOME_KILL"
     fi
@@ -76,17 +56,27 @@ rec {
       rm -f "$MARIONETTE_SOCKET"
     fi
   '';
-  firefoxLauncher = pkgs.writeScriptBin name ''
+  firefoxProfileCombiner = pkgs.writeScriptBin "combine-firefox-profile" ''
+    export FIREFOX_PROFILE="$1"
     ${combineProfileScript}
+    echo "$_FIREFOX_PROFILE"
+  '';
+  firefoxLauncher = pkgs.writeScriptBin name ''
+    ${homeScript}
     ${marionetteScript}
-    echo "FIREFOX_EXTRA_PREFS" >> "$_FIREFOX_PROFILE/prefs.js"
+    echo "$FIREFOX_EXTRA_PREFS" >> "$FIREFOX_PROFILE/prefs.js"
     if test -n "$MARIONETTE_PORT"; then
-      sed -e '/marionette[.]defaultPrefs[.]port/d' -i "$_FIREFOX_PROFILE/prefs.js"
-      echo "user_pref(\"marionette.defaultPrefs.port\",\"$MARIONETTE_PORT\");" >> "$_FIREFOX_PROFILE/prefs.js"
-      "${firefoxCmd}" --profile "$_FIREFOX_PROFILE" --new-instance --marionette "$@"
+      sed -e '/marionette[.]defaultPrefs[.]port/d' -i "$FIREFOX_PROFILE/prefs.js"
+      echo "user_pref(\"marionette.defaultPrefs.port\",\"$MARIONETTE_PORT\");" >> "$FIREFOX_PROFILE/prefs.js"
+      "${firefoxCmd}" --profile "$FIREFOX_PROFILE" --new-instance --marionette "$@"
     else
-      "${firefoxCmd}" --profile "$_FIREFOX_PROFILE" --new-instance "$@"
+      "${firefoxCmd}" --profile "$FIREFOX_PROFILE" --new-instance "$@"
     fi
     ${cleanupScript}
+  '';
+  firefoxScripts = pkgs.runCommand "firefox-scripts" {} ''
+    mkdir -p "$out/bin"
+    ln -s "${firefoxProfileCombiner}"/bin/* "$out/bin"
+    ln -s "${firefoxLauncher}"/bin/* "$out/bin"
   '';
 }

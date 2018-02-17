@@ -71,7 +71,9 @@ pkgs.runCommand "firefox-initialised-profile" environment ''
   echo "Exited the namespaces"
 
   if test -n "${builtins.toString finalContent}"; then
-    cp -rf "${builtins.toString finalContent}"/* "$out"
+    echo "${builtins.toString finalContent}";
+    ls "${builtins.toString finalContent}";
+    cp -rfT "${builtins.toString finalContent}" "$out"
   fi
   if test -f "$out/search.json"; then
     ${pkgs.lib.getBin pkgs.mozlz4a}/bin/mozlz4a "$out/search.json" "$out/search.json.mozlz4"

@@ -14,6 +14,7 @@
 (in-package :lisp-os-helpers/subuser-x)
 
 (defvar *firefox-profile-contents* nil)
+(defvar *firefox-profile-combiner* nil)
 (defvar *firefox-launcher* nil)
 
 (defun
@@ -92,12 +93,19 @@
 
 (defun reset-firefox-launcher (&key profile-contents nix-path nix-wrapper-file)
   (setf *firefox-profile-contents* profile-contents)
-  (setf *firefox-launcher*
-	(format nil
-		"~a/bin/~a"
-		(nix-build "firefoxLauncher"
-			   :nix-file nix-wrapper-file :nix-path nix-path)
-		"firefox-launcher")))
+  (let
+    ((firefox-scripts 
+       (nix-build
+	 (format
+	   nil
+	   "with import ~s { profileContent = \"\" + ~a; }; firefoxScripts"
+	   nix-wrapper-file 
+	   (cl-ppcre:regex-replace "/$" (namestring (truename profile-contents)) ""))
+	 :nix-path nix-path)))
+    (setf *firefox-profile-combiner* 
+          (format nil "~a/bin/~a" firefox-scripts "combine-firefox-profile"))
+    (setf *firefox-launcher*
+          (format nil "~a/bin/~a" firefox-scripts "firefox-launcher"))))
 
 (defun firefox-pref-value-js (value)
   (cond
@@ -109,46 +117,96 @@
 
 (defun subuser-firefox
   (arguments &key display prefs
-	     environment marionette-socket home profile-storage name
-	     (firefox-launcher *firefox-launcher*) (slay t) (wait t)
-	     (netns t) network-ports pass-stderr mounts system-socket
-	     (path "/var/current-system/sw/bin"))
+             environment marionette-socket home profile-storage name
+             (firefox-launcher *firefox-launcher*) (slay t) (wait t)
+             (netns t) network-ports pass-stderr pass-stdout full-dev
+             mounts system-socket setup
+             (path "/var/current-system/sw/bin"))
   (with-system-socket
-    (system-socket)
-    (when pass-stderr
-      (send-fd-over-unix-socket
-	(concatenate
-	  'string (string #\Null)
-	  (take-reply-value (ask-server `(fd-socket))))
-	2)
-      (ask-server `(receive-fd stderr)))
-    (prog1
-      (subuser-command-with-x
-	`(,firefox-launcher ,@arguments)
-	:display display :name name
-	:environment
-	`(
-	  ,@ environment
-	  ("MARIONETTE_SOCKET" ,(or marionette-socket ""))
-	  ("HOME" ,(or home ""))
-	  ("FIREFOX_PROFILE" ,(or profile-storage ""))
-	  ("FIREFOX_EXTRA_PREFS"
-	   ,(format
-	      nil "~{user_pref(\"~a\",~a);~%~}"
-	      (loop 
-		for pair in prefs
-		for name := (first pair)
-		for value := (second value)
-		for representation :=
-		(firefox-pref-value-js value))))
-	  ("PATH" ,path)
-	  )
-	:options
-	`(
-	  ,@(when slay `("slay"))
-	  ,@(when wait `("wait"))
-	  ("nsjail" "network" ("mounts" ,mounts))
-	  ,@(when netns `(("netns" ,network-ports)))
-	  ,@(when pass-stderr `(("stderr-fd" "stderr"))))
-	:system-socket *ambient-system-socket*)
-      (ask-server `(close-received-fds)))))
+    ()
+    (ask-server
+      (with-uid-auth
+        `(grab-devices ,(mapcar 'namestring (directory "/dev/dri/card*"))))))
+  (let*
+    (
+     (combined-profile
+       (uiop:run-program
+         (list *firefox-profile-combiner* (or profile-storage ""))
+         :output '(:string :stripped t)))
+     )
+    (with-system-socket
+      (system-socket)
+      (when pass-stdout
+        (send-fd-over-unix-socket
+          (concatenate
+            'string (string #\Null)
+            (take-reply-value (ask-server `(fd-socket))))
+          1)
+        (ask-server `(receive-fd stdout)))
+      (when pass-stderr
+        (send-fd-over-unix-socket
+          (concatenate
+            'string (string #\Null)
+            (take-reply-value (ask-server `(fd-socket))))
+          2)
+        (ask-server `(receive-fd stderr)))
+      (unwind-protect
+        (prog1
+          (subuser-command-with-x
+            `(,firefox-launcher ,@arguments)
+            :setup (lambda (&rest args &key uid)
+                     (uiop:run-program
+                       (list
+                         "setfacl"
+                         "-R" "-m"
+                         (format nil "u:~a:rwX" uid)
+                         combined-profile)
+                       :error-output t)
+                     (uiop:run-program
+                       (list
+                         "chmod"
+                         "-R" "u=rwX"
+                         combined-profile)
+                       :error-output t)
+		     (when setup
+		       (apply setup :allow-other-keys t args))
+                     )
+            :display display :name name
+            :environment
+            `(
+              ,@ environment
+              ("MARIONETTE_SOCKET" ,(or marionette-socket ""))
+              ("HOME" ,(or home ""))
+              ("FIREFOX_PROFILE" ,combined-profile)
+              ("FIREFOX_EXTRA_PREFS"
+               ,(format
+                  nil "~{user_pref(\"~a\",~a);~%~}"
+                  (loop 
+                    for pair in prefs
+                    for name := (first pair)
+                    for value := (second pair)
+                    for representation :=
+                    (firefox-pref-value-js value)
+		    collect name collect representation)))
+              ("PATH" ,path)
+              )
+            :options
+            `(
+              ,@(when slay `("slay"))
+              ,@(when wait `("wait"))
+              ("nsjail" "network"
+               ,@(when full-dev `("full-dev"))
+               ("mounts"
+                (("-B" ,combined-profile)
+                 ("-B" "/dev/dri")
+                 ,@ mounts)))
+              ,@(when netns `(("netns" ,network-ports)))
+              ,@(when pass-stdout `(("stdout-fd" "stdout")))
+              ,@(when pass-stderr `(("stderr-fd" "stderr")))
+              )
+            :system-socket *ambient-system-socket*)
+          (ask-server `(close-received-fds)))
+        (ignore-errors
+          (uiop:run-program
+            (list
+              "rm" "-rf" combined-profile)))))))

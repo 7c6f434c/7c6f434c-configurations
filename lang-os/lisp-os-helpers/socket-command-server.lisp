@@ -275,7 +275,7 @@
   "OK")
 (defun socket-command-server-commands::fd-socket (context)
   (or
-    (funcall context :fd-socket)
+    (funcall context :fd-socket-name)
     (let*
       ((key (format nil "~36r" (random (expt 36 20))))
        (socket-address (concatenate 'string (string #\Null) key)))
@@ -285,6 +285,7 @@
           :connect :passive :address-family :local :type :datagram
           :local-filename socket-address))
       (socket-command-server-commands::close-received-fds context)
+      (funcall context :fd-socket-name key)
       key)))
 (defun socket-command-server-commands::receive-fd (context tag)
   (let*

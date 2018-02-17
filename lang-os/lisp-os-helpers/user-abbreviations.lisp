@@ -137,7 +137,7 @@
     `(uiop:launch-program (list ,@command) ,@arguments)))
 
 (defmacro !! (&rest data)
-  `(! screen -_X screen ,@data :&> nil :< nil))
+  `(! screen -^X screen ,@data :&> nil :< nil))
 
 (defmacro
   >>-impl (bangs &key stream)

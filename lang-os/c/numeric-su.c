@@ -12,10 +12,12 @@ int main ( int argc, char**argv){
         assert(uid);
         if(gid==0) gid = 65534;
 
-        assert(setgid(gid)==0);
-        assert(setregid(gid,gid)==0);
+	if(gid>0){
+        	assert(setgid(gid)==0);
+        	assert(setregid(gid,gid)==0);
 
-	assert(setgroups(0,NULL)==0);
+		assert(setgroups(0,NULL)==0);
+	}
 
         assert(setuid(uid)==0);
         assert(setreuid(uid,uid)==0);
