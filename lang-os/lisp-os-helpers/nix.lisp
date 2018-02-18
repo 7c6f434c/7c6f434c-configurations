@@ -13,16 +13,20 @@
 
 (defun nix-expression
   (package-name &key nix-file 
-                nixpkgs-suffix source-expression)
+                nixpkgs-suffix source-expression
+		import-arguments)
   (let*
     ((expression
        (if (listp package-name)
          (format nil "[ ~{(~a) ~}]" package-name)
          package-name))
+     (import-arguments (or import-arguments "{}"))
      (source-expression
        (or
          source-expression
-         (and nixpkgs-suffix (format nil "with import <nixpkgs~a> {}; " nixpkgs-suffix))
+         (and nixpkgs-suffix (format nil "with import <nixpkgs~a> ~a; " 
+				     nixpkgs-suffix
+				     import-arguments))
          (and nix-file
               (let*
                 ((marker (random (expt 36 20))))
@@ -31,20 +35,21 @@
                   "let
                       imported_~a = import ~s; 
                       true_~a = if (builtins.isFunction imported_~a) then 
-                                   imported_~a {} else imported_~a; 
+                                   imported_~a ~a else imported_~a; 
                    in with true_~a; "
                    marker (namestring (truename nix-file))
                    marker     marker
-                   marker marker
+                   marker import-arguments marker
                    marker)))
-         "with import <nixpkgs> {}; "))
+         (format nil "with import <nixpkgs> ~a; " import-arguments)))
      (full-expression (format nil "~a~a" source-expression expression)))
     full-expression))
 
 (defun nix-instantiate-raw
   (name &key nix-file 
         nix-path nix-path-prefix nix-path-suffix
-        nixpkgs-suffix source-expression
+        nixpkgs-suffix source-expression 
+	import-arguments
         nix-args extra-env
         )
   (let*
@@ -62,7 +67,8 @@
          name
          :nix-file nix-file
          :nixpkgs-suffix nixpkgs-suffix
-         :source-expression source-expression))
+         :source-expression source-expression
+	 :import-arguments import-arguments))
      (nix-command
        `("nix-instantiate" "-E" ,expression ,@nix-args))
      (command

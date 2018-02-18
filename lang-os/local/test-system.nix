@@ -119,7 +119,8 @@ rec {
         sbcl lispPackages.clwrapper lispPackages.uiop asdf gerbil
 	postgresql-package
         nsjail unionfs-fuse
-        lispPackages.stumpwm
+        lispPackages.stumpwm alsaTools
+        xdummy
         (swPieces.cProgram "vtlock" ../c/vtlock.c [] [])
         (swPieces.cProgram "file-lock" ../c/file-lock.c [] [])
         (swPieces.cProgram "in-pty" ../c/in-pty.c [] ["-lutil"])

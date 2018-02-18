@@ -10,6 +10,8 @@
     #:subuser-command-with-x
     #:subuser-firefox
     #:firefox-pref-value-js
+    #:subuser-name-and-marionette-socket
+    #:*firefox-launcher*
     ))
 (in-package :lisp-os-helpers/subuser-x)
 
@@ -115,25 +117,60 @@
     ((stringp value) (format nil "~s" value))
     (t (error "Unrecognised preference type for value ~s" value))))
 
+(defun subuser-name-and-marionette-socket (&key name)
+  (let*
+    ((name (or name (timestamp-usec-recent-base36)))
+     (uid (take-reply-value
+	    (with-system-socket
+	      ()
+	      (ask-server
+		(with-uid-auth
+		  `(subuser-uid ,name))))))
+     (marionette-socket
+       (format nil "/tmp/ff.~a/sockets/~a/marionette-socket"
+	       (get-current-user-name) name)))
+    (ensure-directories-exist marionette-socket)
+    (iolib/syscalls:chmod 
+      (directory-namestring marionette-socket)
+      #o0700)
+    (uiop:run-program
+      (list "setfacl" "-m" (format nil "u:~a:rwx" uid)
+	    (directory-namestring marionette-socket)))
+    `(:name ,name :uid ,uid :marionette-socket ,marionette-socket)))
+
+
 (defun subuser-firefox
   (arguments &key display prefs
              environment marionette-socket home profile-storage name
              (firefox-launcher *firefox-launcher*) (slay t) (wait t)
              (netns t) network-ports pass-stderr pass-stdout full-dev
-             mounts system-socket setup
+             mounts system-socket setup hostname grab-devices
              (path "/var/current-system/sw/bin"))
-  (with-system-socket
-    ()
-    (ask-server
-      (with-uid-auth
-        `(grab-devices ,(mapcar 'namestring (directory "/dev/dri/card*"))))))
   (let*
     (
      (combined-profile
        (uiop:run-program
          (list *firefox-profile-combiner* (or profile-storage ""))
-         :output '(:string :stripped t)))
+         :output '(:string :stripped t) :error-output t))
+     (name (or name (timestamp-usec-recent-base36)))
+     (uid (take-reply-value
+	    (with-system-socket 
+	      ()
+	      (ask-server (with-uid-auth `(subuser-uid ,name))))))
+     (marionette-socket
+       (case marionette-socket
+	 ((t)
+	  (getf (subuser-name-and-marionette-socket :name name)
+		:marionette-socket))
+	 (t marionette-socket)))
+     (hostname
+       (or hostname (format nil "~a.~a" (get-current-user-name) name)))
      )
+    (uiop:run-program
+      (list "setfacl" "-R" "-m" (format nil "u:~a:rwX" uid) combined-profile)
+      :error-output t)
+    (uiop:run-program
+      (list "chmod" "-R" "u=rwX" combined-profile) :error-output t)
     (with-system-socket
       (system-socket)
       (when pass-stdout
@@ -150,27 +187,21 @@
             (take-reply-value (ask-server `(fd-socket))))
           2)
         (ask-server `(receive-fd stderr)))
+      (take-reply-value
+	(ask-server 
+	  (with-uid-auth
+	    `(grab-devices
+	       ,(loop
+		   for d in (append (list "/dev/dri/card*") grab-devices)
+		   for dl := (directory d)
+		   for dn := (mapcar 'namestring dl)
+		   append dn)
+	       ,name))))
       (unwind-protect
         (prog1
           (subuser-command-with-x
             `(,firefox-launcher ,@arguments)
-            :setup (lambda (&rest args &key uid)
-                     (uiop:run-program
-                       (list
-                         "setfacl"
-                         "-R" "-m"
-                         (format nil "u:~a:rwX" uid)
-                         combined-profile)
-                       :error-output t)
-                     (uiop:run-program
-                       (list
-                         "chmod"
-                         "-R" "u=rwX"
-                         combined-profile)
-                       :error-output t)
-		     (when setup
-		       (apply setup :allow-other-keys t args))
-                     )
+            :setup setup
             :display display :name name
             :environment
             `(
@@ -178,6 +209,7 @@
               ("MARIONETTE_SOCKET" ,(or marionette-socket ""))
               ("HOME" ,(or home ""))
               ("FIREFOX_PROFILE" ,combined-profile)
+	      ("FIREFOX_PROFILE_KILL" ,(if profile-storage "" "1"))
               ("FIREFOX_EXTRA_PREFS"
                ,(format
                   nil "~{user_pref(\"~a\",~a);~%~}"
@@ -196,9 +228,12 @@
               ,@(when wait `("wait"))
               ("nsjail" "network"
                ,@(when full-dev `("full-dev"))
+	       ("hostname" ,hostname)
                ("mounts"
                 (("-B" ,combined-profile)
                  ("-B" "/dev/dri")
+		 ,@(when marionette-socket
+		     `(("-B" ,(directory-namestring marionette-socket))))
                  ,@ mounts)))
               ,@(when netns `(("netns" ,network-ports)))
               ,@(when pass-stdout `(("stdout-fd" "stdout")))
@@ -209,4 +244,11 @@
         (ignore-errors
           (uiop:run-program
             (list
-              "rm" "-rf" combined-profile)))))))
+              "rm" "-rf" combined-profile)
+	    :error-output t))
+	(when marionette-socket
+	  (ignore-errors
+	    (uiop:run-program
+	      (list "rm" "-rf" (directory-namestring marionette-socket))
+	      :error-output t)))
+	))))

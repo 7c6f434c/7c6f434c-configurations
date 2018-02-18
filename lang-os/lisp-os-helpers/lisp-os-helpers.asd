@@ -32,5 +32,6 @@
    (:file "subuser-x" :depends-on ("shell" "nix" "timestamp" "socket-command-client"))
    (:file "marionette" :depends-on ("subuser-x"))
    (:file "plain-web" :depends-on ())
+   (:file "sound" :depends-on ("shell"))
    )
   )

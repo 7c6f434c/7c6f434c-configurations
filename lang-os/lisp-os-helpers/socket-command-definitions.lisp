@@ -6,6 +6,8 @@
 	:lisp-os-helpers/socket-command-server
 	:lisp-os-helpers/vt
 	:lisp-os-helpers/util
+	:lisp-os-helpers/auth-data
+	:lisp-os-helpers/fbterm-requests
 	)
   (:export
     #:start-x-allowed-p
@@ -89,6 +91,8 @@
 		      if (equalp oo "fake-passwd") append (list :fake-passwd t)
 		      if (and (listp oo) (equalp (first oo) "mounts"))
 		      append (list :mounts (second oo))
+		      if (and (listp oo) (equalp (first oo) "hostname"))
+		      append (list :hostname (second oo))
 		      ))
 	   if (and (listp o) (equalp (first o) "netns"))
 	   append (list :netns t :netns-ports-out (second o))
@@ -148,3 +152,40 @@
     do (do-grab-device user subuser d))
   "OK")
 
+(defun socket-command-server-commands::set-password (context &optional password)
+  (require-password context (context-uid context))
+  (unless
+    (set-password
+      (context-uid context)
+      (or password
+	  (let*
+	    ((first
+	       (fbterm-request
+		 (format 
+		   nil
+		   "Setting password for user ~a. Please enter your new password:~%"
+		   (context-uid context))
+		 :pre-prompt
+		 (format 
+		   nil
+		   "Setting password for user ~a.~%"
+		   (context-uid context))
+		 :timeout 30 :hide-entry t))
+	     (second
+	       (when 
+		 first
+		 (fbterm-request
+		   (format 
+		     nil
+		     "Setting password for user ~a. Please repeat your new password:~%"
+		     (context-uid context))
+		   :pre-prompt
+		   (format 
+		     nil
+		     "Setting password for user ~a.~%"
+		     (context-uid context))
+		   :timeout 30 :hide-entry t))))
+	    (assert first)
+	    (assert (equal first second))
+	    first)))
+    (error "Password change failed for ~a" (context-uid context))))

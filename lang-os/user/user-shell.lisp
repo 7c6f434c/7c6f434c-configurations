@@ -21,6 +21,7 @@
 (use-package :lisp-os-helpers/nix)
 (use-package :lisp-os-helpers/subuser-x)
 (use-package :lisp-os-helpers/timestamp)
+(use-package :lisp-os-helpers/marionette)
 
 (defpackage :sudo (:use))
 
@@ -109,6 +110,15 @@
 	"Arbitrary Lisp code load is requested"
 	`(load ,path) :user "root"))))
 
+(defun-export
+  sudo::eval-string (code)
+  (with-system-socket
+    ()
+    (ask-server
+      (with-password-auth
+	"Arbitrary Lisp code load is requested"
+	`(eval ,code) :user "root"))))
+
 (defmacro
   !su (&rest data)
   `(apply 'sudo:run
@@ -138,9 +148,48 @@
 	  "Activate network"
 	  `(dhclient ,interface ,copy-resolv))))))
 
-(reset-firefox-launcher :nix-path (list ($ :home))
-			:nix-wrapper-file (format nil "~a/lang-os/wrapped-firefox-launcher.nix"
-						  ($ :home))
-			:profile-contents
-			(format nil "~a/lang-os/user/firefox-profile-skel/"
-				($ :home)))
+(defun-export
+  sudo::passwd (&optional password)
+  (with-system-socket
+    ()
+    (ask-server
+      (with-password-auth
+	"Change the password"
+	`(set-password ,password)))))
+
+(defun-export
+  sudo::system-shutdown ()
+  (with-system-socket
+    ()
+    (ask-server
+      (with-presence-auth
+	"Shutdown the system: go to ramfs console"
+	`(system-shutdown)))))
+
+(defun-export
+  sudo::system-poweroff ()
+  (with-system-socket
+    ()
+    (ask-server
+      (with-presence-auth
+	"Shutdown the system: poweroff"
+	`(system-poweroff)))))
+
+(defun-export
+  sudo::system-reboot ()
+  (with-system-socket
+    ()
+    (ask-server
+      (with-presence-auth
+	"Shutdown the system: reboot"
+	`(system-reboot)))))
+
+(defun update-firefox-launcher ()
+  (reset-firefox-launcher :nix-path (list ($ :home))
+                          :nix-wrapper-file (format nil "~a/lang-os/wrapped-firefox-launcher.nix"
+                                                    ($ :home))
+                          :profile-contents
+                          (format nil "~a/lang-os/user/firefox-profile-skel/"
+                                  ($ :home))))
+
+(unless lisp-os-helpers/subuser-x:*firefox-launcher* (update-firefox-launcher))

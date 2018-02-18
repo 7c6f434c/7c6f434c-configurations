@@ -9,6 +9,7 @@
     #:editor #:periodically
     #:cd #:ls #:ls* #:ps
     #:build-shell
+    #:create-eval-socket
     ))
 (in-package :lisp-os-helpers/user-abbreviations)
 
@@ -228,3 +229,55 @@
     do (format t "Results:~%~{~s~%~}" (list ,@body))
     do (format t "~s~%~%" (local-time:now))
     do (sleep ,period)))
+
+(defun create-eval-socket ()
+  (let*
+    ((socket-name (format nil "/run/user/~a/user-lisp-evaluator/socket"
+			  (iolib/syscalls:getuid))))
+    (ensure-directories-exist socket-name)
+    (iolib/syscalls:chmod (directory-namestring socket-name) #o0700)
+    (unless
+      (ignore-errors
+	(let*
+	  ((s (iolib:make-socket :connect :active
+				 :address-family :local
+				 :type :stream
+				 :remote-filename socket-name)))
+	  (unwind-protect
+	    (progn
+	      (format s "1~%")
+	      (finish-output s)
+	      (equal (read-line s nil nil) "1"))
+	    (close s))))
+      (bordeaux-threads:make-thread
+	(lambda ()
+	  (let*
+	    ((socket
+	       (iolib:make-socket
+		 :connect :passive
+		 :address-family :local
+		 :type :stream
+		 :local-filename socket-name
+		 :external-format :utf-8)))
+	    (loop
+	      for client-socket :=
+	      (iolib:accept-connection socket :wait t)
+	      do
+	      (ignore-errors
+		(bordeaux-threads:make-thread
+		  (lambda ()
+		    (loop
+		      for form := (read client-socket nil nil)
+		      while form
+		      do (format client-socket "~s~%"
+				 (eval
+				   `(let
+				      ((client-socket ,client-socket))
+				      client-socket
+				      ,form)))
+		      do (finish-output client-socket)
+		      do (sleep 0.05))
+		    (ignore-errors (close client-socket)))
+		  :name "User socket evaluator connection handler")))
+	    ))
+	:name "User socket evaluator"))))

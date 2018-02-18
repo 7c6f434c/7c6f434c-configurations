@@ -166,7 +166,7 @@
 
 (defun add-command-nsjail
   (command uid &key
-	   (gid 65534) (network nil)
+	   (gid 65534) (network nil) hostname
 	   mounts skip-default-mounts
 	   (proc-rw t)
 	   (internal-uid uid) (internal-gid gid)
@@ -202,6 +202,7 @@
 	   "-R" "/etc/fonts"
 	   ))
      ,@(when full-dev `("-B" "/dev/" "-B" "/dev/shm"))
+     ,@(when hostname `("-H" ,hostname))
      ,@(when fake-passwd
 	 (ensure-directories-exist "/tmp/system-lisp/subuser-passwd/")
 	 (with-open-file 

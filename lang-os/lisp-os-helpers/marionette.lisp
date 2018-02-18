@@ -6,6 +6,7 @@
   (:export
     #:subuser-firefox
     #:with-marionette
+    #:with-new-firefox-marionette
     #:ask-marionette
     #:ask-marionette-parenscript
     #:marionette-set-pref
@@ -15,27 +16,35 @@
 (defvar *ambient-marionette-socket* nil)
 
 (defmacro with-marionette ((socket-path 
-			     &key window (context :content)
-			     (socket-name '*ambient-marionette-socket*))
-			   &rest code)
+                             &key window (context :content)
+                             (socket-name '*ambient-marionette-socket*))
+                           &rest code)
   `(let*
      ((,socket-name
-	(iolib:make-socket
-	  :connect :active :address-family :local :type :stream
-	  :remote-filename socket-path)))
+        (iolib:make-socket
+          :connect :active :address-family :local :type :stream
+          :remote-filename ,socket-path
+	  :external-format :utf-8)))
      ,@(when window
-	 `((format ,socket-name "session.switch_to_window('~a');~%" ,window)))
+         `((format ,socket-name "session.switch_to_window('~a')~%" ,window)
+           (finish-output ,socket-name)
+           (read-line ,socket-name)))
      ,@(when context
-	 `((format ,socket-name "session.set_context(CONTEXT_~a);~%"
-		   (string-upcase context))))
+         `((format ,socket-name "session.set_context(session.CONTEXT_~a)~%"
+                   (string-upcase ,context))
+           (finish-output ,socket-name)
+           (read-line ,socket-name)))
      ,@ code))
 
 (defun skip-marionette-messages (&key (socket *ambient-marionette-socket*))
   (let*
     ((key (format nil "~36r" (random (expt 36 20)))))
-    (format socket "print('~a');" key)
+    (format socket "'~a'~%" key)
+    (finish-output socket)
     (loop
-      for line := (read-line socket)
+      for line := (read-line socket nil nil)
+      unless line collect :eof
+      while line
       until (equal line key)
       collect line)))
 
@@ -56,17 +65,82 @@
      )
     str))
 
-(defun ask-marionette-parenscript (ps-code &key (socket *ambient-marionette-socket*))
+(defun ask-marionette-parenscript (ps-code 
+                                    &key
+                                    (socket *ambient-marionette-socket*)
+                                    context)
   (let*
     ((js-code (ps:ps* ps-code))
      (js-code-escaped (escape-for-python js-code))
      (py-code
-       (format nil "print(session.execute_script(\"~a\"));"
+       (format nil "session.execute_script(\"~a\")"
 	       js-code-escaped)))
+    (when context
+      (ask-marionette 
+        (format
+          nil "session.set_context(session.CONTEXT_~a)" (string-upcase context))
+        :socket socket))
     (ask-marionette py-code :socket socket)))
 
 (defun marionette-set-pref (key value &key (socket *ambient-marionette-socket*))
   (ask-marionette
     (format nil "session.set_pref('~a',~a)"
             (escape-for-python key)
-            (firefox-pref-value-js value))))
+            (firefox-pref-value-js value))
+    :socket socket))
+
+(defmacro with-new-firefox-marionette ((&rest marionette-args)
+                                       (arguments &rest firefox-args)
+                                       &rest body)
+  (let*
+    ((marionette-socket-name (gensym))
+     (marionette-socket-path (gensym))
+     (thread (gensym)))
+    `(let*
+       ((,marionette-socket-name (subuser-name-and-marionette-socket
+                                   ,@ firefox-args :allow-other-keys t))
+        (,marionette-socket-path (getf ,marionette-socket-name
+                                       :marionette-socket))
+       (,thread (bordeaux-threads:make-thread
+                  (lambda ()
+                    (apply
+                      'subuser-firefox
+                      ,arguments
+                      :allow-other-keys t
+                      (append
+                        ,marionette-socket-name
+                        (list ,@ firefox-args))))
+                  :name "Firefox launcher thread")))
+       (loop
+         for k from 1 to 10
+         do (sleep 1)
+         when (probe-file ,marionette-socket-path) return nil
+         finally (error "socket creation timeout"))
+       (format t "Socket: ~s~%" ,marionette-socket-path)
+       (loop
+         for k from 1 to 6
+         for test-thread :=
+         (bordeaux-threads:make-thread
+           (lambda ()
+             (let*
+               ((response
+                  (ignore-errors
+                    (with-marionette
+                      (,marionette-socket-path)
+                      (ask-marionette "1")))))
+               (unless
+                 (equal (list "1") response)
+                 (format *error-output* "Response: ~s~%" response)
+                 (sleep 100))))
+           :name "Marionette test thread")
+         do (sleep 3)
+         do (if (bordeaux-threads:thread-alive-p test-thread)
+              (bordeaux-threads:destroy-thread test-thread)
+              (return nil))
+         finally (error "Marionette does not respond at ~s"
+                        ,marionette-socket-path))
+       (prog1
+         (with-marionette
+           (,marionette-socket-path ,@ marionette-args)
+           ,@body)
+         (bordeaux-threads:join-thread ,thread)))))

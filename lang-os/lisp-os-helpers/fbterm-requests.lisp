@@ -108,6 +108,7 @@
       :vt-lock-helper vt-lock-helper
       :vt-lock-directory vt-lock-directory
       :file-lock-helper file-lock-helper)
+    (kill-vt-users vtn)
     (let*
       ((vtdev (format nil "/dev/tty~d" vtn)))
       (unless

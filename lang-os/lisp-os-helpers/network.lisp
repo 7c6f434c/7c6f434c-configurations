@@ -8,6 +8,8 @@
     #:disable-ip-link
     #:run-link-dhclient
     #:port-open-p
+    #:wpa-supplicant-status
+    #:local-resolv-conf
     ))
 (in-package :lisp-os-helpers/network)
 
@@ -146,3 +148,23 @@
     (iolib/sockets:make-socket
       :remote-host host :remote-port port)
     t))
+
+(defun wpa-supplicant-status (interface)
+  (let*
+    ((lines
+       (program-output-lines
+	 `("wpa_cli" "status" "-i" ,interface))))
+    (loop
+      for l in lines
+      for p := (cl-ppcre:split "=" l)
+      for k := (first p)
+      for v := (second p)
+      collect (intern (string-upcase k) :keyword)
+      collect v)))
+
+(defun local-resolv-conf (&optional search)
+  (with-open-file
+    (f "/var/etc/resolv.conf" :direction :output :if-exists :supersede)
+    (when search
+      (format f "search ~a~%" search))
+    (format f "nameserver 127.0.0.1~%")))

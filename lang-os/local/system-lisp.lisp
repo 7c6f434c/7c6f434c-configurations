@@ -196,6 +196,14 @@
       ,path
       ,@(when nix-path `("-I" ,nix-path)))))
 
+(defun socket-command-server-commands::wpa-supplicant-status (interface)
+  (loop
+    for data := (wpa-supplicant-status interface) then (cddr data)
+    for key := (first data)
+    for value := (second data)
+    while data
+    collect (list (string-downcase (symbol-name key)) value)))
+
 (defun start-x-allowed-p (context display)
   (require-presence context) t)
 
