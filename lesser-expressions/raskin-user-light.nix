@@ -25,11 +25,12 @@ fullEnv "main-light-package-set"
         pv lvm2 mariadb remind xterm zsh mlterm ntp mc ncdu
         htop iotop powertop mtr bind inotify-tools xorg.setxkbmap xfig
         firefox vimHugeX evince xpdf zathura mplayer alsaUtils xvfb_run
-        xorg.xmodmap bc xdotool lftp wget unzip p7zip gnumake xcape
+        xorg.xmodmap bc xdotool lftp wget unzip p7zip gnumake xcape xorg.xrandr
         xsel xclip pulseaudioLight ripmime xscreensaver xorg.xsetroot lsof rofi
         fpc nix-repl graphviz diffutils fontconfig compton xorg.xprop xorg.xwininfo
         xorg.xlsclients fortune fuse3
         xdaliclock openvpn iftop
+        man manpages
         (import ./texlive-set.nix pkgs)
         (pkgs.lib.overrideDerivation
            pkgs.slimerjs (x: {
