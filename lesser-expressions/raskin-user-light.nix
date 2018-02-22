@@ -29,7 +29,7 @@ fullEnv "main-light-package-set"
         xsel xclip pulseaudioLight ripmime xscreensaver xorg.xsetroot lsof rofi
         fpc nix-repl graphviz diffutils fontconfig compton xorg.xprop xorg.xwininfo
         xorg.xlsclients fortune fuse3 openssl
-        xdaliclock openvpn iftop
+        xdaliclock openvpn iftop file
         man manpages
         (import ./texlive-set.nix pkgs)
         (pkgs.lib.overrideDerivation
