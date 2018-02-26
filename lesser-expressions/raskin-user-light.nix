@@ -32,18 +32,4 @@ fullEnv "main-light-package-set"
         xdaliclock openvpn iftop file
         man manpages
         (import ./texlive-set.nix pkgs)
-        (pkgs.lib.overrideDerivation
-           pkgs.slimerjs (x: {
-             buildPhase = ''
-               (
-                  mkdir omni.ja.unpacked
-                  cd omni.ja.unpacked
-                  unzip ../omni.ja
-                  patch -Np0 -i ${/home/repos/slimerjs-omni-ja-overrides/overrides.patch}
-                  zip ../omni.ja -r . 
-                  cd ..
-                  test -d chrome && cp -r omni.ja.unpacked/* .
-               )
-             '';
-             }))
       ]      
