@@ -27,9 +27,9 @@ fullEnv "main-light-package-set"
         firefox vimHugeX evince xpdf zathura mplayer alsaUtils xvfb_run
         xorg.xmodmap bc xdotool lftp wget unzip p7zip gnumake xcape xorg.xrandr
         xsel xclip pulseaudioLight ripmime xscreensaver xorg.xsetroot lsof rofi
-        fpc nix-repl graphviz diffutils fontconfig compton xorg.xprop xorg.xwininfo
-        xorg.xlsclients fortune fuse3 openssl axel
-        xdaliclock openvpn iftop file
+        fpc nix-repl graphviz diffutils fontconfig compton xorg.xprop xorg.xwininfo 
+        xorg.xlsclients fortune fuse3 openssl axel arping
+        xdaliclock openvpn iftop file patchutils
         man manpages
         (import ./texlive-set.nix pkgs)
       ]      

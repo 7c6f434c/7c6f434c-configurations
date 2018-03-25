@@ -26,13 +26,13 @@ with pkgs;
       clisp xdotool ncdu ntfs3g
       xorg.xdpyinfo xorg.xev pciutils usbutils
       midori chromium zsh sqlite openssl
-      expect bc xfig transfig asymptote stumpwm
+      expect bc xfig transfig asymptote 
+      lispPackages.stumpwm
       pdftk inotifyTools libeatmydata p7zip
-      multipath_tools textadept fossil
-      kde4.kpat xfce.xfwm4 xfce.xfdesktop
+      multipath_tools textadept fossil unzip
+      xfce.xfwm4 xfce.xfdesktop
       xfce.xfce4panel xfce.xfce4settings
       xfce.xfce4taskmanager xfce.exo
       xfce.thunar xfce.xfce4session
       xfce.xfconf
-      #(linuxPackages_latest).virtualbox 
     ]

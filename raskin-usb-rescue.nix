@@ -15,6 +15,7 @@
         extraConfig = ''
         '';
         efiSupport = true;
+        memtest86.enable = true;
       };
       systemd-boot = {
         #enable = true;
@@ -73,7 +74,7 @@
         enable = true;
 	dev = null;
       };
-      layout = "us(altgr-intl-rich),ru(common),gr(basic)";			
+      layout = "us(altgr-intl),ru(common),gr(basic)";			
       xkbOptions = "grp:caps_toggle, grp_led:caps, lv3:lwin_switch, terminate:ctrl_alt_bksp";	
       useXFS = "unix/:7100";
     };
@@ -92,10 +93,16 @@
   };
   
   security = {
-    setuidPrograms = [
-      "fusermount" "mount" "umount"
-      "lsof" "pmount" "pumount" "fbterm"
-    ];
+    wrappers = {
+      fusermount = { source = "${pkgs.fuse}/bin/fusermount"; };
+      fusermount3 = { source = "${pkgs.fuse3}/bin/fusermount3"; };
+      mount = { source = "${pkgs.utillinux}/bin/mount"; };
+      umount = { source = "${pkgs.utillinux}/bin/umount"; };
+      lsof = { source = "${pkgs.lsof}/bin/lsof"; };
+      pmount = { source = "${pkgs.pmount}/bin/pmount"; };
+      pumount = { source = "${pkgs.pmount}/bin/pumount"; };
+      fbterm = { source = "${pkgs.fbterm}/bin/fbterm"; };
+    };
     sudo = {
       configFile = (builtins.readFile ./sudoers); };
   };
@@ -127,6 +134,6 @@
   };
 
   hardware = {
-    enableAllFirmware = true;
+    enableRedistributableFirmware = true;
   };
 }

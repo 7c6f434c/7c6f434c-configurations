@@ -20,6 +20,7 @@ linkFarm "raskin-packages" ([
       });
     }
     {name = "gnome_themes_standard"; path = gnome3.gnome_themes_standard;}
+    {name = "adwaita_icon_theme"; path = gnome3.adwaita-icon-theme;}
 		{name="clx-truetype"; path=lispPackages.clx-truetype;}
 		{name="xkeyboard"; path=lispPackages.xkeyboard;}
 		{name="clx-xkeyboard"; path=lispPackages.xkeyboard;}

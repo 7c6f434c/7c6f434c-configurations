@@ -22,7 +22,8 @@ linkFarm "raskin-ultraheavy-packages" ([
   { name = "main-ultraheavy-package-set";
     path = (fullEnv "main-ultraheavy-package-set"
       [
-        libreoffice chromium midori /*clasp-common-lisp*/
+        libreoffice chromium qutebrowser wineUnstable 
+        /*midori*/ /*clasp-common-lisp*/
       ]);}
 ])
 
