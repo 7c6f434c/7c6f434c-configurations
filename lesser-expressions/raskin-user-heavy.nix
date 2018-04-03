@@ -26,7 +26,7 @@ linkFarm "raskin-heavy-packages" ([
         vue gqview geeqie subversion espeak fossil mercurial djview
         gnuplot mozlz4a lz4 maxima valgrind pdftk lilypond timidity OVMF atop
         gptfdisk dmidecode inkscape x11vnc tightvnc xdummy tcpdump wireshark
-        testdisk fdupes ntfs3g julia lazarus icewm youtube-dl
+        testdisk fdupes ntfs3g julia lazarus icewm youtube-dl swfdec xorg.xwd
         vlc sshfs dmtx glxinfo xorg.xdpyinfo xorg.xdriinfo go-mtpfs
         xorg.xinput usbutils wgetpaste gdb scowl xcalib fmbt eprover
       ]);}
