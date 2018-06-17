@@ -29,7 +29,7 @@ fullEnv "main-light-package-set"
         xsel xclip pulseaudioLight ripmime xscreensaver xorg.xsetroot lsof rofi
         fpc nix-repl graphviz diffutils fontconfig compton xorg.xprop xorg.xwininfo 
         xorg.xlsclients fortune fuse3 openssl axel arping whois hping badvpn
-        xdaliclock openvpn iftop file patchutils zip gawk parallel perl
+        xdaliclock openvpn iftop file patchutils zip gawk parallel perl btrfs-progs
         man manpages
         (import ./texlive-set.nix pkgs)
       ]      
