@@ -10,36 +10,66 @@ let justUseMult = output: str: {name = "${str}.${output}"; path = builtins.getAt
 let ppUse = str: {name = str; path = builtins.getAttr str pp;}; in
 
 linkFarm "raskin-packages" ([
-		{name="mime"; path=shared_mime_info;}
-    { name="query-fs"; 
-      path = lib.overrideDerivation lispPackages.query-fs (x: {
-        linkedSystems = x.linkedSystems ++ ["clsql" "clsql-postgresql" "clsql-sqlite3"
-          "ironclad" "esrap-peg" "md5" "sb-bsd-sockets"]; 
-        nativeBuildInputs = x.nativeBuildInputs ++ (with lispPackages; 
-          [clsql ironclad md5 clsql-postgresql clsql-sqlite3]) ++ (with lispPackages; [esrap-peg]);
-      });
-    }
-    {name = "gnome_themes_standard"; path = gnome3.gnome_themes_standard;}
-    {name = "adwaita_icon_theme"; path = gnome3.adwaita-icon-theme;}
-		{name="clx-truetype"; path=lispPackages.clx-truetype;}
-		{name="xkeyboard"; path=lispPackages.xkeyboard;}
-		{name="clx-xkeyboard"; path=lispPackages.xkeyboard;}
-		{name="clwrapper"; path=lispPackages.clwrapper;}
-		{name="python-mozilla-marionette"; path=pythonPackages.marionette-harness;}
-		{name="ipython"; path=pythonPackages.ipython;}
-		{name="bordeaux-threads"; path=lispPackages.bordeaux-threads;}
-    {name="gimp-resynthesizer"; path=gimpPlugins.resynthesizer;}
-    {name="gimp-resynthesizer2"; path=gimpPlugins.resynthesizer2;}
-		]
-		++ 
-		(map justUse [
-		"gsettings_desktop_schemas" "gtk3" "weechat-matrix-bridge"
-		"fuse" "mysql" "openssl" "opencv" "postgresql" "sqlite"
-		"icedtea_web" "love_0_10" "love_0_9" "love_11" "libpulseaudio"
-                "xfig" "transfig" "wgetpaste" "gdmap" "netcat" "python3"
-		])
-    ++
-    (map (justUseMult "out") [
-    "openssl"
-    ])
-		)
+                {name="mime"; path=shared_mime_info;}
+                { name="query-fs"; 
+                path = lib.overrideDerivation lispPackages.query-fs (x: {
+                                linkedSystems = x.linkedSystems ++ ["clsql" "clsql-postgresql" "clsql-sqlite3"
+                                "ironclad" "esrap-peg" "md5" "sb-bsd-sockets"]; 
+                                nativeBuildInputs = x.nativeBuildInputs ++ (with lispPackages; 
+                                                [clsql ironclad md5 clsql-postgresql clsql-sqlite3]) ++ (with lispPackages; [esrap-peg]);
+                                });
+                }
+                {name = "gnome_themes_standard"; path = gnome3.gnome_themes_standard;}
+                {name = "adwaita_icon_theme"; path = gnome3.adwaita-icon-theme;}
+                {name="clx-truetype"; path=lispPackages.clx-truetype;}
+                {name="xkeyboard"; path=lispPackages.xkeyboard;}
+                {name="clx-xkeyboard"; path=lispPackages.xkeyboard;}
+                {name="clwrapper"; path=lispPackages.clwrapper;}
+                {name="python-mozilla-marionette"; path=pythonPackages.marionette-harness;}
+                {name="ipython"; path=pythonPackages.ipython;}
+                {name="bordeaux-threads"; path=lispPackages.bordeaux-threads;}
+                {name="gimp-resynthesizer"; path=gimpPlugins.resynthesizer;}
+                { name = "gimp-resynthesizer2"; path = gimpPlugins.resynthesizer2; }
+                { name = "words"; path = scowl; }
+                { name = "dicts"; path = dictDBCollector {
+                        dictlist = (with dictdDBs; map 
+                                (x:{
+                                 name = x.dbName;
+                                 filename = x.outPath;
+                                 locale = x.locale;
+                                 })
+                        [ 
+                                eng2fra fra2eng eng2nld
+                                        nld2eng eng2rus
+                                        mueller_enru_abbr
+                                        mueller_enru_base
+                                        mueller_enru_dict
+                                        mueller_enru_geo
+                                        mueller_enru_names
+                        ]) ++ [
+                          { 
+                            name = "wiktionary-en";
+                            filename = "${dictdDBs.wiktionary}/share/dictd/wiktionary-en";
+                            locale = "en_US.UTF-8";
+                          }
+                          { 
+                            name = "wordnet";
+                            filename = "${dictdDBs.wordnet}/share/dictd/wn";
+                            locale = "en_US.UTF-8";
+                          }
+                        ];
+                                                         };
+                }
+]
+++ 
+(map justUse [
+ "gsettings_desktop_schemas" "gtk3" "weechat-matrix-bridge"
+ "fuse" "mysql" "openssl" "opencv" "postgresql" "sqlite"
+ "icedtea_web" "love_0_10" "love_0_9" "love_11" "libpulseaudio"
+ "xfig" "transfig" "wgetpaste" "gdmap" "netcat" "python3"
+])
+++
+(map (justUseMult "out") [
+ "openssl"
+])
+)
