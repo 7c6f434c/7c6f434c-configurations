@@ -23,7 +23,7 @@ linkFarm "raskin-heavy-packages" ([
     path = (fullEnv "main-heavy-package-set"
       [
         gimp ghostscript asymptote qemu love imagemagick7 openscad
-        vue gqview geeqie subversion espeak fossil mercurial djview
+        vue gqview geeqie subversion espeak fossil mercurial djview wxmaxima
         gnuplot mozlz4a lz4 maxima valgrind pdftk lilypond timidity OVMF atop
         gptfdisk dmidecode inkscape x11vnc tightvnc xdummy tcpdump wireshark
         testdisk fdupes ntfs3g julia lazarus icewm youtube-dl swfdec xorg.xwd
