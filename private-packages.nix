@@ -171,9 +171,9 @@ let pp =
 #};
  lcard_ltr_sdk = pkgs.stdenv.mkDerivation rec {
    name = "lcard-ltr-sdk";
-   src = "/home/repos/ltr_cross_sdk/";
+   src = /home/repos/ltr_cross_sdk;
    revision = builtins.readFile "${src}/.hg/cache/branch2-served";
-   buildInputs = with pkgs; [cmake qt4 libusb1 pkgconfig];
+   buildInputs = with pkgs; [cmake qt59.qtbase qt59.qttools libusb1 pkgconfig];
    preConfigure = ''
      sed -e '/ltr35api/d' -i ltrapi/CMakeLists.txt
      sed -e "s@ /etc/@ $out/etc/@" -i ltrd/CMakeLists.txt
