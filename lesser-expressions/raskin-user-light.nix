@@ -23,7 +23,8 @@ fullEnv "main-light-package-set"
         squid git monotone fbida fbterm postgresql95 expect pmount fdm python2
         slmenu mcabber ii irssi elinks links2 rsync
         pv lvm2 mariadb remind xterm zsh mlterm ntp mc ncdu ltrace weechat
-        htop iotop powertop mtr bind inotify-tools xorg.setxkbmap xfig
+        htop iotop powertop mtr bind inotify-tools xorg.setxkbmap
+        xfig transfig kig
         firefox vimHugeX evince xpdf zathura mplayer alsaUtils xvfb_run
         xorg.xmodmap bc xdotool lftp wget unzip p7zip gnumake xcape xorg.xrandr
         xsel xclip pulseaudioLight ripmime xscreensaver xorg.xsetroot lsof rofi
