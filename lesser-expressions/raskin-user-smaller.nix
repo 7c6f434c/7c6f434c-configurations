@@ -65,7 +65,7 @@ linkFarm "raskin-packages" ([
                   path = buildFHSUserEnv {
                     name = "julia-fhs-env"; 
                     targetPkgs = p: with p; [
-                      julia
+                      julia_10
                       cmake hdf5 gnuplot glibc zlib
                       xorg.libXt xorg.libX11 qt4];
                     };
