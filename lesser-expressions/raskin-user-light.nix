@@ -31,6 +31,6 @@ fullEnv "main-light-package-set"
         fpc graphviz diffutils fontconfig compton xorg.xprop xorg.xwininfo 
         xorg.xlsclients fortune fuse3 openssl axel arping whois hping badvpn dict
         xdaliclock openvpn iftop file patchutils zip gawk parallel perl btrfs-progs
-        man manpages oathToolkit wavemon proxychains telegram-cli
+        man manpages oathToolkit wavemon proxychains telegram-cli screenkey untrunc
         (import ./texlive-set.nix pkgs)
       ]      
