@@ -24,7 +24,7 @@ linkFarm "raskin-ultraheavy-packages" ([
       [
         libreoffice chromium qutebrowser wineUnstable 
         /* sage */ midori scilab-bin /*clasp-common-lisp*/
-        ffmpeg-full obs-studio
+        ffmpeg-full obs-studio audacity pitivi
       ]);}
 ])
 
