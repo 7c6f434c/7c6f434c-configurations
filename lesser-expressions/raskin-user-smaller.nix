@@ -70,6 +70,7 @@ linkFarm "raskin-packages" ([
                       xorg.libXt xorg.libX11 qt4];
                     };
                 }
+                {name = "julia_10"; path=julia_10;}
 ]
 ++ 
 (map justUse [
