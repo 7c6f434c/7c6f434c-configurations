@@ -9,7 +9,6 @@ let justUse = str: {name = str; path = builtins.getAttr str pkgs;}; in
 let ppUse = str: {name = str; path = builtins.getAttr str pp;}; in
 
 linkFarm "raskin-packages" ([
-{ name = "androidsdk"; path = androidenv.androidsdk_4_2 ; }
 		]
 		++ 
 		(map justUse [
