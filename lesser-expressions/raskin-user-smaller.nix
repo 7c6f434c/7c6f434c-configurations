@@ -71,6 +71,11 @@ linkFarm "raskin-packages" ([
                     };
                 }
                 {name = "julia_10"; path=julia_10;}
+                {name= "queryfs-deps";path = linkFarm
+                  "queryfs-deps"
+                  (map (x: {name=x.name+"."+x.outputName;path=x;})
+                  (lib.concatLists (map (x: x.all)
+                    [ sqlite postgresql fuse openssl ])));}
 ]
 ++ 
 (map justUse [
