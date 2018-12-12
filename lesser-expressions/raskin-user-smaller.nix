@@ -41,6 +41,7 @@ linkFarm "raskin-packages" ([
                         [ 
                                 eng2fra fra2eng eng2nld
                                         nld2eng eng2rus
+                                        eng2deu deu2eng
                                         mueller_enru_abbr
                                         mueller_enru_base
                                         mueller_enru_dict
