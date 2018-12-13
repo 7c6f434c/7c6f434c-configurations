@@ -28,7 +28,7 @@ fullEnv "main-light-package-set"
         firefox vimHugeX evince xpdf zathura mplayer alsaUtils xvfb_run
         xorg.xmodmap bc xdotool lftp wget unzip p7zip gnumake xcape xorg.xrandr
         xsel xclip pulseaudioLight ripmime xscreensaver xorg.xsetroot lsof rofi
-        fpc graphviz diffutils fontconfig compton xorg.xprop xorg.xwininfo 
+        fpc graphviz diffutils fontconfig compton xorg.xprop xorg.xwininfo jq
         xorg.xlsclients fortune fuse3 openssl axel arping whois hping badvpn dict
         xdaliclock openvpn iftop file patchutils zip gawk parallel perl btrfs-progs
         man manpages oathToolkit wavemon proxychains telegram-cli screenkey untrunc
