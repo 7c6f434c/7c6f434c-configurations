@@ -23,7 +23,7 @@ linkFarm "raskin-toy-packages" ([
     path = (fullEnv "main-heavy-package-set"
       [
         fsg kobodeluxe extremetuxracer golly lincity construo
-        sgtpuzzles xconq pysolfc xaos _2048-in-terminal
+        sgtpuzzles xconq pysolfc xaos _2048-in-terminal blobby
       ]);}
 ])
 
