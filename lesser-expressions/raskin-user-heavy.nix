@@ -29,6 +29,7 @@ linkFarm "raskin-heavy-packages" ([
         testdisk fdupes ntfs3g lazarus icewm youtube-dl swfdec xorg.xwd
         vlc sshfs dmtx glxinfo xorg.xdpyinfo xorg.xdriinfo go-mtpfs nmap
         xorg.xinput usbutils wgetpaste gdb scowl xcalib fmbt eprover glucose
-        nginx cfdg highlight cachix darcs transmission spass iprover cvc4
+        nginx cfdg highlight transmission spass iprover cvc4
+        /*cachix darcs*/
       ]);}
 ])
