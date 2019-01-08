@@ -13,6 +13,7 @@ linkFarm "raskin-packages" ([
                 {name="mime"; path=shared_mime_info;}
                 { name="query-fs"; 
                 path = lib.overrideDerivation lispPackages.query-fs (x: {
+                                NIX_LISP_EARLY_OPTIONS = " --dynamic-space-size 4096 ";
                                 linkedSystems = x.linkedSystems ++ ["clsql" "clsql-postgresql" "clsql-sqlite3"
                                 "ironclad" "esrap-peg" "md5" "sb-bsd-sockets"]; 
                                 nativeBuildInputs = x.nativeBuildInputs ++ (with lispPackages; 
