@@ -23,6 +23,6 @@ linkFarm "raskin-heavy-packages" ([
     path = (fullEnv "main-heavy-package-set"
       [
         prosody matrix-synapse dovecot postfix
-        bind dhcp dnsmasq lighttpd nginx
+        bind dhcp dnsmasq /*lighttpd*/ nginx
       ]);}
 ])
