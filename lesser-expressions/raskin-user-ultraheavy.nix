@@ -23,8 +23,8 @@ linkFarm "raskin-ultraheavy-packages" ([
     path = (fullEnv "main-ultraheavy-package-set"
       [
         libreoffice chromium qutebrowser wineUnstable 
-        /* sage */ midori scilab-bin /*clasp-common-lisp*/
-        ffmpeg-full /*obs-studio*/ audacity /*pitivi*/
+        sage midori scilab-bin clasp-common-lisp
+        ffmpeg-full obs-studio audacity pitivi
       ]);}
 ])
 

@@ -13,7 +13,7 @@ linkFarm "raskin-packages" ([
 		]
 		++ 
 		(map justUse [
-		"flashplayer" /*"jrePlugin"*/ "tptp"
+		"flashplayer" "tptp"
                 "flashplayer-standalone" "vampire"
 		])
 		)
