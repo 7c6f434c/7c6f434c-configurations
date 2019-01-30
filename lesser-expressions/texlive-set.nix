@@ -25,6 +25,7 @@ pkgs.texlive.combine {
     totpages comment soul multirow threeparttable lastpage preprint
     mnsymbol paralist animate media9 ocgx2 breakcites biblatex bibtex
     xstring wrapfig ifoddpage inlinedef draftwatermark everypage
-    enumitem cutwin moreverb mparhack bbding thmtools csquotes
+    enumitem cutwin moreverb mparhack bbding thmtools csquotes stmaryrd
+    cleveref
     ;
 }
