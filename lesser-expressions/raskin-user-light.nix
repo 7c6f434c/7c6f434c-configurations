@@ -21,7 +21,7 @@ in with pkgs;
 fullEnv "main-light-package-set"
       [
         squid git monotone fbida fbterm postgresql95 expect pmount fdm python2
-        slmenu mcabber ii irssi elinks links2 rsync
+        slmenu mcabber ii irssi elinks links2 rsync ratpoison xdummy
         pv lvm2 mariadb remind xterm zsh mlterm ntp mc ncdu ltrace weechat
         htop iotop powertop mtr bind inotify-tools xorg.setxkbmap
         xfig transfig kig
