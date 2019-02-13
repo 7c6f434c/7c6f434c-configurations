@@ -30,6 +30,7 @@ linkFarm "raskin-heavy-packages" ([
         vlc sshfs dmtx glxinfo xorg.xdpyinfo xorg.xdriinfo go-mtpfs nmap
         xorg.xinput usbutils wgetpaste gdb scowl xcalib fmbt eprover glucose
         nginx cfdg highlight transmission spass iprover cvc4 z3 z3-tptp prover9
+        signal-desktop
         /*cachix darcs*/
       ]);}
 ])
