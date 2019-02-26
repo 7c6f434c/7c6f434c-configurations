@@ -27,10 +27,10 @@ linkFarm "raskin-heavy-packages" ([
         gnuplot mozlz4a lz4 maxima valgrind pdftk lilypond timidity OVMF atop
         gptfdisk dmidecode inkscape x11vnc tightvnc xdummy tcpdump wireshark
         testdisk fdupes ntfs3g lazarus icewm youtube-dl swfdec xorg.xwd
-        vlc sshfs dmtx glxinfo xorg.xdpyinfo xorg.xdriinfo go-mtpfs nmap
+        vlc sshfs dmtx glxinfo xorg.xdpyinfo xorg.xdriinfo go-mtpfs nmap sox
         xorg.xinput usbutils wgetpaste gdb scowl xcalib fmbt eprover glucose
         nginx cfdg highlight transmission spass iprover cvc4 z3 z3-tptp prover9
-        signal-desktop
+        signal-desktop mustache-spec mustache-go
         /*cachix darcs*/
       ]);}
 ])
