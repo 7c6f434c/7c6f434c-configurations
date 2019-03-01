@@ -29,6 +29,8 @@ linkFarm "raskin-packages" ([
                 {name="python-mozilla-marionette"; path=pythonPackages.marionette-harness;}
                 {name="ipython"; path=pythonPackages.ipython;}
                 {name="bordeaux-threads"; path=lispPackages.bordeaux-threads;}
+                {name="lparallel"; path=lispPackages.lparallel;}
+                {name="pcall"; path=lispPackages.pcall;}
                 {name="gimp-resynthesizer"; path=gimpPlugins.resynthesizer;}
                 { name = "gimp-resynthesizer2"; path = gimpPlugins.resynthesizer2; }
                 { name = "words"; path = scowl; }
