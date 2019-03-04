@@ -30,6 +30,8 @@ linkFarm "raskin-packages" ([
                 {name="ipython"; path=pythonPackages.ipython;}
                 {name="bordeaux-threads"; path=lispPackages.bordeaux-threads;}
                 {name="lparallel"; path=lispPackages.lparallel;}
+                {name="lfarm-client"; path=lispPackages.lfarm-client;}
+                {name="lfarm-server"; path=lispPackages.lfarm-server;}
                 {name="pcall"; path=lispPackages.pcall;}
                 {name="gimp-resynthesizer"; path=gimpPlugins.resynthesizer;}
                 { name = "gimp-resynthesizer2"; path = gimpPlugins.resynthesizer2; }
