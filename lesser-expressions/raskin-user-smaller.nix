@@ -33,6 +33,7 @@ linkFarm "raskin-packages" ([
                 {name="lfarm-client"; path=lispPackages.lfarm-client;}
                 {name="lfarm-server"; path=lispPackages.lfarm-server;}
                 {name="pcall"; path=lispPackages.pcall;}
+                {name="parse-number"; path=lispPackages.parse-number;}
                 {name="gimp-resynthesizer"; path=gimpPlugins.resynthesizer;}
                 { name = "gimp-resynthesizer2"; path = gimpPlugins.resynthesizer2; }
                 { name = "words"; path = scowl; }
