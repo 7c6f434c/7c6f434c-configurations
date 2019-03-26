@@ -16,7 +16,7 @@ linkFarm "raskin-packages" ([
                                 NIX_LISP_EARLY_OPTIONS = " --dynamic-space-size 4096 ";
                                 linkedSystems = x.linkedSystems ++ ["clsql" "clsql-postgresql" "clsql-sqlite3"
                                 "ironclad" "esrap-peg" "md5" "sb-bsd-sockets"]; 
-                                nativeBuildInputs = x.nativeBuildInputs ++ (with lispPackages; 
+                                buildInputs = x.buildInputs ++ (with lispPackages; 
                                                 [clsql ironclad md5 clsql-postgresql clsql-sqlite3]) ++ (with lispPackages; [esrap-peg]);
                                 });
                 }
