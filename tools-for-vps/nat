@@ -1,0 +1,4 @@
+#! /bin/sh
+
+iptables -t nat -A POSTROUTING -o "$1" -j MASQUERADE
+echo 1 > /proc/sys/net/ipv4/ip_forward

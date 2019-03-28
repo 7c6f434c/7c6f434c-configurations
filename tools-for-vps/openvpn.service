@@ -1,0 +1,9 @@
+[Unit]
+Description=OpenVPN server (UDP)
+
+[Service]
+ExecStart=/root/tools/bin/openvpn /etc/openvpn/server.conf
+WorkingDirectory=/etc/openvpn/
+
+[Install]
+WantedBy=multi-user.target
