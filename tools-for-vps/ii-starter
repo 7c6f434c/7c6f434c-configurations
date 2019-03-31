@@ -3,4 +3,4 @@
 export HOME=/home/raskin
 export PATH="$PATH:$HOME/tools/bin/"
 
-while true; do while ps -ef | grep -v grep | grep ' ii -s irc.freenode.net '; do sleep 1; done; ii -s irc.freenode.net -i ~/mnt/irc/ -n IdleBot_$(dd if=/dev/urandom bs=1 count=4 | xxd -ps ) & for c in nixos-security stumpwm irp tunes bussard ca-duel cl-fuse query-fs; do echo /j "#$c" > ~/mnt/irc/irc.freenode.net/in; sleep 1; done; done
+while true; do while ps -ef | grep -v grep | grep ' ii -s irc.freenode.net ' >/dev/null; do sleep 1; done; ii -s irc.freenode.net -i ~/mnt/irc/ -n IdleBot_$(dd if=/dev/urandom bs=1 count=4 | xxd -ps ) & for c in nixos-security stumpwm irp tunes bussard ca-duel cl-fuse query-fs; do echo /j "#$c" > ~/mnt/irc/irc.freenode.net/in; sleep 1; done; done

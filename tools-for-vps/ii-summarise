@@ -13,12 +13,15 @@ l="${#ts}"
 while test "$l" -gt 1; do
         l=$((l-1))
         last="${ts:l:1}"
+        lastp=$((last+1))
         prefix="${ts:0:l}"
-        tsre="$tsre|($prefix[$last-9][0-9]*)"
+        test "$last" -lt 9 && tsre="$tsre|($prefix[$lastp-9][0-9]*)"
 done
 
 cutoff="$cutyear-$cutmonth-(${cutday:0:1}[${cutday:1:1}-9]|[$((${cutday:0:1} + 1))-9].)"
 
 trap "reset; exit" 3
 
-while ( grep -A999999 -E "^($tsre) " ~/mnt/irc/irc.freenode.net/*/out | sed -re 's@^([-/a-z.0-9#]*/out:[0-9]{6})[0-9]{4} -!- .*@\10000@' | uniq  | less -c ); do :; done;
+cd ~/mnt/irc
+
+while ( grep -A999999 -E "^($tsre) " */*/out | sed -re 's@^([-/a-z.0-9#]*/out:[0-9]{6})[0-9]{4} -!- .*@\10000@' | uniq  | less -c ); do :; done;
