@@ -26,6 +26,7 @@ pkgs.texlive.combine {
     mnsymbol paralist animate media9 ocgx2 breakcites biblatex bibtex
     xstring wrapfig ifoddpage inlinedef draftwatermark everypage
     enumitem cutwin moreverb mparhack bbding thmtools csquotes stmaryrd
-    cleveref cancel ncctools changebar tocbibind shadow
+    cleveref cancel ncctools changebar tocbibind shadow datetime fmtcount
+    bussproofs
     ;
 }
