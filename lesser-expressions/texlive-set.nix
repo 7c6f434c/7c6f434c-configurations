@@ -27,6 +27,6 @@ pkgs.texlive.combine {
     xstring wrapfig ifoddpage inlinedef draftwatermark everypage
     enumitem cutwin moreverb mparhack bbding thmtools csquotes stmaryrd
     cleveref cancel ncctools changebar tocbibind shadow datetime fmtcount
-    bussproofs l3kernel
+    bussproofs l3kernel cclicenses
     ;
 }
