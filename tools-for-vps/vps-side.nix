@@ -21,7 +21,7 @@ with rec {
           paths = [ openvpn matrix-synapse ii screen nginx less
                 rsync git monotone fossil mercurial vim strace transmission
                 glibcLocales host dnsutils mtr htop iotop hping socat iftop
-                curl wget youtube-dl jemalloc nix dehydrated
+                curl wget youtube-dl jemalloc nix dehydrated netcat
                 globalLinks
           ];
         };
