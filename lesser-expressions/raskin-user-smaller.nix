@@ -16,9 +16,24 @@ linkFarm "raskin-packages" ([
                                 NIX_LISP_EARLY_OPTIONS = " --dynamic-space-size 4096 ";
                                 linkedSystems = x.linkedSystems ++ ["clsql" "clsql-postgresql" "clsql-sqlite3"
                                 "ironclad" "esrap-peg" "md5" "sb-bsd-sockets"]; 
-                                buildInputs = x.buildInputs ++ (with lispPackages; 
-                                                [clsql ironclad md5 clsql-postgresql clsql-sqlite3]) ++ (with lispPackages; [esrap-peg]);
-                                });
+                                buildInputs = 
+                                let
+                                cl-fuse = lispPackages.cl-fuse.override (x: {
+                                                src = /home/raskin/src/lsp/venv-cl-fuse/src/cl-fuse;
+                                                });
+                                cl-fuse-meta-fs = lispPackages.cl-fuse-meta-fs.override (x: {
+                                                src = /home/raskin/src/lsp/venv-cl-fuse/src/cl-fuse-meta-fs;
+                                                });
+                                in
+                                []
+                                ++ [ cl-fuse cl-fuse-meta-fs ]
+                                ++ x.buildInputs
+                                ++ (with lispPackages; 
+                                                [clsql ironclad md5 clsql-postgresql clsql-sqlite3])
+                                ++ (with lispPackages; [esrap-peg])
+                                ++ [ cl-fuse cl-fuse-meta-fs ]
+                                ;
+                });
                 }
                 {name = "gnome_themes_standard"; path = gnome3.gnome_themes_standard;}
                 {name = "adwaita_icon_theme"; path = gnome3.adwaita-icon-theme;}
