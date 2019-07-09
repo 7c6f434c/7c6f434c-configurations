@@ -133,10 +133,9 @@ let pp =
  };
  _3dc = pkgsi686Linux.stdenv.mkDerivation rec {
    name = "3dc-git-head";
-   src= "/home/repos/3dc";
-   JustStamp = "${builtins.readFile "${src}/.git/refs/heads/master"}";
+   src= /home/repos/3dc;
    installPhase = ''
-     ensureDir "$out/bin"
+     mkdir -p "$out/bin"
      cp bin/3dc "$out/bin"
    '';
    buildInputs = [
