@@ -89,7 +89,8 @@ linkFarm "raskin-packages" ([
                     targetPkgs = p: with p; [
                       julia_10
                       cmake hdf5 gnuplot glibc zlib
-                      xorg.libXt xorg.libX11 qt4];
+                      xorg.libXt xorg.libX11 xorg.libXrender 
+                      xorg.libXtst xorg.libXext xorg.libXi qt4];
                     };
                 }
                 {name= "queryfs-deps";path = linkFarm
