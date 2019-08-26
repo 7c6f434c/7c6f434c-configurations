@@ -106,7 +106,7 @@ linkFarm "raskin-packages" ([
  "icedtea_web" "love_0_10" "love_11" "libpulseaudio"
  "wgetpaste" "gdmap" "netcat" "python3" "kdiff3"
  "julia_10" 
- # "julia_11"
+ "julia_11"
  "julia"
 ])
 ++
