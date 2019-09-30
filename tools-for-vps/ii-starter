@@ -14,7 +14,7 @@ while true; do
         while ! test -e  ~/mnt/irc/irc.freenode.net/in; do
                 sleep 1;
         done
-        for c in nixos-security stumpwm irp tunes bussard ca-duel cl-fuse query-fs nixos-de; do
+        for c in nixos-security stumpwm irp tunes bussard ca-duel cl-fuse query-fs nixos-de spectrum; do
                 echo /j "#$c" > ~/mnt/irc/irc.freenode.net/in;
                 sleep 1;
         done;
