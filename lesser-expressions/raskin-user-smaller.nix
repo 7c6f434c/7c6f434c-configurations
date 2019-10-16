@@ -98,6 +98,13 @@ linkFarm "raskin-packages" ([
                   (map (x: {name=x.name+"."+x.outputName;path=x;})
                   (lib.concatLists (map (x: x.all)
                     [ sqlite postgresql fuse openssl ])));}
+               {name="pypi2nix"; path = import /home/repos/pypi2nix/default.nix {};}
+               { name = "conpra-deps"; path = buildEnv { name = "conpra-deps"; paths = [
+                 gcc.out glibc.out glibc.static openjdk
+                 poppler_utils
+                 (import ./plastex/requirements.nix {}).packages.plastex
+                 python3 python27Packages.pyyaml
+               ];};}
 ]
 ++ 
 (map justUse [

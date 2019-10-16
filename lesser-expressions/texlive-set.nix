@@ -14,6 +14,6 @@ pkgs.texlive.combine {
     enumitem cutwin moreverb mparhack bbding thmtools csquotes stmaryrd
     cleveref cancel ncctools changebar tocbibind shadow datetime fmtcount
     bussproofs l3kernel cclicenses xifthen ifmtarg blindtext changepage
-    lstaddons
+    lstaddons import fancyvrb tocloft tikz-qtree
     ;
 }
