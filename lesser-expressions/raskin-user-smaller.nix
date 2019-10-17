@@ -104,6 +104,7 @@ linkFarm "raskin-packages" ([
                  poppler_utils
                  (import ./plastex/requirements.nix {}).packages.plastex
                  python3 python27Packages.pyyaml
+                 julia
                ];};}
 ]
 ++ 
