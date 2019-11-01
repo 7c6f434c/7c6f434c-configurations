@@ -103,7 +103,16 @@ linkFarm "raskin-packages" ([
                  gcc.out glibc.out glibc.static openjdk
                  poppler_utils
                  (import ./plastex/requirements.nix {}).packages.plastex
+                 (import ./flask_inputs/requirements.nix {}).packages.flask-inputs
                  python3 python27Packages.pyyaml
+                 python27Packages.flask python27Packages.jsonschema
+                 python27Packages.werkzeug python27Packages.jinja2
+                 python27Packages.markupsafe
+                 python27Packages.itsdangerous
+                 python27Packages.click
+                 python27Packages.wtforms
+                 python27Packages.functools32
+                 python27Packages.runrandomcase
                  julia
                ];};}
 ]
