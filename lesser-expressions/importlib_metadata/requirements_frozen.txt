@@ -1,0 +1,9 @@
+configparser==4.0.2
+contextlib2==0.6.0.post1
+importlib-metadata==0.23
+more-itertools==5.0.0
+pathlib2==2.3.5
+scandir==1.10.0
+setuptools-scm==3.3.3
+six==1.12.0
+zipp==0.6.0

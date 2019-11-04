@@ -104,6 +104,12 @@ linkFarm "raskin-packages" ([
                  poppler_utils
                  (import ./plastex/requirements.nix {}).packages.plastex
                  (import ./flask_inputs/requirements.nix {}).packages.flask-inputs
+                 (import ./importlib_metadata/requirements.nix {}).packages.importlib-metadata
+                 (import ./importlib_metadata/requirements.nix {}).packages.more-itertools
+                 (import ./importlib_metadata/requirements.nix {}).packages.configparser
+                 (import ./importlib_metadata/requirements.nix {}).packages.contextlib2
+                 (import ./importlib_metadata/requirements.nix {}).packages.pathlib2
+                 (import ./importlib_metadata/requirements.nix {}).packages.scandir
                  python3 python27Packages.pyyaml
                  python27Packages.flask python27Packages.jsonschema
                  python27Packages.werkzeug python27Packages.jinja2
@@ -112,8 +118,12 @@ linkFarm "raskin-packages" ([
                  python27Packages.click
                  python27Packages.wtforms
                  python27Packages.functools32
-                 python27Packages.runrandomcase
+                 python27Packages.attrs
+                 python27Packages.pyrsistent
+                 python27Packages.six
+                 python27Packages.zipp
                  julia
+                 autoconf automake libtool gmp boost bison flex gmp.dev
                ];};}
 ]
 ++ 
