@@ -100,7 +100,7 @@ linkFarm "raskin-packages" ([
                     [ sqlite postgresql fuse openssl ])));}
                {name="pypi2nix"; path = import /home/repos/pypi2nix/default.nix {};}
                { name = "conpra-deps"; path = buildEnv { name = "conpra-deps"; paths = [
-                 gcc.out glibc.out glibc.static openjdk
+                 gcc.out glibc.out glibc.static openjdk11
                  poppler_utils
                  (import ./plastex/requirements.nix {}).packages.plastex
                  (import ./flask_inputs/requirements.nix {}).packages.flask-inputs
@@ -122,6 +122,7 @@ linkFarm "raskin-packages" ([
                  python27Packages.pyrsistent
                  python27Packages.six
                  python27Packages.zipp
+                 pypy3
                  julia
                  autoconf automake libtool gmp boost bison flex gmp.dev
                ];};}
