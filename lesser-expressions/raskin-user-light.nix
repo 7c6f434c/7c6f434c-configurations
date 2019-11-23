@@ -25,7 +25,7 @@ fullEnv "main-light-package-set"
         pv lvm2 mariadb remind xterm zsh mlterm ntp mc vifm ncdu ltrace weechat
         htop iotop powertop mtr bind inotify-tools xorg.setxkbmap xorg.xev
         xfig transfig kig
-        firefox vimHugeX evince xpdf zathura mplayer alsaUtils xvfb_run
+        firefox vimHugeX evince zathura mplayer alsaUtils xvfb_run
         xorg.xmodmap bc xdotool lftp wget unzip p7zip gnumake xcape xorg.xrandr
         xsel xclip pulseaudioLight ripmime xscreensaver xorg.xsetroot lsof rofi
         fpc graphviz diffutils fontconfig compton xorg.xprop xorg.xwininfo jq
@@ -34,4 +34,5 @@ fullEnv "main-light-package-set"
         man manpages oathToolkit wavemon proxychains screenkey untrunc
         monotoneViz udftools units texinfoInteractive kitty
         (import ./texlive-set.nix pkgs)
+        /* xpdf */
       ]      
