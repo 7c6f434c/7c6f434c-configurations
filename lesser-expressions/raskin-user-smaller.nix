@@ -136,6 +136,8 @@ linkFarm "raskin-packages" ([
  "julia_10" 
  "julia_11"
  "julia"
+ "tigervnc" "fbvnc"
+ "glpk" "clingo"
 ])
 ++
 (map (justUseMult "out") [
