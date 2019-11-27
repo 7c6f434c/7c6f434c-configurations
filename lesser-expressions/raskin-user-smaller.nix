@@ -125,6 +125,7 @@ linkFarm "raskin-packages" ([
                  pypy3
                  julia
                  autoconf automake libtool gmp boost bison flex gmp.dev
+                 glpk
                ];};}
 ]
 ++ 
