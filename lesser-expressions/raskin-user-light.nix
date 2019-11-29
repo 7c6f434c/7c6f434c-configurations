@@ -22,6 +22,15 @@ fullEnv "main-light-package-set"
       [
         squid git monotone fbida fbterm postgresql95 expect pmount fdm python2
         slmenu mcabber ii irssi elinks links2 rsync ratpoison xdummy
+        (matrixcli.overrideAttrs (x: {
+          postPatch = ''
+            sed -e '
+              s@!= client.user_id:@!= client.user_id or args.include_user:@;
+              /return parser/i\    parser_tail.add_argument("-i", "--include-user", dest="include_user", action="store_true", help="include own messages")
+              /return parser/i\    parser_listen.add_argument("-i", "--include-user", dest="include_user", action="store_true", help="include own messages")
+            ' -i matrixcli
+          '';
+        }))
         pv lvm2 mariadb remind xterm zsh mlterm ntp mc vifm ncdu ltrace weechat
         htop iotop powertop mtr bind inotify-tools xorg.setxkbmap xorg.xev
         xfig transfig kig
