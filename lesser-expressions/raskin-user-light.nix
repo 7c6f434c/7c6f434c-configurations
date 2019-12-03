@@ -28,6 +28,7 @@ fullEnv "main-light-package-set"
               s@!= client.user_id:@!= client.user_id or args.include_user:@;
               /return parser/i\    parser_tail.add_argument("-i", "--include-user", dest="include_user", action="store_true", help="include own messages")
               /return parser/i\    parser_listen.add_argument("-i", "--include-user", dest="include_user", action="store_true", help="include own messages")
+              s@\['"'"'url'"'"'\]@.get('"'"'url'"'"',"mxc://")@
             ' -i matrixcli
           '';
         }))
