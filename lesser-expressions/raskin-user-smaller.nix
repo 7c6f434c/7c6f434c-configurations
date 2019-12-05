@@ -127,6 +127,10 @@ linkFarm "raskin-packages" ([
                  autoconf automake libtool gmp boost bison flex gmp.dev
                  glpk
                ];};}
+               { name = "pypy3-as-python3"; path = runCommandNoCC "pypy3-as-python3" {} ''
+                 mkdir -p "$out/bin"
+                 ln -s "${pypy3}/bin/pypy3" "$out/bin/python3"
+               '';}
 ]
 ++ 
 (map justUse [
