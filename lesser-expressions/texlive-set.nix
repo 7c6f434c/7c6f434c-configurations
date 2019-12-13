@@ -15,6 +15,6 @@ pkgs.texlive.combine {
     cleveref cancel ncctools changebar tocbibind shadow datetime fmtcount
     bussproofs l3kernel cclicenses xifthen ifmtarg blindtext changepage
     lstaddons import fancyvrb tocloft tikz-qtree ellipsis nag tkz-euclide
-    tkz-base numprint tkz-graph
+    tkz-base numprint tkz-graph a4wide
     ;
 }
