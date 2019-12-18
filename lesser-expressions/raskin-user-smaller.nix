@@ -144,6 +144,7 @@ linkFarm "raskin-packages" ([
  "julia"
  "tigervnc" "fbvnc"
  "glpk" "clingo"
+ "plan9port"
 ])
 ++
 (map (justUseMult "out") [
