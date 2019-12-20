@@ -44,6 +44,7 @@ fullEnv "main-light-package-set"
         xdaliclock openvpn iftop file patchutils zip gawk parallel perl btrfs-progs
         man manpages oathToolkit wavemon proxychains screenkey untrunc
         monotoneViz udftools units texinfoInteractive kitty yap
+        python3Packages.pygments
         (import ./texlive-set.nix pkgs)
         /* xpdf */
       ]      

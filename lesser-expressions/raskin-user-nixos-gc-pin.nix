@@ -14,6 +14,12 @@ linkFarm "raskin-packages" ([
       documentation.nixos.enable = true;
     };
   }).system; }
+  { name = "nixos-empty-vm"; path = (import <nixpkgs/nixos> {
+    configuration = {
+      documentation.dev.enable = true;
+      documentation.nixos.enable = true;
+    };
+  }).vm; }
   { name = "python-black"; path = pkgs.python3Packages.black; }
   { name = "nixos-test"; path = (import <nixpkgs/nixos/release.nix> {}).tests.login.x86_64-linux; }
 ])

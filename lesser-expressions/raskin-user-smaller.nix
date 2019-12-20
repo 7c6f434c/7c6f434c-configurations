@@ -144,7 +144,7 @@ linkFarm "raskin-packages" ([
  "julia"
  "tigervnc" "fbvnc"
  "glpk" "clingo"
- "plan9port"
+ "plan9port" "sway" "syslogng" "rsyslog"
 ])
 ++
 (map (justUseMult "out") [

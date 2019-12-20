@@ -1,0 +1,48 @@
+socket_dir="$HOME/tmp/store-9p-$USER/"
+
+mkdir "$socket_dir" -p
+
+grab-from-subuser "$socket_dir"
+
+@sub \
+,mount,b'"'"$socket_dir"'""/sockets"' ,stdout, ,grant,'"'"$socket_dir"'"' \
+$(nix-call-package ./rust-9p.nix)/bin/unpfs 'unix!/sockets/socket!0' /nix/store \
+&
+
+while ! test -e "$socket_dir/socket:0"; do
+  sleep 0.1
+done
+
+grab-from-subuser "$socket_dir"
+
+@sub \
+,stdin, ,stdout, \
+,mount,b'"/dev/kvm"' \
+,mount,t'"/var/empty"' \
+,lisp-arg,:fake-passwd:t ,fake-group,chronos ,lisp-arg,:fake-usernames:'`("chronos")' \
+,dev-log, \
+,lisp-arg,:netns-tuntap-devices:'`(("tap0" "10.0.2.2/24" "tap" ("vnet_hdr")))' \
+,mount,b'"/dev/net"' \
+,network-port,'((564)"0.0.0.0"("/9p-sockets/socket\\:0"unix))' \
+,mount,b'"'"$socket_dir"'""/9p-sockets/"' ,grant,"\"$socket_dir\"" \
+,network-port,'((3128)"0.0.0.0"()"127.0.0.1")' \
+\
+$(test-build -test mktuntap)/bin/mktuntap -i tap0 -B -v -p 3 \
+$(test-build -test crosvm)/bin/crosvm run  \
+--disk "$(test-build ./rootfs.nix fsSquash)" \
+--disk "$(test-build '' 'writeTextFile { name = "init"; text = '"''"' 
+    modprobe virtio-net;
+    ip link set lo up;
+    ip link set eth0 up;
+    ip a a 10.0.2.3/24 dev eth0;
+    modprobe 9p;
+    modprobe 9pnet;
+    modprobe 9pnet-virtio;
+    mount -t 9p -o version=9p2000.L,trans=tcp,cache=loose,tag=store 10.0.2.2 /nix/store;
+    export PATH="$PATH:'"$(test-build ./rootfs.nix swEnv)/bin"'";
+'"''"' + (lib.fixedWidthString 1024 " " ""); }')" \
+-m 256 \
+--params 'root=/dev/vda init=/init ! source /dev/vdb' \
+--tap-fd 3 \
+$(test-build ./rootfs.nix large_kernel)/bzImage \
+;
