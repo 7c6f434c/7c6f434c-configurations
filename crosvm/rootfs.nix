@@ -1,6 +1,5 @@
 {
-  overrides ? x: {}
-  , pkgs ? import <nixpkgs> {}
+    pkgs ? import <nixpkgs> {}
   , nixos ? import <nixpkgs/nixos>
 }:
 pkgs.lib.makeExtensible (self: with self; {
@@ -78,7 +77,8 @@ pkgs.lib.makeExtensible (self: with self; {
       { object = udevRules + "/etc/udev"; symlink = "/etc/udev"; }
     ];
 
-  extraDirs = ["/dev" "/tmp" "/sys" "/proc" "/mnt-root"];
+  extraDirs = ["/dev" "/tmp" "/sys" "/proc" "/mnt" "/media" "/etc"
+    "/home" "/var/log" "/var/db" "/run"];
 
   initramfs = pkgs.makeInitrd {
     contents = fsContents base_kernel;
