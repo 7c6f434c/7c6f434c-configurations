@@ -65,12 +65,25 @@ pkgs.lib.makeExtensible (self: with self; {
   '';
   store-9p-exporter = pkgs.writeScript "store-9p-exporter" store-9p-export;
 
-  host-address = "10.0.2.2";
-  vm-address = "10.0.2.3";
-  ip-netmask = "24";
-  ip-version = "4";
+  ip-subnet4 = "10.0.2.";
+  ip-netmask4 = "24";
+  ip-subnet6 = "fdc8:63b4:1def:b085::";
+  ip-netmask6 = "64";
+  host-idx = "2";
+  vm-idx = "3";
 
-  base-modules = [ "virtio-net" "9p" "9pnet" ];
+  # Current blocker for IPv6: linux/net/9p/trans_fd.c assumes AF_INET
+  ip-version = "4";
+  
+  ip-subnet = if ip-version == "4" then ip-subnet4 else ip-subnet6;
+  ip-netmask = if ip-version == "4" then ip-netmask4 else ip-netmask6;
+  host-address = "${ip-subnet}${host-idx}";
+  vm-address = "${ip-subnet}${vm-idx}";
+
+  host-bracketed-address = if ip-version =="6" then "[${host-address}]" else host-address;
+  host-socat-bind-address = "${host-bracketed-address},pf=ip${ip-version}";
+
+  base-modules = [ "ipv6" "virtio-net" "9p" "9pnet" ];
 
   crosvm-base-script = ''
     for m in ${escapeShellArgs base-modules}; do
@@ -81,7 +94,9 @@ pkgs.lib.makeExtensible (self: with self; {
     ip link set eth0 up
     ip -${ip-version} address add ${vm-address}/${ip-netmask} dev eth0
 
-    mount -t 9p -o version=9p2000.L,trans=tcp,cache=loose,ro ${host-address} /nix/store
+    set -x
+    mount -t 9p -o version=9p2000.L,trans=tcp,cache=loose,ro ${escapeShellArg host-bracketed-address} /nix/store
+    set +x
 
     export PATH="$PATH:${rootfs.swEnv}/bin"
 
@@ -89,12 +104,23 @@ pkgs.lib.makeExtensible (self: with self; {
   '';
 
   pow2string = n: s: if n <= 0 then s else pow2string (n - 1) (s+s);
+  timesString = n: s: if n <= 0 then "" else let
+    last = if (n / 2) * 2 == n then "" else s;
+    main = n / 2;
+  in last + (timesString main (s+s));
+  padStringRightMod = n: pad: s:
+     let ls = pkgs.lib.stringLength s;
+         lsmod = ls - (ls / n) * n;
+         lpad = pkgs.lib.stringLength pad;
+         need = if lsmod == 0 then 0 else n - lsmod;
+         needdiv = (need +  lpad - 1) / lpad;
+     in (timesString needdiv pad) + s;
 
   crosvm-base-init-disk = pkgs.writeTextFile {
     name = "init";
     # Add enough spaces that rounding down to whole blocks is safe
     # Ideally, should add exactly the exact number of bytes needed
-    text = crosvm-base-script + (pow2string 13 " ");
+    text = padStringRightMod 8192 " " crosvm-base-script;
   };
 
   crosvm-init-disk-internal = "/crosvm-init";
@@ -121,7 +147,9 @@ pkgs.lib.makeExtensible (self: with self; {
     mkdir -p "$init_dir"
     init_file="$(mktemp -p "$init_dir")"
     echo "$1" > "$init_file"
-    yes "" | head -n 8192 >> "$init_file"
+    size="$(wc -c < "$init_file")"
+    need="$(( 8192 - (size % 8192) ))"
+    yes "" | head -n "$need" >> "$init_file"
     
     chmod a+rX "$init_dir" "$init_file"
     
@@ -135,6 +163,8 @@ pkgs.lib.makeExtensible (self: with self; {
            :pass-stdin t :pass-stderr t :pass-stdout t
            :dev-log-socket ""
            :x-optional t :display 999
+           ; Muffle the warning about user not being found
+           :fake-passwd t :fake-usernames `("chronos") :fake-groups `("chronos")
            :mounts `(
                       (:b "/dev/kvm") (:r "/var/empty") (:b "/dev/net")
                       (:b ,(~ ${escapeLispString socket-9p-dir}) ${escapeLispString socket-9p-dir-internal})
@@ -147,13 +177,16 @@ pkgs.lib.makeExtensible (self: with self; {
                           ,(~ ${escapeLispString socket-9p-dir} "store:0")
                         )
            :network-ports `(
-                             ((564 :tcp)${escapeLispString host-address}(${escapeLispString "${socket-9p-dir-internal}/store\\:0"} :unix))
+                             ((564 :tcp)${escapeLispString host-socat-bind-address}
+                              (${escapeLispString "${socket-9p-dir-internal}/store\\:0"} :unix))
                              ,@(loop for p in (cl-ppcre:split " " ($ "ports"))
                                      for proto := (if (cl-ppcre:scan ":" p) (cl-ppcre:regex-replace ".*:" p "") "tcp")
                                      for pnum := (parse-integer (cl-ppcre:regex-replace ":.*" p ""))
-                                     collect `((,pnum ,proto) ${escapeLispString host-address} (,pnum ,proto) "127.0.0.1")
+                                     collect `((,pnum ,proto) ${escapeLispString host-socat-bind-address}
+                                               (,pnum ,proto (",pf=ip4")) "127.0.0.1" #| IPv4 outside the container |#)
                                   )
                            )
+           :verbose-netns t
            :netns-tuntap-devices `(("tap0" "${host-address}/${ip-netmask}" "tap" ("vnet_hdr" "${ip-version}")))
            )
     ''}

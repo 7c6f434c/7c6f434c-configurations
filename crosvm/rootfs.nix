@@ -113,7 +113,8 @@ pkgs.lib.makeExtensible (self: with self; {
     gunzip < "${fsTarball}" | ${pkgs.squashfs-tools-ng}/bin/tar2sqfs "$out"
   '';
 
-  swPackages = with pkgs; [curl];
+  swPackages = with pkgs; [curl host iotop htop (hiPrio glibcLocales)
+    screen git cacert];
   swEnv = pkgs.buildEnv {
     name = "main-tools";
     paths = swPackages;
