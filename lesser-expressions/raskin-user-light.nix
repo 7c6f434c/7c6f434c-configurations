@@ -21,7 +21,7 @@ in with pkgs;
 fullEnv "main-light-package-set"
       [
         squid git monotone fbida fbterm postgresql95 expect pmount fdm python2
-        slmenu mcabber ii irssi elinks links2 rsync ratpoison xdummy
+        slmenu fzf mcabber ii irssi elinks links2 rsync ratpoison xdummy
         (matrixcli.overrideAttrs (x: {
           postPatch = ''
             sed -e '
@@ -29,6 +29,7 @@ fullEnv "main-light-package-set"
               /return parser/i\    parser_tail.add_argument("-i", "--include-user", dest="include_user", action="store_true", help="include own messages")
               /return parser/i\    parser_listen.add_argument("-i", "--include-user", dest="include_user", action="store_true", help="include own messages")
               s@\['"'"'url'"'"'\]@.get('"'"'url'"'"',"mxc://")@
+              '"s@\['msgtype']@.get('msgtype')@"'
             ' -i matrixcli
           '';
         }))
