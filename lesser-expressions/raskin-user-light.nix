@@ -44,7 +44,7 @@ fullEnv "main-light-package-set"
         xorg.xlsclients fortune fuse3 openssl axel arping whois hping badvpn dict
         xdaliclock openvpn iftop file patchutils zip gawk parallel perl btrfs-progs
         man manpages oathToolkit wavemon proxychains screenkey untrunc
-        monotoneViz udftools units texinfoInteractive kitty yap
+        monotoneViz udftools units texinfoInteractive kitty yap _3proxy
         python3Packages.pygments
         (import ./texlive-set.nix pkgs)
         /* xpdf */
