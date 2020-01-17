@@ -13,6 +13,7 @@ with rec {
           ncp ${./openvpn.private/server-tcp.conf} ./etc/openvpn
           ncp ${./ii.service} ./lib/systemd/system
           ncp ${./openvpn.service} ./lib/systemd/system
+          ncp ${./openvpn-tcp.service} ./lib/systemd/system
           ncp ${./nat} ./etc/network/if-up.d
           ncp ${./env} ./etc
         '';
