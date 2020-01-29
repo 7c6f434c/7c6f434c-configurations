@@ -102,7 +102,7 @@ linkFarm "raskin-packages" ([
                { name = "conpra-deps"; path = buildEnv { name = "conpra-deps"; paths = [
                  gcc.out glibc.out glibc.static openjdk11
                  poppler_utils
-                 boost
+                 boost boost.dev
                  (import ./plastex/requirements.nix {}).packages.plastex
                  (import ./flask_inputs/requirements.nix {}).packages.flask-inputs
                  (import ./importlib_metadata/requirements.nix {}).packages.importlib-metadata
@@ -147,7 +147,7 @@ linkFarm "raskin-packages" ([
  "julia_10" 
  "julia_11"
  "julia"
- "tigervnc" "fbvnc"
+ /*"tigervnc"*/ "fbvnc"
  "glpk" "clingo"
  "plan9port" "sway" "syslogng" "rsyslog"
  "xmacro"
