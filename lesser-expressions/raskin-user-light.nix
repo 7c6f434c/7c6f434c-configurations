@@ -30,7 +30,7 @@ fullEnv "main-light-package-set"
               /return parser/i\    parser_listen.add_argument("-i", "--include-user", dest="include_user", action="store_true", help="include own messages")
               s@\['"'"'url'"'"'\]@.get('"'"'url'"'"',"mxc://")@
               '"s@\['msgtype']@.get('msgtype')@"'
-              s@listen_handler()@listen_handler(sys.exc_info()[0]); sender_name="unknown"; avatar_url="unknown://"; break@
+              s@listen_handler()@listen_handler(sys.exc_info()[0]); sender_name=event["sender"]; avatar_url="unknown://"; break@
               /def listen_handler(e):/a\    try:
               /def listen_handler(e):/a\      print(e)
               /def listen_handler(e):/a\    except:
