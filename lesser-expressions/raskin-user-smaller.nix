@@ -8,6 +8,7 @@ let pp = import /home/raskin/src/nix/configurations/misc/raskin/private-packages
 let justUse = str: {name = str; path = builtins.getAttr str pkgs;}; in
 let justUseMult = output: str: {name = "${str}.${output}"; path = builtins.getAttr output (builtins.getAttr str pkgs);}; in
 let ppUse = str: {name = str; path = builtins.getAttr str pp;}; in
+let julia_used = julia_13.overrideAttrs (x: { doCheck = false; }); in
 
 linkFarm "raskin-packages" ([
                 {name="mime"; path=shared_mime_info;}
@@ -87,7 +88,7 @@ linkFarm "raskin-packages" ([
                   path = buildFHSUserEnv {
                     name = "julia-fhs-env"; 
                     targetPkgs = p: with p; [
-                      julia_10
+                      julia_used
                       cmake hdf5 gnuplot glibc zlib
                       xorg.libXt xorg.libX11 xorg.libXrender 
                       xorg.libXtst xorg.libXext xorg.libXi qt4];
@@ -124,7 +125,7 @@ linkFarm "raskin-packages" ([
                  python27Packages.six
                  python27Packages.zipp
                  pypy3
-                 julia
+                 julia_used
                  autoconf automake libtool gmp boost bison flex gmp.dev
                  glpk
                ];};}
@@ -136,6 +137,7 @@ linkFarm "raskin-packages" ([
                  mkdir -p "$out/bin"
                  ln -s "${python3}/bin/python3" "$out/bin/pypy3"
                '';}
+               { name = "julia"; path = julia_used; }
 ]
 ++ 
 (map justUse [
@@ -144,9 +146,6 @@ linkFarm "raskin-packages" ([
  "icedtea_web" "love_0_10" "love_11" "libpulseaudio"
  "wgetpaste" "gdmap" "netcat" "python3" "kdiff3" "meld"
  "gfxtablet" "keynav"
- "julia_10" 
- "julia_11"
- "julia"
  /*"tigervnc"*/ "fbvnc"
  "glpk" "clingo"
  "plan9port" "sway" "syslogng" "rsyslog"
