@@ -138,6 +138,26 @@ linkFarm "raskin-packages" ([
                  ln -s "${python3}/bin/python3" "$out/bin/pypy3"
                '';}
                { name = "julia"; path = julia_used; }
+               { name = "heron-python"; path = 
+                       python38.withPackages
+                               (p: with p; [
+                                (clingo.overrideAttrs
+                                 (x: { buildInputs = (x.buildInputs or []) ++ [p.python];
+                                  cmakeFlags = x.cmakeFlags ++ [
+                                  "-DPYCLINGO_USER_INSTALL=OFF"
+                                  "-DCLINGO_BUILD_WITH_PYTHON=ON"
+                                  "-DPYCLINGO_USE_INSTALL_PREFIX=${builtins.placeholder "out"}/lib/${python3.libPrefix}"
+                                  ]; 
+                                  passthru = {
+                                  pythonModule = p.python;
+                                  };
+                                  preConfigure = ''
+                                  sed -re 's@^ *nullptr,( *// *tp_)@NULL,\1@' -i libpyclingo/*.{cc,hh}
+                                  '';
+                                  }))
+                                z3 jinja2 lark-parser
+                               ])
+                               ; }
 ]
 ++ 
 (map justUse [
