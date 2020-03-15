@@ -167,7 +167,7 @@ linkFarm "raskin-packages" ([
  "wgetpaste" "gdmap" "netcat" "python3" "kdiff3" "meld"
  "gfxtablet" "keynav"
  /*"tigervnc"*/ "fbvnc"
- "glpk" "clingo"
+ "glpk" "clingo" "urn"
  "plan9port" "sway" "syslogng" "rsyslog"
  "xmacro"
 ])
