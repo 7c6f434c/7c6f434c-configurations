@@ -1,0 +1,7 @@
+[Unit]
+Description=Dehydrated Let's Encrypt client
+
+[Service]
+Type=oneshot
+User=root
+ExecStart=/root/tools/bin/dehydrated -c -f /var/dehydrated/dehydrated.conf

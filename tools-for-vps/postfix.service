@@ -1,0 +1,9 @@
+[Unit]
+Description=Postfix mail server
+
+[Service]
+Type=forking
+ExecStart=/root/tools/bin/postfix -c /etc/postfix start
+
+[Install]
+WantedBy=multi-user.target

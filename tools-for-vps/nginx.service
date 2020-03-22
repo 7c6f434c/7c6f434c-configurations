@@ -1,0 +1,14 @@
+[Unit]
+Description=Nginx HTTP server
+
+[Service]
+Type=forking
+PIDFile=/run/nginx.pid
+User=root
+ExecStartPre=/root/tools/bin/nginx -t -q -p /var/nginx -g 'daemon on; master_process on;'
+ExecStart=/root/tools/bin/nginx -p /var/nginx -g 'daemon on; master_process on;'
+ExecStop=
+
+[Install]
+WantedBy=multi-user.target
+
