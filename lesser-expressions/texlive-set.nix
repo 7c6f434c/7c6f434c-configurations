@@ -16,6 +16,7 @@ pkgs.texlive.combine {
     bussproofs l3kernel cclicenses xifthen ifmtarg blindtext changepage
     lstaddons import fancyvrb tocloft tikz-qtree ellipsis nag tkz-euclide
     tkz-base numprint tkz-graph a4wide inconsolata newtx upquote acmart
-    minted fvextra framed titling units siunitx colortbl xpatch
+    minted fvextra framed titling units siunitx colortbl xpatch prooftrees
+    lkproof
     ;
 }
