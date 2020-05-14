@@ -15,7 +15,7 @@ rust.packages.stable.rustPlatform.buildRustPackage rec {
 
   sourceRoot = "source/example/unpfs";
 
-  cargoSha256 = "1d33nwj3i333a6ji3r3037mgg553lc3wsawm0pz13kbvhjf336i8";
+  cargoSha256 = "045fb0q5d8frfjq83a3v4mgck3398l23rhzwk8qkdk48xv3j1d5i";
 
   RUSTC_BOOTSTRAP=1;
 
