@@ -12,7 +12,7 @@ pkgs.lib.makeExtensible (self: with self; {
 
   rust-9p = pkgs.callPackage ./rust-9p.nix {};
   mktuntap = spectrumPkgs.mktuntap;
-  crosvm = spectrumPkgs.crosvm;
+  crosvm = pkgs.crosvm;
 
   lispClientBin = pkgs.runCommand "lisp-request-client" {}
     ''

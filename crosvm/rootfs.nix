@@ -8,9 +8,10 @@ pkgs.lib.makeExtensible (self: with self; {
   makeSquashfs = pkgs.callPackage <nixpkgs/nixos/lib/make-squashfs.nix>;
 
   base_kernel = pkgs.linux;
-  large_kernel = with import <nixpkgs/lib/kernel.nix> { inherit (pkgs) lib; inherit (base_kernel) version; };
+  nixpkgs_kernel_lib = (import <nixpkgs/lib/kernel.nix> { inherit (pkgs) lib; });
+  large_kernel = 
     base_kernel.override {
-      structuredExtraConfig = {
+      structuredExtraConfig = with nixpkgs_kernel_lib; {
          VIRTIO_PCI = yes;
          VIRTIO_BLK = yes;
          DEVTMPFS_MOUNT = yes;
