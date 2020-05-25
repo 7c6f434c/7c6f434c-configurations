@@ -169,7 +169,7 @@ linkFarm "raskin-packages" ([
  /*"tigervnc"*/ "fbvnc"
  "glpk" "clingo" "urn"
  "plan9port" "sway" "syslogng" "rsyslog"
- "xmacro"
+ "xmacro" "manpages" "mpv"
 ])
 ++
 (map (justUseMult "out") [
