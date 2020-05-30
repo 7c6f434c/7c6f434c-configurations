@@ -51,7 +51,7 @@ fullEnv "main-light-package-set"
         xdaliclock openvpn iftop file patchutils zip gawk parallel perl btrfs-progs
         man manpages oathToolkit wavemon proxychains screenkey untrunc
         monotoneViz udftools units texinfoInteractive kitty yap _3proxy
-        python3Packages.pygments ffsend poppler_utils libarchive
+        python3Packages.pygments ffsend poppler_utils libarchive wdiff
         (import ./texlive-set.nix pkgs)
         /* xpdf */
       ]      
