@@ -35,7 +35,7 @@ fullEnv "main-light-package-set"
               /def listen_handler(e):/a\      print(e)
               /def listen_handler(e):/a\    except:
               /def listen_handler(e):/a\      pass
-              s@content = download_url@content = event\["content"].get("body") +"\\n"+ download_url@
+              s@content = download_url@content = (event\["content"].get("body") or ("{{ no event body, type: " + event\["type"] + " }}")) +"\\n" + (download_url or "no_url://")@
             ' -i matrixcli
           '';
         }))
