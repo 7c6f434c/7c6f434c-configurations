@@ -17,6 +17,6 @@ pkgs.texlive.combine {
     lstaddons import fancyvrb tocloft tikz-qtree ellipsis nag tkz-euclide
     tkz-base numprint tkz-graph a4wide inconsolata newtx upquote acmart
     minted fvextra framed titling units siunitx colortbl xpatch prooftrees
-    lkproof acronym listings listingsutf8 biber
+    lkproof acronym listings listingsutf8 biber pgfplots
     ;
 }
