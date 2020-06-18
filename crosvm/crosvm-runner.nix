@@ -10,7 +10,7 @@
 pkgs.lib.makeExtensible (self: with self; {
   inherit pkgs nixos rootfs;
 
-  rust-9p = pkgs.callPackage ./rust-9p.nix {};
+  rust-9p = pkgs.unpfs;
   mktuntap = spectrumPkgs.mktuntap;
   crosvm = pkgs.crosvm;
 
@@ -42,25 +42,31 @@ pkgs.lib.makeExtensible (self: with self; {
 
   store-9p-command = socket: path:
     ["${rust-9p}/bin/unpfs" "unix!${socket-9p-dir-internal}/${socket}!0" path];
-  store-9p-export = ''
-    ${ensureSocketDir}
+  store-9p-prepare = socket: path: ''
     ${pkgs.socat}/bin/socat stdio \
-       unix-connect:"$HOME"/${escapeShellArg socket-9p-dir}/'store\:0' \
+       unix-connect:"$HOME"/${escapeShellArg socket-9p-dir}/${escapeShellArg socket}'\:0' \
        &> /dev/null < /dev/null ||
     {
-    rm "$HOME"/${escapeShellArg socket-9p-dir}/'store:0'
+    rm "$HOME"/${escapeShellArg socket-9p-dir}/${escapeShellArg socket}':0'
     ${lispRequest ''
          (subuser-nsjail-x-application
-            `(${escapeLispStrings (store-9p-command "store" "/nix/store")})
+            `(${escapeLispStrings (store-9p-command socket "/data")})
             :grant `(,(~ ${escapeLispString socket-9p-dir}))
-            :mounts `((:b ,(~ ${escapeLispString socket-9p-dir}) ${escapeLispString socket-9p-dir-internal}))
+            :mounts `((:b ,(~ ${escapeLispString socket-9p-dir}) ${escapeLispString socket-9p-dir-internal})
+                      (:b ${escapeLispString path} "/data"))
             :wait nil
             )
     ''}
     }
-    while ! test -e "$HOME"/${escapeShellArg socket-9p-dir}/store:0; do
-      sleep 0.1;
+    while ! test -e "$HOME"/${escapeShellArg socket-9p-dir}/${escapeShellArg socket}:0; do
+      sleep 0.1
     done
+  '';
+  store-9p-export = ''
+    ${ensureSocketDir}
+    ${store-9p-prepare "store" "/nix/store"}
+    mkdir -p /tmp/crosvm-test
+    ${store-9p-prepare "tmp" "/tmp/crosvm-test"}
     ${ensureSocketDir}
   '';
   store-9p-exporter = pkgs.writeScript "store-9p-exporter" store-9p-export;
@@ -95,7 +101,10 @@ pkgs.lib.makeExtensible (self: with self; {
     ip -${ip-version} address add ${vm-address}/${ip-netmask} dev eth0
 
     set -x
-    mount -t 9p -o version=9p2000.L,trans=tcp,cache=loose,ro ${escapeShellArg host-bracketed-address} /nix/store
+    mount -t 9p -o version=9p2000.L,trans=tcp,cache=loose,ro,port=564 ${escapeShellArg host-bracketed-address} /nix/store
+    mount -t tmpfs tmpfs /tmp
+    mkdir /tmp/host
+    mount -t 9p -o version=9p2000.L,trans=tcp,cache=none,posixacl,port=2564 ${escapeShellArg host-bracketed-address} /tmp/host
     set +x
 
     export PATH="$PATH:${rootfs.swEnv}/bin"
@@ -175,10 +184,14 @@ pkgs.lib.makeExtensible (self: with self; {
                         )
            :grant      `(
                           ,(~ ${escapeLispString socket-9p-dir} "store:0")
+                          ,(~ ${escapeLispString socket-9p-dir} "tmp:0")
+                          "/tmp/crosvm-test/"
                         )
            :network-ports `(
                              ((564 :tcp)${escapeLispString host-socat-bind-address}
                               (${escapeLispString "${socket-9p-dir-internal}/store\\:0"} :unix))
+                             ((2564 :tcp)${escapeLispString host-socat-bind-address}
+                              (${escapeLispString "${socket-9p-dir-internal}/tmp\\:0"} :unix))
                              ,@(loop for p in (cl-ppcre:split " " ($ "ports"))
                                      for proto := (if (cl-ppcre:scan ":" p) (cl-ppcre:regex-replace ".*:" p "") "tcp")
                                      for pnum := (parse-integer (cl-ppcre:regex-replace ":.*" p ""))

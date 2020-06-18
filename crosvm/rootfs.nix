@@ -115,7 +115,7 @@ pkgs.lib.makeExtensible (self: with self; {
   '';
 
   swPackages = with pkgs; [curl host iotop htop (hiPrio glibcLocales)
-    screen git cacert];
+    screen git cacert gcc];
   swEnv = pkgs.buildEnv {
     name = "main-tools";
     paths = swPackages;
