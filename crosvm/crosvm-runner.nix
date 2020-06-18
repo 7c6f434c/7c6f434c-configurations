@@ -66,6 +66,7 @@ pkgs.lib.makeExtensible (self: with self; {
     ${ensureSocketDir}
     ${store-9p-prepare "store" "/nix/store"}
     mkdir -p /tmp/crosvm-test
+    chmod a+rwxt /tmp/crosvm-test
     ${store-9p-prepare "tmp" "/tmp/crosvm-test"}
     ${ensureSocketDir}
   '';
