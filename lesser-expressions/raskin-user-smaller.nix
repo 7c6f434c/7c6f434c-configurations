@@ -106,12 +106,12 @@ linkFarm "raskin-packages" ([
                  boost boost.dev
                  (import ./plastex/requirements.nix {}).packages.plastex
                  (import ./flask_inputs/requirements.nix {}).packages.flask-inputs
-                 (import ./importlib_metadata/requirements.nix {}).packages.importlib-metadata
-                 (import ./importlib_metadata/requirements.nix {}).packages.more-itertools
-                 (import ./importlib_metadata/requirements.nix {}).packages.configparser
-                 (import ./importlib_metadata/requirements.nix {}).packages.contextlib2
-                 (import ./importlib_metadata/requirements.nix {}).packages.pathlib2
-                 (import ./importlib_metadata/requirements.nix {}).packages.scandir
+                 # (import ./importlib_metadata/requirements.nix {}).packages.importlib-metadata
+                 # (import ./importlib_metadata/requirements.nix {}).packages.more-itertools
+                 # (import ./importlib_metadata/requirements.nix {}).packages.configparser
+                 # (import ./importlib_metadata/requirements.nix {}).packages.contextlib2
+                 # (import ./importlib_metadata/requirements.nix {}).packages.pathlib2
+                 # (import ./importlib_metadata/requirements.nix {}).packages.scandir
                  python3 python27Packages.pyyaml
                  python27Packages.flask python27Packages.jsonschema
                  python27Packages.werkzeug python27Packages.jinja2
