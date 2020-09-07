@@ -158,6 +158,14 @@ linkFarm "raskin-packages" ([
                                 z3 jinja2 lark-parser
                                ])
                                ; }
+               { name = "wordnet-data"; path = runCommandNoCC "wordnet-data" {} ''
+                 mkdir -p "$out/share/"
+                 cd "$out/share"
+                 tar -xf "${fetchurl {
+                   url = "http://wordnetcode.princeton.edu/wn3.1.dict.tar.gz";
+                   hash = "sha256:0an226fl5zpav7vmgkdxnn044wzcailxc44vsdkp3k3fxzl8nz9z";
+                 }}"
+               ''; }
 ]
 ++ 
 (map justUse [
