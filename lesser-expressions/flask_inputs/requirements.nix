@@ -19,7 +19,6 @@ let
     inherit pkgs;
     inherit (pkgs) stdenv;
     python = pkgs.python27Full;
-    inherit (pkgs) qt5 libsForQt5;
   };
 
   commonBuildInputs = [];

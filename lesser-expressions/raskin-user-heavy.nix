@@ -25,7 +25,13 @@ linkFarm "raskin-heavy-packages" ([
         gimp ghostscript asymptote qemu love imagemagick7 openscad
         vue gqview geeqie subversion espeak fossil mercurial djview wxmaxima
         gnuplot mozlz4a lz4 maxima valgrind pdftk lilypond timidity OVMF atop
-        gptfdisk dmidecode inkscape x11vnc tightvnc xdummy tcpdump wireshark
+        gptfdisk dmidecode inkscape x11vnc 
+        (tightvnc.override {
+          fontDirectories = [
+            xorg.fontadobe75dpi xorg.fontmiscmisc xorg.fontcursormisc
+          ];
+        })
+        xdummy tcpdump wireshark
         testdisk fdupes ntfs3g lazarus icewm youtube-dl xorg.xwd
         vlc sshfs dmtx glxinfo xorg.xdpyinfo xorg.xdriinfo go-mtpfs nmap sox
         xorg.xinput usbutils wgetpaste gdb scowl xcalib fmbt eprover glucose
