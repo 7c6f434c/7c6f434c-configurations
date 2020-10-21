@@ -22,7 +22,7 @@ fullEnv "main-light-package-set"
       [
         squid git monotone fbida fbterm postgresql95 expect pmount fdm python2
         slmenu fzf mcabber ii irssi links2 rsync ratpoison xdummy
-        (elinks.override { enableSpidermonkey = false; })
+        elinks
         (matrixcli.overrideAttrs (x: {
           postPatch = ''
             sed -e '
