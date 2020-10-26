@@ -9,6 +9,7 @@ let justUse = str: {name = str; path = builtins.getAttr str pkgs;}; in
 let justUseMult = output: str: {name = "${str}.${output}"; path = builtins.getAttr output (builtins.getAttr str pkgs);}; in
 let ppUse = str: {name = str; path = builtins.getAttr str pp;}; in
 let julia_used = julia_13.overrideAttrs (x: { doCheck = false; }); in
+let myLispPackages = import ./lisp-packages.nix { inherit pkgs; }; in
 
 linkFarm "raskin-packages" ([
                 {name="mime"; path=shared_mime_info;}
@@ -128,6 +129,10 @@ linkFarm "raskin-packages" ([
                  julia_used
                  autoconf automake libtool gmp boost bison flex gmp.dev
                  glpk
+               ];};}
+               { name = "local-lisp-binaries"; path = buildEnv { name="lisp-binaries"; paths = 
+               with myLispPackages; [
+                 cl-mailer squid-url-rewrite 
                ];};}
                { name = "pypy3-as-python3"; path = runCommandNoCC "pypy3-as-python3" {} ''
                  mkdir -p "$out/bin"
