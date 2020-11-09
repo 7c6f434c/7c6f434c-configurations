@@ -50,7 +50,7 @@ fullEnv "main-light-package-set"
         fpc graphviz diffutils fontconfig compton xorg.xprop xorg.xwininfo jq
         xorg.xlsclients fortune fuse3 openssl axel arping whois hping badvpn dict
         xdaliclock openvpn iftop file patchutils zip gawk parallel perl btrfs-progs
-        man manpages oathToolkit wavemon proxychains screenkey untrunc
+        man manpages oathToolkit wavemon proxychains screenkey
         monotoneViz udftools units texinfoInteractive kitty yap _3proxy
         python3Packages.pygments ffsend poppler_utils libarchive wdiff ydiff
         pass gnupg
