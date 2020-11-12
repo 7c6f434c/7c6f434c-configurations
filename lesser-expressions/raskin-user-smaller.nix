@@ -129,6 +129,7 @@ linkFarm "raskin-packages" ([
                  julia_used
                  autoconf automake libtool gmp boost bison flex gmp.dev
                  glpk
+                 flexcpp bisoncpp
                ];};}
                { name = "local-lisp-binaries"; path = buildEnv { name="lisp-binaries"; paths = 
                with myLispPackages; [
