@@ -52,7 +52,6 @@ linkFarm "raskin-packages" ([
                 {name="pcall"; path=lispPackages.pcall;}
                 {name="parse-number"; path=lispPackages.parse-number;}
                 {name="gimp-resynthesizer"; path=gimpPlugins.resynthesizer;}
-                { name = "gimp-resynthesizer2"; path = gimpPlugins.resynthesizer2; }
                 { name = "words"; path = scowl; }
                 { name = "dicts"; path = dictDBCollector {
                         dictlist = (with dictdDBs; map 
