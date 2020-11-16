@@ -7,7 +7,8 @@ with rec {
       (monotone.override{
         botan = (botan.override { openssl = null; }).overrideAttrs (x: { meta = null; });
       })
-      file
+      file remind
+      pv wavemon nmap
     ];
   };
 };
