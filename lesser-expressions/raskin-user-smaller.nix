@@ -183,7 +183,7 @@ linkFarm "raskin-packages" ([
  "glpk" "clingo" "urn"
  "plan9port" "sway" "syslogng" "rsyslog"
  "xmacro" "manpages" "mpv" "zbar" "lsb-release"
- "pinentry" "bfs" "moreutils"
+ "pinentry" "bfs" "moreutils" "spaceFM"
 ])
 ++
 (map (justUseMult "out") [
