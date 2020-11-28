@@ -33,7 +33,8 @@ with rec {
 
           mkdir -p ./var/log/nginx ./var/www ./var/www/.well-known ./var/nginx/logs \
             ./var/dehydrated/conf.d ./var/dehydrated/acme-challenge \
-            ./var/lib/postfix/queue ./var/spool/mail ./var/mail ./var/spool/postfix
+            ./var/lib/postfix/queue ./var/spool/mail ./var/mail ./var/spool/postfix \
+            ./var/cache/nginx
         '';
         remoteDeploy = pkgs.writeScriptBin "remote-deploy" ''
           for i in root raskin matrix; do

@@ -44,7 +44,6 @@ linkFarm "raskin-packages" ([
                 {name="clx-xkeyboard"; path=lispPackages.xkeyboard;}
                 {name="clwrapper"; path=lispPackages.clwrapper;}
                 {name="python-mozilla-marionette"; path=pythonPackages.marionette-harness;}
-                {name="ipython"; path=pythonPackages.ipython;}
                 {name="bordeaux-threads"; path=lispPackages.bordeaux-threads;}
                 {name="lparallel"; path=lispPackages.lparallel;}
                 {name="lfarm-client"; path=lispPackages.lfarm-client;}
@@ -99,13 +98,13 @@ linkFarm "raskin-packages" ([
                   (map (x: {name=x.name+"."+x.outputName;path=x;})
                   (lib.concatLists (map (x: x.all)
                     [ sqlite postgresql fuse openssl ])));}
-               {name="pypi2nix"; path = import /home/repos/pypi2nix/default.nix {};}
+               /* {name="pypi2nix"; path = import /home/repos/pypi2nix/default.nix {};} */
                { name = "conpra-deps"; path = buildEnv { name = "conpra-deps"; paths = [
                  gcc.out glibc.out glibc.static openjdk11
                  poppler_utils
                  boost boost.dev
-                 (import ./plastex/requirements.nix {}).packages.plastex
-                 (import ./flask_inputs/requirements.nix {}).packages.flask-inputs
+                 # (import ./plastex/requirements.nix {}).packages.plastex
+                 # (import ./flask_inputs/requirements.nix {}).packages.flask-inputs
                  # (import ./importlib_metadata/requirements.nix {}).packages.importlib-metadata
                  # (import ./importlib_metadata/requirements.nix {}).packages.more-itertools
                  # (import ./importlib_metadata/requirements.nix {}).packages.configparser
