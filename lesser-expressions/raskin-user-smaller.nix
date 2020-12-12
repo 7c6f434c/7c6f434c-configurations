@@ -43,7 +43,7 @@ linkFarm "raskin-packages" ([
                 {name="xkeyboard"; path=lispPackages.xkeyboard;}
                 {name="clx-xkeyboard"; path=lispPackages.xkeyboard;}
                 {name="clwrapper"; path=lispPackages.clwrapper;}
-                {name="python-mozilla-marionette"; path=pythonPackages.marionette-harness;}
+                {name="python-mozilla-marionette"; path=(import ../lang-os/marionette-python-packages.nix {inherit pkgs;}).marionette-harness;}
                 {name="bordeaux-threads"; path=lispPackages.bordeaux-threads;}
                 {name="lparallel"; path=lispPackages.lparallel;}
                 {name="lfarm-client"; path=lispPackages.lfarm-client;}
@@ -99,36 +99,6 @@ linkFarm "raskin-packages" ([
                   (lib.concatLists (map (x: x.all)
                     [ sqlite postgresql fuse openssl ])));}
                /* {name="pypi2nix"; path = import /home/repos/pypi2nix/default.nix {};} */
-               { name = "conpra-deps"; path = buildEnv { name = "conpra-deps"; paths = [
-                 gcc.out glibc.out glibc.static openjdk11
-                 poppler_utils
-                 boost boost.dev
-                 # (import ./plastex/requirements.nix {}).packages.plastex
-                 # (import ./flask_inputs/requirements.nix {}).packages.flask-inputs
-                 # (import ./importlib_metadata/requirements.nix {}).packages.importlib-metadata
-                 # (import ./importlib_metadata/requirements.nix {}).packages.more-itertools
-                 # (import ./importlib_metadata/requirements.nix {}).packages.configparser
-                 # (import ./importlib_metadata/requirements.nix {}).packages.contextlib2
-                 # (import ./importlib_metadata/requirements.nix {}).packages.pathlib2
-                 # (import ./importlib_metadata/requirements.nix {}).packages.scandir
-                 python3 python27Packages.pyyaml
-                 python27Packages.flask python27Packages.jsonschema
-                 python27Packages.werkzeug python27Packages.jinja2
-                 python27Packages.markupsafe
-                 python27Packages.itsdangerous
-                 python27Packages.click
-                 python27Packages.wtforms
-                 python27Packages.functools32
-                 python27Packages.attrs
-                 python27Packages.pyrsistent
-                 python27Packages.six
-                 python27Packages.zipp
-                 pypy3
-                 julia_used
-                 autoconf automake libtool gmp boost bison flex gmp.dev
-                 glpk
-                 flexcpp bisoncpp
-               ];};}
                { name = "local-lisp-binaries"; path = buildEnv { name="lisp-binaries"; paths = 
                with myLispPackages; [
                  cl-mailer squid-url-rewrite 
@@ -170,6 +140,7 @@ linkFarm "raskin-packages" ([
                    hash = "sha256:0an226fl5zpav7vmgkdxnn044wzcailxc44vsdkp3k3fxzl8nz9z";
                  }}"
                ''; }
+               { name = "conpra-deps"; path = (import /home/raskin/.conpra-shell.nix).env; }
 ]
 ++ 
 (map justUse [
