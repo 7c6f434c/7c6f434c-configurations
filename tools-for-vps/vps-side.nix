@@ -49,7 +49,8 @@ with rec {
           (
             cd ./tools/global/lib/systemd/system
             for i in *; do
-              systemctl reenable /lib/systemd/system/$i
+              rm -v /etc/systemd/$i /etc/systemd/*/$i
+              systemctl enable /lib/systemd/system/$i
             done
           )
           for i in nginx; do systemctl restart $i; done
@@ -78,7 +79,13 @@ with rec {
                 rsync git monotone fossil mercurial vim strace transmission
                 glibcLocales host dnsutils mtr htop iotop hping socat iftop
                 curl wget youtube-dl jemalloc nix dehydrated netcat tcpdump
-                alpine postfix dovecot shared_mime_info
+                alpine postfix dovecot shared_mime_info textadept 
+                (tigervnc.override {
+                 fontDirectories = [
+                 xorg.fontadobe75dpi xorg.fontmiscmisc xorg.fontcursormisc
+                 ];
+                 })
+                xorg.xinit xorg.twm icewm rxvt_unicode
                 globalLinks remoteDeploy
           ];
         };

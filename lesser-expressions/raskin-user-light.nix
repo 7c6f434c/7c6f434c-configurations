@@ -51,7 +51,9 @@ fullEnv "main-light-package-set"
         xorg.xlsclients fortune fuse3 openssl axel arping whois hping badvpn dict
         xorg.appres
         xdaliclock openvpn iftop file patchutils zip gawk parallel perl btrfs-progs
-        man manpages oathToolkit wavemon proxychains screenkey
+        man manpages oathToolkit wavemon 
+        (proxychains.overrideAttrs (x: { NIX_CFLAGS_COMPILE="-Wno-error"; }))
+        screenkey
         monotoneViz udftools units texinfoInteractive kitty yap _3proxy
         python3Packages.pygments ffsend poppler_utils libarchive wdiff ydiff
         pass gnupg

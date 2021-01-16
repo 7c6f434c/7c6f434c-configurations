@@ -5,3 +5,6 @@ Description=Dehydrated Let's Encrypt client
 Type=oneshot
 User=root
 ExecStart=/root/tools/bin/dehydrated -c -f /var/dehydrated/dehydrated.conf
+
+[Install]
+WantedBy=dehydrated.timer
