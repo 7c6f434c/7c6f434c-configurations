@@ -85,6 +85,7 @@ with rec {
                  xorg.fontadobe75dpi xorg.fontmiscmisc xorg.fontcursormisc
                  ];
                  })
+                (callPackage ./scite.nix {})
                 xorg.xinit xorg.twm icewm rxvt_unicode
                 globalLinks remoteDeploy
           ];
