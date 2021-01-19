@@ -142,6 +142,16 @@ linkFarm "raskin-packages" ([
                ''; }
                { name = "conpra-deps"; path = (import /home/raskin/.conpra-shell.nix).env; }
                { name = "love_11_luajit_2_0"; path = love_11.override { luajit = luajit_2_0; }; }
+               { name = "tigervnc"; path = (tigervnc.override {
+                                              fontDirectories = [
+                                                  xorg.fontadobe75dpi xorg.fontmiscmisc xorg.fontcursormisc
+                                              ];
+                                           }); }
+               { name = "tightvnc"; path = (tightvnc.override {
+                                              fontDirectories = [
+                                                  xorg.fontadobe75dpi xorg.fontmiscmisc xorg.fontcursormisc
+                                              ];
+                                           }); }
 ]
 ++ 
 (map justUse [

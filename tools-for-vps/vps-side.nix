@@ -1,5 +1,8 @@
 with import <nixpkgs> {};
 with rec {
+        fontsConf = makeFontsConf {
+          fontDirectories = [ dejavu_fonts ];
+        };
         globalLinks = pkgs.runCommand "global-links" {} ''
           ncp () {
                 mkdir -p "$2"
@@ -25,6 +28,7 @@ with rec {
           ncp ${./postfix/main.cf} ./etc/postfix
           ncp ${./postfix/master.cf} ./etc/postfix
           ncp ${./postfix.service} ./lib/systemd/system
+          ncp ${fontsConf} ./etc/fonts
 
           sed -e 's/@@@/'"$(cat ${./domains.txt.private} | xargs)"'/' -i ./etc/postfix/main.cf
           for i in $(cat ${./domains.txt.private}); do
@@ -86,6 +90,7 @@ with rec {
                  ];
                  })
                 (callPackage ./scite.nix {})
+                gsettings_desktop_schemas gtk3
                 xorg.xinit xorg.twm icewm rxvt_unicode
                 globalLinks remoteDeploy
           ];
