@@ -43,6 +43,7 @@ fullEnv "main-light-package-set"
         matrix-recorder
         pv lvm2 mariadb remind xterm zsh mlterm ntp mc vifm ncdu ltrace weechat
         htop iotop powertop mtr bind inotify-tools xorg.setxkbmap xorg.xev
+        xorg.xset
         xfig transfig kig
         firefox vimHugeX evince zathura mplayer alsaUtils xvfb_run
         xorg.xmodmap bc xdotool lftp wget unzip gnumake xcape xorg.xrandr
