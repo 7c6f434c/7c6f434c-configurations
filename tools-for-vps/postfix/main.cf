@@ -1,3 +1,9 @@
 mydestination = @@@
 mynetworks = 127.0.0.1/32
 smtpd_relay_restrictions = reject_unauth_destination
+
+smtpd_tls_security_level = may
+smtpd_tls_cert_file = /etc/postfix/pointless-postfix.crt
+
+indexed = ${default_database_type}:${config_directory}/
+tls_server_sni_maps = ${indexed}sni

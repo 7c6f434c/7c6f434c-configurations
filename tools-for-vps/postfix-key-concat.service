@@ -1,0 +1,11 @@
+[Unit]
+Description=Key concatenation for Postfix
+
+[Service]
+Type=oneshot
+User=root
+ExecStart=bash -c 'for i in /var/dehydrated/certs/*/; do cd $i; cat privkey.pem fullchain.pem > key-chain-concatenated.pem; done'
+
+[Install]
+WantedBy=postfix-key-concat.timer
+

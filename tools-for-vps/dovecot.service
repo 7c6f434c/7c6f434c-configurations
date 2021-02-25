@@ -1,0 +1,10 @@
+[Unit]
+Description=Dovecot mail server
+
+[Service]
+Type=forking
+ExecStart=/root/tools/bin/dovecot -c /etc/dovecot/dovecot.conf
+
+[Install]
+WantedBy=multi-user.target
+

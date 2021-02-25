@@ -1,0 +1,4 @@
+local_name @@@ {
+  ssl_key = </var/dehydrated/certs/@@@/privkey.pem
+  ssl_cert = </var/dehydrated/certs/@@@/fullchain.pem
+}
