@@ -4,6 +4,7 @@ Description=Dehydrated Let's Encrypt client
 [Service]
 Type=oneshot
 User=root
+ExecStartPre=/root/tools/bin/dehydrated -f /var/dehydrated/dehydrated.conf --register --accept-terms
 ExecStart=/root/tools/bin/dehydrated -c -f /var/dehydrated/dehydrated.conf
 
 [Install]

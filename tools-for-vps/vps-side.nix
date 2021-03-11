@@ -55,6 +55,9 @@ with rec {
           ln -sfT ${dovecot}/lib/dovecot ./etc/dovecot/modules
         '';
         remoteDeploy = pkgs.writeScriptBin "remote-deploy" ''
+          for u in raskin matrix; do
+            useradd -m -s /bin/bash $u
+          done
           for i in root raskin matrix; do
             su - $i sh -c 'grep /etc/env .bashrc || echo . /etc/env >> .bashrc'
           done
@@ -86,7 +89,7 @@ with rec {
           for i in nginx dovecot; do
             systemctl restart $i;
           done
-          for i in ii openvpn openvpn-tcp nginx dehydrated.timer postfix-key-concat.timer postfix dovecot; do systemctl enable $i; done;
+          for i in ii openvpn openvpn-tcp nginx dehydrated.timer postfix-key-concat.timer postfix dovecot; do systemctl enable $i; systemctl start $i; systemctl reload $i; done;
           (
             cd ./tools/global/lib/systemd/system
             for i in *; do

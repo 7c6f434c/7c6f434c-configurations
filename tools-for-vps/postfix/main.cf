@@ -7,3 +7,5 @@ smtpd_tls_cert_file = /etc/postfix/pointless-postfix.crt
 
 indexed = ${default_database_type}:${config_directory}/
 tls_server_sni_maps = ${indexed}sni
+
+recipient_delimiter = +
