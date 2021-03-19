@@ -19,6 +19,6 @@ pkgs.texlive.combine {
     minted fvextra framed titling units siunitx colortbl xpatch prooftrees
     lkproof acronym listings listingsutf8 biber pgfplots csvsimple fourier
     appendix scalerel showlabels subfigure acro zref translations fixme
-    doublestroke hyperxmp lipsum standalone
+    doublestroke hyperxmp lipsum standalone changes truncate
     ;
 }
