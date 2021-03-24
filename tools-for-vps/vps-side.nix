@@ -39,6 +39,7 @@ with rec {
           ncp ${./dovecot.private/pointless-dovecot.key} ./etc/dovecot
           ncp ${./dovecot.private/pointless-dovecot.crt} ./etc/dovecot
           ncp ${fontsConf} ./etc/fonts
+          ncp ${./screenrc} ./etc
 
           sed -e 's/@@@/'"$(cat ${./domains.txt.private} | xargs)"'/' -i ./etc/postfix/main.cf
           for i in $(cat ${./domains.txt.private}); do

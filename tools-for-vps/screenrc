@@ -1,0 +1,5 @@
+startup_message off
+hardstatus off
+hardstatus alwaysignore
+scrollback 100000
+defscrollback 100000
