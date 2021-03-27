@@ -12,7 +12,7 @@
 let
 
   inherit (pkgs) makeWrapper;
-  inherit (pkgs.stdenv.lib) fix' extends inNixShell;
+  inherit (pkgs.lib) fix' extends inNixShell;
 
   pythonPackages =
   import "${toString pkgs.path}/pkgs/top-level/python-packages.nix" {
@@ -89,7 +89,7 @@ let
         self."wheel"
       ];
       propagatedBuildInputs = [ ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://github.com/jaraco/configparser/";
         license = licenses.mit;
         description = "Updated configparser from Python 3.7 for Python 2.6+.";
@@ -105,7 +105,7 @@ let
       doCheck = commonDoCheck;
       buildInputs = commonBuildInputs ++ [ ];
       propagatedBuildInputs = [ ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "http://contextlib2.readthedocs.org";
         license = licenses.psfl;
         description = "Backports and enhancements for the contextlib module";
@@ -130,7 +130,7 @@ let
         self."pathlib2"
         self."zipp"
       ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "http://importlib-metadata.readthedocs.io/";
         license = licenses.asl20;
         description = "Read metadata from Python packages";
@@ -148,7 +148,7 @@ let
       propagatedBuildInputs = [
         self."six"
       ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://github.com/erikrose/more-itertools";
         license = licenses.mit;
         description = "More routines for operating on iterables, beyond itertools";
@@ -167,7 +167,7 @@ let
         self."scandir"
         self."six"
       ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://github.com/mcmtroffaes/pathlib2";
         license = licenses.mit;
         description = "Object-oriented filesystem paths";
@@ -183,7 +183,7 @@ let
       doCheck = commonDoCheck;
       buildInputs = commonBuildInputs ++ [ ];
       propagatedBuildInputs = [ ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://github.com/benhoyt/scandir";
         license = licenses.bsdOriginal;
         description = "scandir, a better directory iterator and faster os.walk()";
@@ -199,7 +199,7 @@ let
       doCheck = commonDoCheck;
       buildInputs = commonBuildInputs ++ [ ];
       propagatedBuildInputs = [ ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://github.com/pypa/setuptools";
         license = licenses.mit;
         description = "Easily download, build, install, upgrade, and uninstall Python packages";
@@ -215,7 +215,7 @@ let
       doCheck = commonDoCheck;
       buildInputs = commonBuildInputs ++ [ ];
       propagatedBuildInputs = [ ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://github.com/pypa/setuptools_scm/";
         license = licenses.mit;
         description = "the blessed package to manage your versions by scm tags";
@@ -231,7 +231,7 @@ let
       doCheck = commonDoCheck;
       buildInputs = commonBuildInputs ++ [ ];
       propagatedBuildInputs = [ ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://github.com/benjaminp/six";
         license = licenses.mit;
         description = "Python 2 and 3 compatibility utilities";
@@ -247,7 +247,7 @@ let
       doCheck = commonDoCheck;
       buildInputs = commonBuildInputs ++ [ ];
       propagatedBuildInputs = [ ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://github.com/pypa/wheel";
         license = licenses.mit;
         description = "A built-package format for Python.";
@@ -269,7 +269,7 @@ let
       propagatedBuildInputs = [
         self."more-itertools"
       ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://github.com/jaraco/zipp";
         license = licenses.mit;
         description = "Backport of pathlib-compatible object wrapper for zip files";

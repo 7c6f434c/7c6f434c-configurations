@@ -12,7 +12,7 @@
 let
 
   inherit (pkgs) makeWrapper;
-  inherit (pkgs.stdenv.lib) fix' extends inNixShell;
+  inherit (pkgs.lib) fix' extends inNixShell;
 
   pythonPackages =
   import "${toString pkgs.path}/pkgs/top-level/python-packages.nix" {
@@ -85,7 +85,7 @@ let
       doCheck = commonDoCheck;
       buildInputs = commonBuildInputs ++ [ ];
       propagatedBuildInputs = [ ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://palletsprojects.com/p/click/";
         license = licenses.bsdOriginal;
         description = "Composable command line interface toolkit";
@@ -106,7 +106,7 @@ let
         self."jinja2"
         self."werkzeug"
       ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://palletsprojects.com/p/flask/";
         license = licenses.bsd3;
         description = "A simple framework for building complex web applications.";
@@ -125,7 +125,7 @@ let
         self."flask"
         self."wtforms"
       ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "http://pythonhosted.org/Flask-Inputs/";
         license = licenses.mit;
         description = "Flask request data validation";
@@ -141,7 +141,7 @@ let
       doCheck = commonDoCheck;
       buildInputs = commonBuildInputs ++ [ ];
       propagatedBuildInputs = [ ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://palletsprojects.com/p/itsdangerous/";
         license = licenses.bsdOriginal;
         description = "Various helpers to pass data to untrusted environments and back.";
@@ -159,7 +159,7 @@ let
       propagatedBuildInputs = [
         self."markupsafe"
       ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://palletsprojects.com/p/jinja/";
         license = licenses.bsd3;
         description = "A very fast and expressive template engine.";
@@ -175,7 +175,7 @@ let
       doCheck = commonDoCheck;
       buildInputs = commonBuildInputs ++ [ ];
       propagatedBuildInputs = [ ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://palletsprojects.com/p/markupsafe/";
         license = licenses.bsd3;
         description = "Safely add untrusted strings to HTML/XML markup.";
@@ -191,7 +191,7 @@ let
       doCheck = commonDoCheck;
       buildInputs = commonBuildInputs ++ [ ];
       propagatedBuildInputs = [ ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://palletsprojects.com/p/werkzeug/";
         license = licenses.bsd3;
         description = "The comprehensive WSGI web application library.";
@@ -207,7 +207,7 @@ let
       doCheck = commonDoCheck;
       buildInputs = commonBuildInputs ++ [ ];
       propagatedBuildInputs = [ ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://wtforms.readthedocs.io/";
         license = licenses.bsdOriginal;
         description = "A flexible forms validation and rendering library for Python web development.";

@@ -12,7 +12,7 @@
 let
 
   inherit (pkgs) makeWrapper;
-  inherit (pkgs.stdenv.lib) fix' extends inNixShell;
+  inherit (pkgs.lib) fix' extends inNixShell;
 
   pythonPackages =
   import "${toString pkgs.path}/pkgs/top-level/python-packages.nix" {
@@ -91,7 +91,7 @@ let
         self."multidict"
         self."yarl"
       ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://github.com/aio-libs/aiohttp";
         license = licenses.asl20;
         description = "Async http client/server framework (asyncio)";
@@ -112,7 +112,7 @@ let
         self."python-editor"
         self."sqlalchemy"
       ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://alembic.sqlalchemy.org";
         license = licenses.mit;
         description = "A database migration tool for SQLAlchemy.";
@@ -128,7 +128,7 @@ let
       doCheck = commonDoCheck;
       buildInputs = commonBuildInputs ++ [ ];
       propagatedBuildInputs = [ ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://github.com/aio-libs/async_timeout/";
         license = licenses.asl20;
         description = "Timeout context manager for asyncio programs";
@@ -147,7 +147,7 @@ let
         self."wheel"
       ];
       propagatedBuildInputs = [ ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://www.attrs.org/";
         license = licenses.mit;
         description = "Classes Without Boilerplate";
@@ -165,7 +165,7 @@ let
       propagatedBuildInputs = [
         self."pycparser"
       ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "http://cffi.readthedocs.org";
         license = licenses.mit;
         description = "Foreign Function Interface for Python calling C code.";
@@ -181,7 +181,7 @@ let
       doCheck = commonDoCheck;
       buildInputs = commonBuildInputs ++ [ ];
       propagatedBuildInputs = [ ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://github.com/chardet/chardet";
         license = licenses.lgpl2;
         description = "Universal encoding detector for Python 2 and 3";
@@ -197,7 +197,7 @@ let
       doCheck = commonDoCheck;
       buildInputs = commonBuildInputs ++ [ ];
       propagatedBuildInputs = [ ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://github.com/rtfd/commonmark.py";
         license = licenses.bsdOriginal;
         description = "Python parser for the CommonMark Markdown spec";
@@ -215,7 +215,7 @@ let
       propagatedBuildInputs = [
         self."cffi"
       ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://github.com/ionelmc/python-file";
         license = licenses.mit;
         description = "CFFI bindings for libmagic.";
@@ -231,7 +231,7 @@ let
       doCheck = commonDoCheck;
       buildInputs = commonBuildInputs ++ [ ];
       propagatedBuildInputs = [ ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://github.com/asottile/future-fstrings";
         license = licenses.mit;
         description = "A backport of fstrings to python<3.6";
@@ -247,7 +247,7 @@ let
       doCheck = commonDoCheck;
       buildInputs = commonBuildInputs ++ [ ];
       propagatedBuildInputs = [ ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://github.com/kjd/idna";
         license = licenses.bsdOriginal;
         description = "Internationalized Domain Names in Applications (IDNA)";
@@ -263,7 +263,7 @@ let
       doCheck = commonDoCheck;
       buildInputs = commonBuildInputs ++ [ ];
       propagatedBuildInputs = [ ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "http://bitbucket.org/xmonader/pymagic-dev";
         license = licenses.gpl1;
         description = "libmagic bindings";
@@ -281,7 +281,7 @@ let
       propagatedBuildInputs = [
         self."markupsafe"
       ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://www.makotemplates.org/";
         license = licenses.mit;
         description = "A super-fast templating language that borrows the  best ideas from the existing templating languages.";
@@ -297,7 +297,7 @@ let
       doCheck = commonDoCheck;
       buildInputs = commonBuildInputs ++ [ ];
       propagatedBuildInputs = [ ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://palletsprojects.com/p/markupsafe/";
         license = licenses.bsdOriginal;
         description = "Safely add untrusted strings to HTML/XML markup.";
@@ -316,7 +316,7 @@ let
         self."aiohttp"
         self."future-fstrings"
       ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://github.com/tulir/mautrix-appservice-python";
         license = licenses.mit;
         description = "A Python 3 asyncio-based Matrix application service framework.";
@@ -343,7 +343,7 @@ let
         self."telethon"
         self."telethon-session-sqlalchemy"
       ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://github.com/tulir/mautrix-telegram";
         license = licenses.agpl3Plus;
         description = "A Matrix-Telegram hybrid puppeting/relaybot bridge.";
@@ -359,7 +359,7 @@ let
       doCheck = commonDoCheck;
       buildInputs = commonBuildInputs ++ [ ];
       propagatedBuildInputs = [ ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://github.com/aio-libs/multidict";
         license = licenses.asl20;
         description = "multidict implementation";
@@ -375,7 +375,7 @@ let
       doCheck = commonDoCheck;
       buildInputs = commonBuildInputs ++ [ ];
       propagatedBuildInputs = [ ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://github.com/ricmoo/pyaes";
         license = licenses.mit;
         description = "Pure-Python Implementation of the AES block-cipher and common modes of operation";
@@ -391,7 +391,7 @@ let
       doCheck = commonDoCheck;
       buildInputs = commonBuildInputs ++ [ ];
       propagatedBuildInputs = [ ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://github.com/etingof/pyasn1";
         license = licenses.bsdOriginal;
         description = "ASN.1 types and codecs";
@@ -407,7 +407,7 @@ let
       doCheck = commonDoCheck;
       buildInputs = commonBuildInputs ++ [ ];
       propagatedBuildInputs = [ ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://github.com/eliben/pycparser";
         license = licenses.bsdOriginal;
         description = "C parser in Python";
@@ -427,7 +427,7 @@ let
         self."wheel"
       ];
       propagatedBuildInputs = [ ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://github.com/pytest-dev/pytest-runner/";
         license = licenses.mit;
         description = "Invoke py.test as distutils command with dependency resolution";
@@ -449,7 +449,7 @@ let
       propagatedBuildInputs = [
         self."six"
       ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://dateutil.readthedocs.io";
         license = licenses.bsdOriginal;
         description = "Extensions to the standard Python datetime module";
@@ -465,7 +465,7 @@ let
       doCheck = commonDoCheck;
       buildInputs = commonBuildInputs ++ [ ];
       propagatedBuildInputs = [ ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://github.com/fmoo/python-editor";
         license = licenses.asl20;
         description = "Programmatically open an editor, capture the result.";
@@ -481,7 +481,7 @@ let
       doCheck = commonDoCheck;
       buildInputs = commonBuildInputs ++ [ ];
       propagatedBuildInputs = [ ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "http://github.com/ahupp/python-magic";
         license = licenses.mit;
         description = "File type identification using libmagic";
@@ -499,7 +499,7 @@ let
       propagatedBuildInputs = [
         self."pyasn1"
       ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://stuvel.eu/rsa";
         license = licenses.asl20;
         description = "Pure-Python RSA implementation";
@@ -515,7 +515,7 @@ let
       doCheck = commonDoCheck;
       buildInputs = commonBuildInputs ++ [ ];
       propagatedBuildInputs = [ ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://bitbucket.org/ruamel/yaml";
         license = licenses.mit;
         description = "ruamel.yaml is a YAML parser/emitter that supports roundtrip preservation of comments, seq/map flow style, and map key order";
@@ -531,7 +531,7 @@ let
       doCheck = commonDoCheck;
       buildInputs = commonBuildInputs ++ [ ];
       propagatedBuildInputs = [ ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://github.com/pypa/setuptools";
         license = licenses.mit;
         description = "Easily download, build, install, upgrade, and uninstall Python packages";
@@ -547,7 +547,7 @@ let
       doCheck = commonDoCheck;
       buildInputs = commonBuildInputs ++ [ ];
       propagatedBuildInputs = [ ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://github.com/pypa/setuptools_scm/";
         license = licenses.mit;
         description = "the blessed package to manage your versions by scm tags";
@@ -563,7 +563,7 @@ let
       doCheck = commonDoCheck;
       buildInputs = commonBuildInputs ++ [ ];
       propagatedBuildInputs = [ ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://github.com/benjaminp/six";
         license = licenses.mit;
         description = "Python 2 and 3 compatibility utilities";
@@ -579,7 +579,7 @@ let
       doCheck = commonDoCheck;
       buildInputs = commonBuildInputs ++ [ ];
       propagatedBuildInputs = [ ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "http://www.sqlalchemy.org";
         license = licenses.mit;
         description = "Database Abstraction Library";
@@ -598,7 +598,7 @@ let
         self."pyaes"
         self."rsa"
       ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://github.com/LonamiWebs/Telethon";
         license = licenses.mit;
         description = "Full-featured Telegram client library for Python 3";
@@ -616,7 +616,7 @@ let
       propagatedBuildInputs = [
         self."sqlalchemy"
       ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://github.com/tulir/telethon-session-sqlalchemy";
         license = licenses.mit;
         description = "SQLAlchemy backend for Telethon session storage";
@@ -632,7 +632,7 @@ let
       doCheck = commonDoCheck;
       buildInputs = commonBuildInputs ++ [ ];
       propagatedBuildInputs = [ ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://github.com/pypa/wheel";
         license = licenses.mit;
         description = "A built-package format for Python.";
@@ -651,7 +651,7 @@ let
         self."idna"
         self."multidict"
       ];
-      meta = with pkgs.stdenv.lib; {
+      meta = with pkgs.lib; {
         homepage = "https://github.com/aio-libs/yarl/";
         license = licenses.asl20;
         description = "Yet another URL library";

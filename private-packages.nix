@@ -46,7 +46,7 @@ let pp =
     src = "" + /home/repos/uzbl + "/"; 
     buildInputs = x.buildInputs ++ [python3];
   }));
-  grub2Bzr = (stdenv.lib.overrideDerivation grub2 (x: { 
+  grub2Bzr = (lib.overrideDerivation grub2 (x: { 
     src = "" + /home/repos/grub; 
     buildInputs = x.buildInputs ++ [
       automake110x autoconf libtool intltool 
