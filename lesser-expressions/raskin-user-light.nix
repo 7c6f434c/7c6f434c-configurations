@@ -53,7 +53,11 @@ fullEnv "main-light-package-set"
         xorg.appres
         xdaliclock openvpn iftop file patchutils zip gawk parallel perl btrfs-progs
         man manpages oathToolkit wavemon 
-        (proxychains.overrideAttrs (x: { NIX_CFLAGS_COMPILE="-Wno-error"; }))
+        (proxychains.overrideAttrs (x: {
+          postPatch = (x.postPatch or "") + ''
+            sed -e '/while[(]dll_dirs\[i\])/ii=0;' -i src/main.c
+          '';
+        }))
         screenkey
         monotoneViz udftools units texinfoInteractive kitty yap _3proxy
         python3Packages.pygments ffsend poppler_utils libarchive wdiff ydiff
