@@ -152,6 +152,14 @@ linkFarm "raskin-packages" ([
                                                   xorg.fontadobe75dpi xorg.fontmiscmisc xorg.fontcursormisc
                                               ];
                                            }); }
+               { name = "asy-graphtheory"; 
+                 path = fetchFromGitHub {
+                   owner = "taoari";
+                   repo = "asy-graphtheory";
+                   rev = "v5.0";
+                   hash = "sha256:076h364j4jh9nqr1f7dqp7y22gxqq93dbz3x5bvz10za9ap0n13i";
+                 };
+               }
 ]
 ++ 
 (map justUse [
