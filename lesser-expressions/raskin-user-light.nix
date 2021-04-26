@@ -41,7 +41,7 @@ fullEnv "main-light-package-set"
           '';
         }))
         matrix-recorder
-        pv lvm2 mariadb remind xterm zsh mlterm ntp mc vifm ncdu ltrace weechat
+        pv lvm2 mariadb remind xterm zsh mlterm ntp mc ncdu ltrace weechat
         htop iotop powertop mtr bind inotify-tools xorg.setxkbmap xorg.xev
         xorg.xset
         xfig transfig kig
@@ -59,9 +59,9 @@ fullEnv "main-light-package-set"
           '';
         }))
         screenkey
-        monotoneViz udftools units texinfoInteractive kitty yap _3proxy
-        python3Packages.pygments ffsend poppler_utils libarchive wdiff ydiff
+        monotoneViz udftools units texinfoInteractive yap _3proxy
+        python3Packages.pygments poppler_utils libarchive wdiff ydiff
         pass gnupg
         (import ./texlive-set.nix pkgs)
-        /* xpdf */
+        /* xpdf vifm ffsend kitty */
       ]      
