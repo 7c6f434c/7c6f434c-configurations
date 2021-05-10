@@ -125,9 +125,6 @@ linkFarm "raskin-packages" ([
                                   passthru = {
                                   pythonModule = p.python;
                                   };
-                                  preConfigure = ''
-                                  sed -re 's@^ *nullptr,( *// *tp_)@NULL,\1@' -i libpyclingo/*.{cc,hh}
-                                  '';
                                   }))
                                 z3 jinja2 lark-parser
                                ])
