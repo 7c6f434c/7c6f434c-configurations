@@ -1,0 +1,21 @@
+#!/bin/sh
+
+export HOME=/home/raskin
+export PATH="$PATH:$HOME/tools/bin/"
+
+while true; do
+        while ps -ef | grep -v grep |
+                        grep ' ii -s irc.oftc.net ' >/dev/null; do
+                sleep 1;
+        done;
+        rm ~/mnt/irc/irc.oftc.net/in
+        ii -s irc.oftc.net -i ~/mnt/irc/ -n IdleBot_$(
+                        dd if=/dev/urandom bs=1 count=4 | xxd -ps ) &
+        while ! test -e  ~/mnt/irc/irc.oftc.net/in; do
+                sleep 1;
+        done
+        for c in spectrum; do
+                echo /j "#$c" > ~/mnt/irc/irc.oftc.net/in;
+                sleep 1;
+        done;
+done

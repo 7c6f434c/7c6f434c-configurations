@@ -13,10 +13,13 @@ with rec {
           mkdir -p "$out/global/"
           cd "$out/global/"
           ncp ${./ii-starter} ./home/raskin
+          ncp ${./ii-starter-libera-chat} ./home/raskin
+          ncp ${./ii-starter-oftc} ./home/raskin
           ncp ${./ii-summarise} ./home/raskin
           ncp ${./openvpn.private/server.conf} ./etc/openvpn
           ncp ${./openvpn.private/server-tcp.conf} ./etc/openvpn
           ncp ${./ii.service} ./lib/systemd/system
+          ncp ${./ii-oftc.service} ./lib/systemd/system
           ncp ${./openvpn.service} ./lib/systemd/system
           ncp ${./openvpn-tcp.service} ./lib/systemd/system
           ncp ${./nat} ./etc/network/if-up.d
@@ -90,7 +93,12 @@ with rec {
           for i in nginx dovecot; do
             systemctl restart $i;
           done
-          for i in ii openvpn openvpn-tcp nginx dehydrated.timer postfix-key-concat.timer postfix dovecot; do systemctl enable $i; systemctl start $i; systemctl reload $i; done;
+          for i in ii ii-libera-chat ii-oftc \
+                   openvpn openvpn-tcp \
+                   nginx dehydrated.timer postfix-key-concat.timer postfix dovecot \
+                   ; do 
+            systemctl enable $i; systemctl start $i; systemctl reload $i;
+          done;
           (
             cd ./tools/global/lib/systemd/system
             for i in *; do

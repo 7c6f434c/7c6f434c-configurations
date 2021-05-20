@@ -1,0 +1,9 @@
+[Unit]
+Description=ii IRC watcher
+
+[Service]
+User=raskin
+ExecStart=/home/raskin/ii-starter-libera-chat
+
+[Install]
+WantedBy=multi-user.target
