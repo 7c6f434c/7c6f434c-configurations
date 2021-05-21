@@ -2,20 +2,26 @@
 
 export HOME=/home/raskin
 export PATH="$PATH:$HOME/tools/bin/"
+export IRC_SERVER=irc.oftc.net
+export CHANNELS='spectrum'
+
+check_running(){
+        ps -ef | grep -v grep | grep " ii -s $IRC_SERVER " > /dev/null
+}
 
 while true; do
-        while ps -ef | grep -v grep |
-                        grep ' ii -s irc.oftc.net ' >/dev/null; do
+        while check_running; do
                 sleep 1;
         done;
-        rm ~/mnt/irc/irc.oftc.net/in
-        ii -s irc.oftc.net -i ~/mnt/irc/ -n IdleBot_$(
+        rm ~/mnt/irc/"$IRC_SERVER"/in
+        ii -s "$IRC_SERVER" -i ~/mnt/irc/ -n IdleBot_$(
                         dd if=/dev/urandom bs=1 count=4 | xxd -ps ) &
-        while ! test -e  ~/mnt/irc/irc.oftc.net/in; do
+        while ! test -e  ~/mnt/irc/"$IRC_SERVER"/in; do
                 sleep 1;
+                check_running || exit 1
         done
-        for c in spectrum; do
-                echo /j "#$c" > ~/mnt/irc/irc.oftc.net/in;
+        for c in "$CHANNELS"; do
+                echo /j "#$c" > ~/mnt/irc/"$IRC_SERVER"/in;
                 sleep 1;
         done;
 done
