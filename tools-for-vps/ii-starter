@@ -20,7 +20,7 @@ while true; do
                 sleep 1;
                 check_running || exit 1
         done
-        for c in "$CHANNELS"; do
+        for c in $CHANNELS; do
                 echo /j "#$c" > ~/mnt/irc/"$IRC_SERVER"/in;
                 sleep 1;
         done;
