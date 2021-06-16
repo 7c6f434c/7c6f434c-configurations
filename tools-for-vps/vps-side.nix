@@ -12,13 +12,12 @@ with rec {
           }
           mkdir -p "$out/global/"
           cd "$out/global/"
-          ncp ${./ii-starter} ./home/raskin
           ncp ${./ii-starter-libera-chat} ./home/raskin
           ncp ${./ii-starter-oftc} ./home/raskin
           ncp ${./ii-summarise} ./home/raskin
           ncp ${./openvpn.private/server.conf} ./etc/openvpn
           ncp ${./openvpn.private/server-tcp.conf} ./etc/openvpn
-          ncp ${./ii.service} ./lib/systemd/system
+          ncp ${./ii-libera-chat.service} ./lib/systemd/system
           ncp ${./ii-oftc.service} ./lib/systemd/system
           ncp ${./openvpn.service} ./lib/systemd/system
           ncp ${./openvpn-tcp.service} ./lib/systemd/system
