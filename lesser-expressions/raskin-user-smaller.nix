@@ -168,7 +168,7 @@ linkFarm "raskin-packages" ([
  /*"tigervnc"*/ "fbvnc"
  "glpk" "clingo" "urn"
  "plan9port" "sway" "syslogng" "rsyslog"
- "xmacro" "manpages" "mpv" "zbar" "lsb-release"
+ "xmacro" "manpages" "posix_man_pages" "mpv" "zbar" "lsb-release"
  "pinentry" "bfs" "moreutils" "spaceFM"
  "nix-prefetch-github" "nim"
 ])
