@@ -40,6 +40,7 @@ fullEnv "main-light-package-set"
             ' -i matrixcli
           '';
         }))
+        matrix-commander
         matrix-recorder
         pv lvm2 mariadb remind xterm zsh mlterm ntp mc ncdu ltrace weechat
         htop iotop powertop mtr bind inotify-tools xorg.setxkbmap xorg.xev
