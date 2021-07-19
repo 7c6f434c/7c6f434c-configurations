@@ -1,14 +1,14 @@
-with import <nixpkgs> {};
+let pkgs = import <nixpkgs> {}; in
+with pkgs;
 with rec {
   toolset = pkgs.buildEnv {
     name = "tools";
     paths = [
       nix
-      (monotone.override{
-        botan = (botan.override { openssl = null; }).overrideAttrs (x: { meta = null; });
-      })
+      monotone
       file remind
       pv wavemon nmap
+      (import ../lesser-expressions/texlive-set.nix pkgs)
     ];
   };
 };
