@@ -25,7 +25,7 @@ linkFarm "raskin-toy-packages" ([
         fsg kobodeluxe /* extremetuxracer */ golly lincity construo
         sgtpuzzles xconq pysolfc xaos _2048-in-terminal blobby
         xpilot-ng (liquidwar.override (x: { guile = guile_1_8; }))
-        quantumminigolf liquidwar5
+        quantumminigolf liquidwar5 xmoto
       ]);}
 ])
 
