@@ -114,11 +114,7 @@ with rec {
                 glibcLocales host dnsutils mtr htop iotop hping socat iftop
                 curl wget youtube-dl jemalloc nix dehydrated netcat tcpdump
                 alpine postfix dovecot shared_mime_info textadept 
-                (tigervnc.override {
-                 fontDirectories = [
-                 xorg.fontadobe75dpi xorg.fontmiscmisc xorg.fontcursormisc
-                 ];
-                 })
+                tigervnc
                 (callPackage ./scite.nix {})
                 gsettings_desktop_schemas gtk3
                 xorg.xinit xorg.twm icewm rxvt_unicode

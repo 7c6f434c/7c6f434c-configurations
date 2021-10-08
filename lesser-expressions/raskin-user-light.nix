@@ -64,5 +64,6 @@ fullEnv "main-light-package-set"
         python3Packages.pygments poppler_utils libarchive wdiff ydiff
         pass gnupg
         (import ./texlive-set.nix pkgs)
+        p7zip mupdf
         /* xpdf vifm ffsend kitty */
       ]      
