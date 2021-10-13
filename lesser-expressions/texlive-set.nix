@@ -20,6 +20,7 @@ pkgs.texlive.combine {
     lkproof acronym listings listingsutf8 biber pgfplots csvsimple fourier
     appendix scalerel showlabels subfigure acro zref translations fixme
     doublestroke hyperxmp lipsum standalone changes truncate fifo-stack
-    tabto-ltx tikzmark todo adjustbox collectbox spverbatim
+    tabto-ltx tikzmark todo adjustbox collectbox spverbatim eqparbox
+    sttools biblatex-ieee
     ;
 }
