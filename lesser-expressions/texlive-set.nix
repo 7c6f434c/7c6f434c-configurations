@@ -21,6 +21,6 @@ pkgs.texlive.combine {
     appendix scalerel showlabels subfigure acro zref translations fixme
     doublestroke hyperxmp lipsum standalone changes truncate fifo-stack
     tabto-ltx tikzmark todo adjustbox collectbox spverbatim eqparbox
-    sttools biblatex-ieee
+    sttools biblatex-ieee elsarticle orcidlink
     ;
 }

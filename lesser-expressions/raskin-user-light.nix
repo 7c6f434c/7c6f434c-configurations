@@ -52,7 +52,7 @@ fullEnv "main-light-package-set"
         fpc graphviz diffutils fontconfig compton xorg.xprop xorg.xwininfo jq
         xorg.xlsclients fortune fuse3 openssl axel arping whois hping badvpn dict
         xorg.appres
-        xdaliclock openvpn iftop file patchutils zip gawk parallel perl btrfs-progs
+        xdaliclock openvpn iftop file patchutils zip gawk perl btrfs-progs
         man manpages oathToolkit wavemon 
         (proxychains.overrideAttrs (x: {
           postPatch = (x.postPatch or "") + ''
