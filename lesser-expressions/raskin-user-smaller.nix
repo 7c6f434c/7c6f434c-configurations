@@ -105,7 +105,7 @@ linkFarm "raskin-packages" ([
                ];};}
                { name = "pypy3-as-python3"; path = runCommandNoCC "pypy3-as-python3" {} ''
                  mkdir -p "$out/bin"
-                 ln -s "${pypy3}/bin/pypy3" "$out/bin/python3"
+                 ln -s "${pypy37}/bin/pypy3" "$out/bin/python3"
                '';}
                { name = "cpython3-instead-of-pypy3"; path = runCommandNoCC "pypy3-as-python3" {} ''
                  mkdir -p "$out/bin"
@@ -139,12 +139,6 @@ linkFarm "raskin-packages" ([
                ''; }
                { name = "conpra-deps"; path = (import /home/raskin/.conpra-shell.nix).env; }
                { name = "love_11_luajit_2_0"; path = love_11.override { luajit = luajit_2_0; }; }
-               { name = "tigervnc"; path = tigervnc; }
-               { name = "tightvnc"; path = (tightvnc.override {
-                                              fontDirectories = [
-                                                  xorg.fontadobe75dpi xorg.fontmiscmisc xorg.fontcursormisc
-                                              ];
-                                           }); }
                { name = "asy-graphtheory"; 
                  path = fetchFromGitHub {
                    owner = "taoari";
@@ -161,7 +155,7 @@ linkFarm "raskin-packages" ([
  "icedtea_web" "love_0_10" "love_11" "libpulseaudio"
  "wgetpaste" "gdmap" "netcat" "python3" "kdiff3" "meld"
  "gfxtablet" "keynav"
- /*"tigervnc"*/ "fbvnc"
+ "tigervnc" "fbvnc"
  "glpk" "clingo" "urn"
  "plan9port" "sway" "syslogng" "rsyslog"
  "xmacro" "manpages" "posix_man_pages" "mpv" "zbar" "lsb-release"
