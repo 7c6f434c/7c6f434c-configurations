@@ -22,5 +22,6 @@ pkgs.texlive.combine {
     doublestroke hyperxmp lipsum standalone changes truncate fifo-stack
     tabto-ltx tikzmark todo adjustbox collectbox spverbatim eqparbox
     sttools biblatex-ieee elsarticle orcidlink mathabx romanbar makecell
+    pict2e
     ;
 }
