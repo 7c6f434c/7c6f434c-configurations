@@ -2,7 +2,7 @@ pkgs:
 
 pkgs.texlive.combine {
   inherit(pkgs.texlive)
-    scheme-medium collection-langcyrillic 
+    collection-langcyrillic 
     cm-super cm-unicode xcolor pgf beamer moderncv tipa disser urlbst
     moderntimeline texinfo metafont multibib collection-fontutils
     epstopdf epspdfconversion epspdf algorithm2e relsize type1cm logreq
@@ -22,6 +22,28 @@ pkgs.texlive.combine {
     doublestroke hyperxmp lipsum standalone changes truncate fifo-stack
     tabto-ltx tikzmark todo adjustbox collectbox spverbatim eqparbox
     sttools biblatex-ieee elsarticle orcidlink mathabx romanbar makecell
-    pict2e
-    ;
+    pict2e bibunits catchfile;
+
+
+    scheme-medium = pkgs.texlive.scheme-medium // {
+      pkgs = pkgs.lib.filter
+        (x: (x.pname != "apxproof"))
+        pkgs.texlive.scheme-medium.pkgs;
+    };
+
+    apxproof = { pkgs = [(pkgs.runCommand "apxproof" {
+        src = pkgs.fetchurl {
+          url = "https://raw.githubusercontent.com/PierreSenellart/apxproof/1ac14c47b8351b693ca05eec73dca1332a517ac9/apxproof.sty";
+          sha256 = "sha256-XSgtXsOwhMu2Wo4hVp8ZfaPWgjEEg3EBn5/BhD3xkMA=";
+        };
+        passthru = {
+          pname = "apxproof";
+          version = "1.2.3";
+          tlType = "run";
+        };
+      }
+      ''
+        mkdir -p "$out/tex/latex/apxproof/"
+        cp "$src" "$out/tex/latex/apxproof/apxproof.sty"
+      '')]; };
 }
