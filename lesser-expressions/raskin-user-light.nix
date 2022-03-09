@@ -53,7 +53,7 @@ fullEnv "main-light-package-set"
         xorg.xlsclients fortune fuse3 openssl axel arping whois hping badvpn dict
         xorg.appres
         xdaliclock openvpn iftop file patchutils zip gawk perl btrfs-progs
-        man manpages oathToolkit wavemon 
+        man manpages oathToolkit wavemon m4
         (proxychains.overrideAttrs (x: {
           postPatch = (x.postPatch or "") + ''
             sed -e '/while[(]dll_dirs\[i\])/ii=0;' -i src/main.c

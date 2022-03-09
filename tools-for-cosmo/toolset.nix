@@ -8,7 +8,7 @@ with rec {
       monotone
       file remind
       pv wavemon nmap
-      gcc11
+      gcc11 m4 rsync gnumake
       (import ../lesser-expressions/texlive-set.nix pkgs)
     ];
   };
