@@ -113,6 +113,7 @@ with rec {
                 rsync git monotone fossil mercurial vim strace transmission
                 glibcLocales host dnsutils mtr htop iotop hping socat iftop
                 curl wget youtube-dl jemalloc nix dehydrated netcat tcpdump
+                yt-dlp
                 alpine postfix dovecot shared_mime_info textadept 
                 tigervnc
                 (callPackage ./scite.nix {})
