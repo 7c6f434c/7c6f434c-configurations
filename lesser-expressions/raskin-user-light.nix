@@ -48,12 +48,12 @@ fullEnv "main-light-package-set"
         xfig transfig kig
         firefox vimHugeX evince zathura mplayer alsaUtils xvfb_run
         xorg.xmodmap bc xdotool lftp wget unzip gnumake xcape xorg.xrandr
-        xsel xclip pulseaudioLight ripmime xscreensaver xorg.xsetroot lsof rofi
+        xsel xclip pulseaudio ripmime xscreensaver xorg.xsetroot lsof rofi
         fpc graphviz diffutils fontconfig compton xorg.xprop xorg.xwininfo jq
         xorg.xlsclients fortune fuse3 openssl axel arping whois hping badvpn dict
         xorg.appres
         xdaliclock openvpn iftop file patchutils zip gawk perl btrfs-progs
-        man manpages oathToolkit wavemon m4
+        man man-pages oathToolkit wavemon m4
         (proxychains.overrideAttrs (x: {
           postPatch = (x.postPatch or "") + ''
             sed -e '/while[(]dll_dirs\[i\])/ii=0;' -i src/main.c

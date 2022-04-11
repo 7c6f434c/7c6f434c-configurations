@@ -12,7 +12,7 @@ let julia_used = julia_16-bin; in
 let myLispPackages = import ./lisp-packages.nix { inherit pkgs; }; in
 
 linkFarm "raskin-packages" ([
-                {name="mime"; path=shared_mime_info;}
+                {name="mime"; path=shared-mime-info;}
                 { name="query-fs"; 
                 path = lib.overrideDerivation lispPackages.query-fs (x: {
                                 NIX_LISP_EARLY_OPTIONS = " --dynamic-space-size 4096 ";
@@ -37,7 +37,8 @@ linkFarm "raskin-packages" ([
                                 ;
                 });
                 }
-                {name = "gnome_themes_standard"; path = gnome3.gnome_themes_standard;}
+                {name = "gnome_themes_standard"; path = gnome3.gnome-themes-extra;}
+                {name = "gnome-themes-standard"; path = gnome3.gnome-themes-extra;}
                 {name = "adwaita_icon_theme"; path = gnome3.adwaita-icon-theme;}
                 {name="clx-truetype"; path=lispPackages.clx-truetype;}
                 {name="xkeyboard"; path=lispPackages.xkeyboard;}
@@ -126,7 +127,7 @@ linkFarm "raskin-packages" ([
                                   pythonModule = p.python;
                                   };
                                   }))
-                                z3 jinja2 lark-parser
+                                z3 jinja2 lark
                                ])
                                ; }
                { name = "wordnet-data"; path = runCommandNoCC "wordnet-data" {} ''
@@ -147,10 +148,13 @@ linkFarm "raskin-packages" ([
                    hash = "sha256:076h364j4jh9nqr1f7dqp7y22gxqq93dbz3x5bvz10za9ap0n13i";
                  };
                }
+               { name = "gsettings_desktop_schemas"; path = gsettings-desktop-schemas; }
+               { name = "weechat-matrix-bridge"; path = weechatScripts.weechat-matrix-bridge; }
+               { name = "weechat-matrix"; path = weechatScripts.weechat-matrix; }
 ]
 ++ 
 (map justUse [
- "gsettings_desktop_schemas" "gtk3" "weechat-matrix-bridge"
+ "gsettings-desktop-schemas" "gtk3"
  "fuse" "mysql" "openssl" "opencv" "postgresql" "sqlite"
  "icedtea_web" "love_0_10" "love_11" "libpulseaudio"
  "wgetpaste" "gdmap" "netcat" "python3" "kdiff3" "meld"
@@ -158,7 +162,7 @@ linkFarm "raskin-packages" ([
  "tigervnc" "fbvnc"
  "glpk" "clingo" "urn"
  "plan9port" "sway" "syslogng" "rsyslog"
- "xmacro" "manpages" "posix_man_pages" "mpv" "zbar" "lsb-release"
+ "xmacro" "man-pages" "posix_man_pages" "mpv" "zbar" "lsb-release"
  "pinentry" "bfs" "moreutils" "spaceFM"
  "nix-prefetch-github" "nim"
 ])

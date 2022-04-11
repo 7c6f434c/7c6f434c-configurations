@@ -16,20 +16,32 @@ fullEnv = name: packages:
       pathsToLink = ["/"];
       extraOutputsToInstall = (allOutputNames packages);
     };
+wrapperEnv = package:
+  pkgs.buildEnv {
+    name = package.name;
+    paths = [package];
+    ignoreCollisions = false;
+    checkCollisionContents = false;
+    pathsToLink = ["/"];
+    extraOutputsToInstall = [];
+  };
 in with pkgs;
 
 linkFarm "raskin-heavy-packages" ([
   { name = "main-heavy-package-set";
     path = (fullEnv "main-heavy-package-set"
       [
-        gimp ghostscript asymptote qemu love imagemagick7 openscad
+        gimp ghostscript asymptote
+        qemu
+        love imagemagick7 openscad
         vue gqview geeqie subversion espeak fossil mercurial djview wxmaxima
         gnuplot mozlz4a lz4 maxima valgrind pdftk lilypond timidity OVMF atop
         gptfdisk dmidecode inkscape x11vnc 
         tigervnc
         xdummy tcpdump wireshark
         testdisk fdupes ntfs3g lazarus icewm youtube-dl yt-dlp xorg.xwd
-        vlc sshfs dmtx glxinfo xorg.xdpyinfo xorg.xdriinfo go-mtpfs nmap sox
+        vlc sshfs dmtx-utils
+        glxinfo xorg.xdpyinfo xorg.xdriinfo go-mtpfs nmap sox
         xorg.xinput usbutils wgetpaste gdb scowl xcalib /*fmbt*/ eprover glucose
         nginx cfdg /* highlight */ transmission spass iprover cvc4 z3 z3-tptp prover9
         /* signal-desktop */ mustache-spec mustache-go zxing lame
