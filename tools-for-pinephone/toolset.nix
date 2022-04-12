@@ -12,6 +12,7 @@ with rec {
       (import ../lesser-expressions/texlive-set.nix pkgs)
       dmtx-utils
       diffutils findutils
+      vim_configurable
     ];
   };
 };
