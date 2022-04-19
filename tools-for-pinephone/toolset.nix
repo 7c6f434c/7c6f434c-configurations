@@ -5,9 +5,10 @@ with rec {
     name = "tools";
     paths = [
       nix
-      monotone
-      file remind
-      pv wavemon nmap
+      monotone git
+      screen
+      file remind strace
+      pv wavemon nmap curl
       gcc11 m4 rsync gnumake
       (import ../lesser-expressions/texlive-set.nix pkgs)
       dmtx-utils
@@ -44,6 +45,10 @@ with rec {
             }
             ];
             })
+    (glibcLocales.override {
+		locales=["en_US.UTF-8/UTF-8" "ru_RU.UTF-8/UTF-8" "C.UTF-8/UTF-8" ];
+		allLocales = false;
+	})
     ];
   };
 };
