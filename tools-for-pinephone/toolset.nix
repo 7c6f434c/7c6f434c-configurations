@@ -8,13 +8,15 @@ with rec {
       monotone git
       screen
       file remind strace
-      pv wavemon nmap curl
+      pv wavemon nmap curl htop
       gcc11 m4 rsync gnumake
       (import ../lesser-expressions/texlive-set.nix pkgs)
       dmtx-utils
       diffutils findutils
       vim_configurable
-      element-desktop
+      element-desktop gnome.geary 
+      fractal
+      #tdesktop
       dict
       (dictDBCollector {
         dictlist = (with dictdDBs; map 
