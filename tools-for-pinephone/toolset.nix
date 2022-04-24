@@ -51,6 +51,10 @@ with rec {
 		locales=["en_US.UTF-8/UTF-8" "ru_RU.UTF-8/UTF-8" "C.UTF-8/UTF-8" ];
 		allLocales = false;
 	})
+    (runCommandCC "in-pty" {} ''
+      mkdir -p "$out/bin"
+      cc -lutil ${../lang-os/c/in-pty.c} -o "$out/bin/in-pty"
+    '')
     ];
   };
 };
