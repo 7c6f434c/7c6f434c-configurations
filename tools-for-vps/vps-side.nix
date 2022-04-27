@@ -114,10 +114,11 @@ with rec {
                 glibcLocales host dnsutils mtr htop iotop hping socat iftop
                 curl wget youtube-dl jemalloc nix dehydrated netcat tcpdump
                 yt-dlp
-                alpine postfix dovecot shared_mime_info textadept 
+                alpine postfix dovecot shared-mime-info
+                (textadept.override { stdenv = gcc10Stdenv; })
                 tigervnc
-                (callPackage ./scite.nix {})
-                gsettings_desktop_schemas gtk3
+                (scite.override { stdenv = gcc10Stdenv; })
+                gsettings-desktop-schemas gtk3
                 xorg.xinit xorg.twm icewm rxvt_unicode
                 globalLinks remoteDeploy
           ];
