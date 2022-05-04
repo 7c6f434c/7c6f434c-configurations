@@ -22,8 +22,8 @@ pkgs.texlive.combine {
     doublestroke hyperxmp lipsum standalone changes truncate fifo-stack
     tabto-ltx tikzmark todo adjustbox collectbox spverbatim eqparbox
     sttools biblatex-ieee elsarticle orcidlink mathabx romanbar makecell
-    pict2e bibunits catchfile textpos hyphenat silence eepic xypic xytree;
-
+    pict2e bibunits catchfile textpos hyphenat silence eepic xypic xytree
+    esvect;
 
     scheme-medium = pkgs.texlive.scheme-medium // {
       pkgs = pkgs.lib.filter
