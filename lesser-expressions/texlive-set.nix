@@ -23,7 +23,7 @@ pkgs.texlive.combine {
     tabto-ltx tikzmark todo adjustbox collectbox spverbatim eqparbox
     sttools biblatex-ieee elsarticle orcidlink mathabx romanbar makecell
     pict2e bibunits catchfile textpos hyphenat silence eepic xypic xytree
-    esvect;
+    esvect spath3;
 
     scheme-medium = pkgs.texlive.scheme-medium // {
       pkgs = pkgs.lib.filter

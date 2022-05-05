@@ -8,10 +8,12 @@ with rec {
       monotone git
       screen
       file remind strace
-      pv wavemon nmap curl htop
-      gcc11 m4 rsync gnumake
+      pv wavemon nmap curl htop powertop iotop
+      gcc11 m4 rsync gnumake zip unzip
+      sbcl
       (import ../lesser-expressions/texlive-set.nix pkgs)
       dmtx-utils
+      librsvg pdftk
       diffutils findutils
       vim_configurable
       element-desktop gnome.geary 
