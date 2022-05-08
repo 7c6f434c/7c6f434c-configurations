@@ -7,13 +7,13 @@ with rec {
       nix
       monotone git
       screen
-      file remind strace
+      file remind strace gdb
       pv wavemon nmap curl htop powertop iotop
       gcc11 m4 rsync gnumake zip unzip
       sbcl
       (import ../lesser-expressions/texlive-set.nix pkgs)
       dmtx-utils
-      librsvg pdftk
+      librsvg pdftk transfig
       diffutils findutils
       vim_configurable
       element-desktop gnome.geary 
