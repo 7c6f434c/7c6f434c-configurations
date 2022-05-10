@@ -1,7 +1,7 @@
 let
 NIXPKGS_env = builtins.getEnv "NIXPKGS";
 pkgsPath = if NIXPKGS_env == "" then <nixpkgs> else NIXPKGS_env;
-pkgs = import pkgsPath {};
+pkgs = import pkgsPath { };
 allOutputNames = packages: builtins.attrNames
       (pkgs.lib.fold
         (a: b: b //
