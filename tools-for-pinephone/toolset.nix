@@ -6,18 +6,19 @@ with rec {
     paths = [
       nix
       monotone git
-      screen
+      screen slmenu fzf
+      wlrctl wl-clipboard
       file remind strace gdb
       pv wavemon nmap curl htop powertop iotop
       gcc11 m4 rsync gnumake zip unzip
-      sbcl
+      sbcl pypy37
       (import ../lesser-expressions/texlive-set.nix pkgs)
       dmtx-utils
       librsvg pdftk transfig
-      diffutils findutils
+      diffutils findutils fdupes age
       vim_configurable
       element-desktop gnome.geary 
-      fractal
+      fractal gomuks
       #tdesktop
       dict
       (dictDBCollector {

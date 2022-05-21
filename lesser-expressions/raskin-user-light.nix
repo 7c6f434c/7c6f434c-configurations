@@ -62,7 +62,7 @@ fullEnv "main-light-package-set"
         screenkey
         monotoneViz udftools units texinfoInteractive yap _3proxy
         python3Packages.pygments poppler_utils libarchive wdiff ydiff
-        pass gnupg
+        pass gnupg age
         (import ./texlive-set.nix pkgs)
         p7zip mupdf librsvg
         /* xpdf vifm ffsend kitty */
