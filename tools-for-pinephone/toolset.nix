@@ -14,7 +14,7 @@ with rec {
       sbcl pypy37
       (import ../lesser-expressions/texlive-set.nix pkgs)
       dmtx-utils
-      librsvg pdftk transfig
+      librsvg pdftk transfig graphviz
       diffutils findutils fdupes age
       vim_configurable
       element-desktop gnome.geary 
