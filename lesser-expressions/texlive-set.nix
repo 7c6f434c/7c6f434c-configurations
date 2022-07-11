@@ -27,6 +27,7 @@ pkgs.texlive.combine {
     pstricks pst-node pst-coil pst-plot pst-tools pstricks-add pst-arrow
     pst-3d pst-math
     newunicodechar trfsigns
+    fontawesome fontawesome5
     ;
 
     scheme-medium = pkgs.texlive.scheme-medium // {

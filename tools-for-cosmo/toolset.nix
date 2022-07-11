@@ -10,6 +10,7 @@ with rec {
       pv wavemon nmap
       gcc11 m4 rsync gnumake
       age fzf
+      graphviz
       (import ../lesser-expressions/texlive-set.nix pkgs)
     (runCommandCC "in-pty" {} ''
       mkdir -p "$out/bin"

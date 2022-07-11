@@ -10,6 +10,11 @@ with rec {
       wlrctl wl-clipboard
       file remind strace gdb
       pv wavemon nmap curl htop powertop iotop
+        (proxychains.overrideAttrs (x: {
+          postPatch = (x.postPatch or "") + ''
+            sed -e '/while[(]dll_dirs\[i\])/ii=0;' -i src/main.c
+          '';
+        }))
       gcc11 m4 rsync gnumake zip unzip
       sbcl pypy37
       (import ../lesser-expressions/texlive-set.nix pkgs)
