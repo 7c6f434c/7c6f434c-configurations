@@ -66,6 +66,6 @@ fullEnv "main-light-package-set"
         (import ./texlive-set.nix pkgs)
         p7zip mupdf librsvg
         /* xpdf vifm ffsend kitty */
-        rosie latexrun moreutils
+        rosie latexrun moreutils gnupatch
         (aspellWithDicts (p: with p; [en ru de fr da]))
       ]      
