@@ -9,7 +9,7 @@ with rec {
       screen slmenu fzf
       wlrctl wl-clipboard
       file remind strace gdb
-      pv wavemon nmap curl htop powertop iotop
+      pv util-linux wavemon nmap curl htop powertop iotop
         (proxychains.overrideAttrs (x: {
           postPatch = (x.postPatch or "") + ''
             sed -e '/while[(]dll_dirs\[i\])/ii=0;' -i src/main.c
@@ -25,6 +25,7 @@ with rec {
       element-desktop gnome.geary 
       fractal gomuks
       #tdesktop
+      links2
       dict
       (dictDBCollector {
         dictlist = (with dictdDBs; map 
