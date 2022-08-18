@@ -17,7 +17,7 @@ pkgs.texlive.combine {
     lstaddons import fancyvrb tocloft tikz-qtree ellipsis nag tkz-euclide
     tkz-base numprint /*tkz-graph*/ a4wide inconsolata newtx upquote acmart
     minted fvextra framed titling units siunitx colortbl xpatch prooftrees
-    lkproof acronym listings listingsutf8 biber pgfplots csvsimple fourier
+    lkproof acronym listings listingsutf8 pgfplots csvsimple fourier
     appendix scalerel showlabels subfigure acro zref translations fixme
     doublestroke hyperxmp lipsum standalone changes truncate fifo-stack
     tabto-ltx tikzmark todo adjustbox collectbox spverbatim eqparbox
@@ -28,6 +28,7 @@ pkgs.texlive.combine {
     pst-3d pst-math
     newunicodechar trfsigns
     fontawesome fontawesome5
+    biber
     ;
 
     scheme-medium = pkgs.texlive.scheme-medium // {
