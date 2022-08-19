@@ -138,7 +138,7 @@ linkFarm "raskin-packages" ([
                    hash = "sha256:0an226fl5zpav7vmgkdxnn044wzcailxc44vsdkp3k3fxzl8nz9z";
                  }}"
                ''; }
-               { name = "conpra-deps"; path = (import /home/raskin/.conpra-shell.nix).env; }
+               /* { name = "conpra-deps"; path = (import /home/raskin/.conpra-shell.nix).env; } */
                { name = "love_11_luajit_2_0"; path = love_11.override { luajit = luajit_2_0; }; }
                { name = "asy-graphtheory"; 
                  path = fetchFromGitHub {
