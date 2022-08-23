@@ -46,7 +46,7 @@ fullEnv "main-light-package-set"
         htop iotop powertop mtr bind inotify-tools xorg.setxkbmap xorg.xev
         xorg.xset
         xfig transfig kig
-        firefox vimHugeX evince zathura mplayer alsaUtils xvfb_run
+        firefox vimHugeX evince mplayer alsaUtils xvfb_run
         xorg.xmodmap bc xdotool lftp wget unzip gnumake xcape xorg.xrandr
         xsel xclip pulseaudio ripmime xscreensaver xorg.xsetroot lsof rofi
         fpc graphviz diffutils fontconfig compton xorg.xprop xorg.xwininfo jq
@@ -59,6 +59,7 @@ fullEnv "main-light-package-set"
             sed -e '/while[(]dll_dirs\[i\])/ii=0;' -i src/main.c
           '';
         }))
+        (zathuraPkgs.override {useMupdf = false;}).zathuraWrapper
         screenkey
         monotoneViz udftools units texinfoInteractive yap _3proxy
         python3Packages.pygments poppler_utils libarchive wdiff ydiff

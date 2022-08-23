@@ -26,6 +26,7 @@ with rec {
       fractal gomuks
       #tdesktop
       links2
+      yt-dlp
       dict
       (dictDBCollector {
         dictlist = (with dictdDBs; map 
