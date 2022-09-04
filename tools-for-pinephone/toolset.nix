@@ -20,6 +20,8 @@ with rec {
       (import ../lesser-expressions/texlive-set.nix pkgs)
       dmtx-utils
       librsvg pdftk transfig graphviz
+      xournalpp
+      foxtrotgps
       diffutils findutils fdupes age
       vim_configurable
       element-desktop gnome.geary 
