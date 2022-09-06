@@ -29,6 +29,7 @@ pkgs.texlive.combine {
     newunicodechar trfsigns
     fontawesome fontawesome5
     biber
+    beamerposter auto-pst-pdf pst-pdf preview srcltx manfnt vwcol bera
     ;
 
     scheme-medium = pkgs.texlive.scheme-medium // {
