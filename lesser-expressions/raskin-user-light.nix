@@ -59,7 +59,7 @@ fullEnv "main-light-package-set"
             sed -e '/while[(]dll_dirs\[i\])/ii=0;' -i src/main.c
           '';
         }))
-        (zathuraPkgs.override {useMupdf = false;}).zathuraWrapper
+        (zathura.override {useMupdf = false; })
         screenkey
         monotoneViz udftools units texinfoInteractive yap _3proxy
         python3Packages.pygments poppler_utils libarchive wdiff ydiff

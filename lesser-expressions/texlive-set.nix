@@ -30,6 +30,7 @@ pkgs.texlive.combine {
     fontawesome fontawesome5
     biber
     beamerposter auto-pst-pdf pst-pdf preview srcltx manfnt vwcol bera
+    exam
     ;
 
     scheme-medium = pkgs.texlive.scheme-medium // {
