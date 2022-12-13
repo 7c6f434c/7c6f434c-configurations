@@ -6,8 +6,7 @@ auth required pam_deny.so
 # Password management.
 password sufficient pam_unix.so nullok sha512
 # Session management.
-session required pam_env.so conffile=/nix/store/1hr3lcbw40hqfp1plinj70fc887y6wnc-pam-environment readenv=0
+session required pam_env.so conffile=/dev/null readenv=0
 session required pam_unix.so
 session required pam_loginuid.so
-session required /nix/store/94bzpph27vl36zfapj7g9agmaki68kp8-linux-pam-1.5.1/lib/security/pam_lastlog.so silent
-session optional /nix/store/nwpwnz9ghydmqiic0psjc8gl4jlw9fmc-systemd-247.2/lib/security/pam_systemd.so
+session required @pam@/lib/security/pam_lastlog.so silent

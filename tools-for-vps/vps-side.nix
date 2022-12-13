@@ -44,6 +44,7 @@ with rec {
           ncp ${./screenrc} ./etc
 
           sed -e 's/@@@/'"$(cat ${./domains.txt.private} | xargs)"'/' -i ./etc/postfix/main.cf
+          sed -e 's^@pam@^${pam}^' -i ./etc/pam.d/dovecot
           for i in $(cat ${./domains.txt.private}); do
                 sed -e "s/@@@/$i/g" < ${./nginx.ssl.conf} >> ./var/nginx/conf/nginx.ssl.conf
                 sed -e "s/@@@/$i/g" < ${./dovecot.conf.per-domain} >> ./etc/dovecot/dovecot.conf
@@ -120,6 +121,7 @@ with rec {
                 (scite.override { stdenv = gcc10Stdenv; })
                 gsettings-desktop-schemas gtk3
                 xorg.xinit xorg.twm icewm rxvt_unicode
+                ncdu
                 globalLinks remoteDeploy
           ];
         };
