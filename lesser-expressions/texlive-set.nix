@@ -28,7 +28,7 @@ pkgs.texlive.combine {
     pst-3d pst-math
     newunicodechar trfsigns
     fontawesome fontawesome5
-    biber
+    biber ieeetran
     beamerposter auto-pst-pdf pst-pdf preview srcltx manfnt vwcol bera
     exam abstract chngcntr eulervm adforn
     ;
