@@ -25,7 +25,7 @@ pkgs.texlive.combine {
     pict2e bibunits catchfile textpos hyphenat silence eepic xypic xytree
     esvect spath3 transparent struktex biblatex-trad titlesec storebox
     pstricks pst-node pst-coil pst-plot pst-tools pstricks-add pst-arrow
-    pst-3d pst-math
+    pst-3d pst-math babel-english
     newunicodechar trfsigns
     fontawesome fontawesome5
     biber ieeetran

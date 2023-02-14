@@ -21,7 +21,7 @@ with rec {
       dmtx-utils
       librsvg pdftk transfig graphviz
       xournalpp
-      foxtrotgps
+      foxtrotgps weather subversion
       diffutils findutils fdupes age
       vim_configurable
       element-desktop gnome.geary 
