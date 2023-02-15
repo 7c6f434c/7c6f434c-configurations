@@ -104,14 +104,14 @@ linkFarm "raskin-packages" ([
                with myLispPackages; [
                  cl-mailer squid-url-rewrite 
                ];};}
-               { name = "pypy3-as-python3"; path = runCommandNoCC "pypy3-as-python3" {} ''
+               /* { name = "pypy3-as-python3"; path = runCommandNoCC "pypy3-as-python3" {} ''
                  mkdir -p "$out/bin"
                  ln -s "${pypy37}/bin/pypy3" "$out/bin/python3"
                '';}
                { name = "cpython3-instead-of-pypy3"; path = runCommandNoCC "pypy3-as-python3" {} ''
                  mkdir -p "$out/bin"
                  ln -s "${python3}/bin/python3" "$out/bin/pypy3"
-               '';}
+               '';} */
                { name = "julia"; path = julia_used; }
                { name = "heron-python"; path = 
                        python38.withPackages
