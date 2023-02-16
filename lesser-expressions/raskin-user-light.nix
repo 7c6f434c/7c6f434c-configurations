@@ -20,7 +20,7 @@ in with pkgs;
 
 fullEnv "main-light-package-set"
       [
-        squid git monotone fbida fbterm postgresql_13 expect pmount fdm python2
+        squid git monotone fbida fbterm postgresql_13 expect pmount fdm
         slmenu fzf mcabber ii irssi links2 rsync ratpoison xdummy
         elinks
         (matrixcli.overrideAttrs (x: {
@@ -60,7 +60,6 @@ fullEnv "main-light-package-set"
           '';
         }))
         zathura
-        screenkey
         monotoneViz udftools units texinfoInteractive yap _3proxy
         python3Packages.pygments poppler_utils libarchive wdiff ydiff
         pass gnupg age easyrsa

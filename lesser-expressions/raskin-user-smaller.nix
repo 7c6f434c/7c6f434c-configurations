@@ -113,7 +113,7 @@ linkFarm "raskin-packages" ([
                  ln -s "${python3}/bin/python3" "$out/bin/pypy3"
                '';} */
                { name = "julia"; path = julia_used; }
-               { name = "heron-python"; path = 
+               /* { name = "heron-python"; path = 
                        python38.withPackages
                                (p: with p; [
                                 (clingo.overrideAttrs
@@ -129,7 +129,7 @@ linkFarm "raskin-packages" ([
                                   }))
                                 z3 jinja2 lark
                                ])
-                               ; }
+                               ; } */
                { name = "wordnet-data"; path = runCommandNoCC "wordnet-data" {} ''
                  mkdir -p "$out/share/"
                  cd "$out/share"
