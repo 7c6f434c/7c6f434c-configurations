@@ -31,6 +31,7 @@ pkgs.texlive.combine {
     biber ieeetran
     beamerposter auto-pst-pdf pst-pdf preview srcltx manfnt vwcol bera
     exam abstract chngcntr eulervm adforn
+    synttree
     ;
 
     scheme-medium = pkgs.texlive.scheme-medium // {
