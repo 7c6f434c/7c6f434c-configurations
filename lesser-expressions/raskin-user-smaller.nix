@@ -37,6 +37,16 @@ linkFarm "raskin-packages" ([
                                 ;
                 });
                 }
+                { name = "openai-whisper-cpp";
+                  path = openai-whisper-cpp.overrideAttrs (
+                    x: { 
+                      makeFlags = x.makeFlags ++ ["command"]; 
+                      installPhase = x.installPhase + ''
+                        cp ./command $out/bin/whisper-cpp-command
+                      ''; 
+                      }
+                  );
+                }
                 {name = "gnome_themes_standard"; path = gnome3.gnome-themes-extra;}
                 {name = "gnome-themes-standard"; path = gnome3.gnome-themes-extra;}
                 {name = "adwaita_icon_theme"; path = gnome3.adwaita-icon-theme;}
