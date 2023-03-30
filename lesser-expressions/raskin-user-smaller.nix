@@ -61,7 +61,7 @@ linkFarm "raskin-packages" ([
                 {name="lfarm-server"; path=lispPackages.lfarm-server;}
                 {name="pcall"; path=lispPackages.pcall;}
                 {name="parse-number"; path=lispPackages.parse-number;}
-                {name="gimp-resynthesizer"; path=gimpPlugins.resynthesizer;}
+                /*{name="gimp-resynthesizer"; path=gimpPlugins.resynthesizer;}*/
                 { name = "words"; path = scowl; }
                 { name = "dicts"; path = dictDBCollector {
                         dictlist = (with dictdDBs; map 
