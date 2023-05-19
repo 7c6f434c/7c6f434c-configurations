@@ -48,5 +48,6 @@ linkFarm "raskin-heavy-packages" ([
         rustc xournalpp bmap-tools webcamoid
         /* cachix */ darcs /* petrinizer */
         /* swfdec */
+        coqPackages.coqide coqPackages.coq
       ]);}
 ])

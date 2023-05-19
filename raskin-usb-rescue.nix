@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 
 {
-
+  system.stateVersion = "18.09";
   boot = rec {
     loader = {
       grub = {
@@ -15,7 +15,6 @@
         extraConfig = ''
         '';
         efiSupport = true;
-        memtest86.enable = true;
       };
       systemd-boot = {
         #enable = true;
@@ -24,7 +23,6 @@
     };
     initrd = {
       kernelModules = [
-        "fbcon"
         "xhci_hcd"
 	"ehci_hcd" "ohci_hcd"
 	"uhci_hcd"
@@ -41,42 +39,38 @@
     blacklistedKernelModules = ["ath3k"];
   };
 
-  fileSystems = [
-    {
+  fileSystems = {
+    "/" = {
       mountPoint = "/";
       label = "NixOSRescue";
       fsType = "ext4";
-    }
-    {
-      mountPoint = "/boot/";
-      label = "RESCUE_EFI";
+    };
+    "/boot" = {
+      mountPoint = "/boot";
+      device = "/dev/disk/by-uuid/7A89-9B4C";
       fsType = "vfat";
-    }
-  ];
+    };
+  };
 
+  documentation.nixos.enable = false;
   services = {
     openssh = {
       enable = true;
-      permitRootLogin = "no";
-
-      extraConfig = ''
-        UseDNS no
-      '';
+      settings.PermitRootLogin = "no";
+      settings.UseDNS = "no";
     };
-    nixosManual.enable = false;
     xserver = {
       enable = true;
       autorun = false;
       exportConfiguration = true;
       enableTCP = true;
-      videoDrivers = ["intel" "nv" "ati" "cirrus" "vesa"];
+      videoDrivers = ["modesetting" "nv" "ati" "cirrus" "vesa"];
       synaptics = {
         enable = true;
 	dev = null;
       };
       layout = "us(altgr-intl),ru(common),gr(basic)";			
       xkbOptions = "grp:caps_toggle, grp_led:caps, lv3:lwin_switch, terminate:ctrl_alt_bksp";	
-      useXFS = "unix/:7100";
     };
     printing = {
       enable = true;
@@ -94,32 +88,32 @@
   
   security = {
     wrappers = {
-      fusermount = { source = "${pkgs.fuse}/bin/fusermount"; };
-      fusermount3 = { source = "${pkgs.fuse3}/bin/fusermount3"; };
-      mount = { source = "${pkgs.utillinux}/bin/mount"; };
-      umount = { source = "${pkgs.utillinux}/bin/umount"; };
-      lsof = { source = "${pkgs.lsof}/bin/lsof"; };
-      pmount = { source = "${pkgs.pmount}/bin/pmount"; };
-      pumount = { source = "${pkgs.pmount}/bin/pumount"; };
-      fbterm = { source = "${pkgs.fbterm}/bin/fbterm"; };
+      fusermount = { owner = "root"; group = "root"; source = "${pkgs.fuse}/bin/fusermount"; };
+      fusermount3 = { owner = "root"; group = "root"; source = "${pkgs.fuse3}/bin/fusermount3"; };
+      mount = { owner = "root"; group = "root"; source = "${pkgs.utillinux}/bin/mount"; };
+      umount = { owner = "root"; group = "root"; source = "${pkgs.utillinux}/bin/umount"; };
+      lsof = { owner = "root"; group = "root"; source = "${pkgs.lsof}/bin/lsof"; };
+      pmount = { owner = "root"; group = "root"; source = "${pkgs.pmount}/bin/pmount"; };
+      pumount = { owner = "root"; group = "root"; source = "${pkgs.pmount}/bin/pumount"; };
+      fbterm = { owner = "root"; group = "root"; source = "${pkgs.fbterm}/bin/fbterm"; };
     };
     sudo = {
       configFile = (builtins.readFile ./sudoers); };
   };
 
   nix = {
-    useSandbox = true;
+    settings.sandbox = true;
+    settings.require-sigs = false;
     extraOptions = ''
-      binary-caches = http://cache.nixos.org http://nixos.org/binary-cache
-      trusted-binary-caches = http://cache.nixos.org http://nixos.org/binary-cache
+      binary-caches = http://cache.nixos.org
+      trusted-binary-caches = http://cache.nixos.org
     '';
-    requireSignedBinaryCaches = false;
     #package = pkgs.nixUnstable;
   };
 
   fonts = {
     enableGhostscriptFonts = true;
-    enableFontDir = true;
+    fontDir.enable = true;
 
     fonts = with pkgs; [
       (ghostscript + "/share/ghostscript/fonts/")

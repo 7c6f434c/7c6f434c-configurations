@@ -21,7 +21,7 @@ in with pkgs;
 fullEnv "main-light-package-set"
       [
         squid git monotone fbida fbterm postgresql_13 expect pmount fdm
-        slmenu fzf mcabber ii irssi links2 rsync ratpoison xdummy
+        fzf mcabber ii irssi links2 rsync ratpoison xdummy
         elinks
         (matrixcli.overrideAttrs (x: {
           postPatch = ''
