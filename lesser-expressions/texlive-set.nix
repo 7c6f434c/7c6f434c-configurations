@@ -34,6 +34,7 @@ pkgs.texlive.combine {
     exam abstract chngcntr eulervm adforn
     synttree
     tcolorbox tikzfill pdfcol
+    gensymb placeins mdframed needspace
     ;
 
 }
