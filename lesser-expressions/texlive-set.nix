@@ -35,6 +35,7 @@ pkgs.texlive.combine {
     synttree
     tcolorbox tikzfill pdfcol
     gensymb placeins mdframed needspace
+    sectsty
     ;
 
 }

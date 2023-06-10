@@ -5,7 +5,8 @@ test -n "$1" || {
         exit
 }
 
-nix build -f ./vps-side.nix -o ~/.nix-personal/vps-tools
+nix-instantiate ./vps-side.nix --add-root ~/.nix-personal-drvs/vps-tools.drv
+nix-store -r  ~/.nix-personal-drvs/vps-tools.drv --add-root ~/.nix-personal/vps-tools
 toolset="$(readlink -f ~/.nix-personal/vps-tools)"
 nix copy "$toolset" -s --to ssh://root@"$1"
 
