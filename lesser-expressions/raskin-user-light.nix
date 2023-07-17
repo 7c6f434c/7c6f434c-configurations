@@ -45,6 +45,7 @@ fullEnv "main-light-package-set"
         (mlterm.override {enableFeatures = mlterm.enableFeatures // {ssh2 = false;};})
         ntp mc ncdu ltrace weechat
         htop iotop powertop mtr bind inotify-tools xorg.setxkbmap xorg.xev
+        curl-impersonate-bin
         xorg.xset
         xfig transfig kig
         firefox vimHugeX evince mplayer alsaUtils xvfb_run
