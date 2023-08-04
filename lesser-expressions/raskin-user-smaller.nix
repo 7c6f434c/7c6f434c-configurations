@@ -112,7 +112,7 @@ linkFarm "raskin-packages" ([
                /* {name="pypi2nix"; path = import /home/repos/pypi2nix/default.nix {};} */
                { name = "local-lisp-binaries"; path = buildEnv { name="lisp-binaries"; paths = 
                with myLispPackages; [
-                 cl-mailer squid-url-rewrite 
+                 cl-mailer squid-url-rewrite rare-words
                ];};}
                /* { name = "pypy3-as-python3"; path = runCommandNoCC "pypy3-as-python3" {} ''
                  mkdir -p "$out/bin"

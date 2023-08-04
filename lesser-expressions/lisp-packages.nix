@@ -73,4 +73,11 @@
       '';
     };
   };
+  rare-words = pkgs.runCommandNoCC "" {
+    buildInputs = [ (pkgs.sbcl.withPackages (p: with p; [])) ];
+  } ''
+    mkdir -p "$out/bin"
+    sbcl --load ${/home/raskin/src/lsp/topic-sorter/rare-words-1.lisp} --eval '(sb-ext:save-lisp-and-die "${placeholder "out"}/bin/rare-words-1.bin" :executable t :toplevel (function sort-input))'
+    sbcl --load ${/home/raskin/src/lsp/topic-sorter/rare-words-1.lisp} --eval '(sb-ext:save-lisp-and-die "${placeholder "out"}/bin/rare-words-1f.bin" :executable t :toplevel (function sort-file-list))'
+  '';
 })

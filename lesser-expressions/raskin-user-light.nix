@@ -1,7 +1,15 @@
 let
 NIXPKGS_env = builtins.getEnv "NIXPKGS";
 pkgsPath = if NIXPKGS_env == "" then <nixpkgs> else NIXPKGS_env;
-pkgs = import pkgsPath { };
+pkgs = import pkgsPath { 
+  config = {
+    permittedInsecurePackages = [
+      "curl-impersonate-0.5.4"
+      "curl-impersonate-ff-0.5.4"
+      "curl-impersonate-chrome-0.5.4"
+    ];
+  };
+};
 allOutputNames = packages: builtins.attrNames
       (pkgs.lib.fold
         (a: b: b //
@@ -45,7 +53,7 @@ fullEnv "main-light-package-set"
         (mlterm.override {enableFeatures = mlterm.enableFeatures // {ssh2 = false;};})
         ntp mc ncdu ltrace weechat
         htop iotop powertop mtr bind inotify-tools xorg.setxkbmap xorg.xev
-        curl-impersonate-bin
+        curl-impersonate
         xorg.xset
         xfig transfig kig
         firefox vimHugeX evince mplayer alsaUtils xvfb_run
