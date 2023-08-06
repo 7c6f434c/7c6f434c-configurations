@@ -3,11 +3,21 @@ NIXPKGS_env = builtins.getEnv "NIXPKGS";
 pkgsPath = if NIXPKGS_env == "" then <nixpkgs> else NIXPKGS_env;
 pkgs = import pkgsPath { 
   config = {
-    permittedInsecurePackages = [
-      "curl-impersonate-0.5.4"
-      "curl-impersonate-ff-0.5.4"
-      "curl-impersonate-chrome-0.5.4"
-    ];
+    allowInsecurePredicate = x: (
+      (
+        (pkgs.lib.hasPrefix "curl-impersonate-" (x.name or x.pname))
+        ||
+        ("curl-impersonate" == (x.name or x.pname))
+      )
+      &&
+      (pkgs.lib.all (y: 
+        (pkgs.lib.findFirst (z: z == y) null [
+                "CVE-2023-32001"  # fopen TOCTOU race condition - https://curl.se/docs/CVE-2023-32001.html
+                "CVE-2022-43551"  # HSTS bypass - https://curl.se/docs/CVE-2022-43551.html
+                "CVE-2022-42916"  # HSTS bypass - https://curl.se/docs/CVE-2022-42916.html
+        ]) != null
+      ) x.meta.knownVulnerabilities)
+    );
   };
 };
 allOutputNames = packages: builtins.attrNames
