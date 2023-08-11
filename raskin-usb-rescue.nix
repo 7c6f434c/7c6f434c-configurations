@@ -57,7 +57,7 @@
     openssh = {
       enable = true;
       settings.PermitRootLogin = "no";
-      settings.UseDNS = "no";
+      settings.UseDns = false;
     };
     xserver = {
       enable = true;
@@ -65,10 +65,6 @@
       exportConfiguration = true;
       enableTCP = true;
       videoDrivers = ["modesetting" "nv" "ati" "cirrus" "vesa"];
-      synaptics = {
-        enable = true;
-	dev = null;
-      };
       layout = "us(altgr-intl),ru(common),gr(basic)";			
       xkbOptions = "grp:caps_toggle, grp_led:caps, lv3:lwin_switch, terminate:ctrl_alt_bksp";	
     };

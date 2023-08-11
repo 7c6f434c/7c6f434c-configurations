@@ -1,7 +1,7 @@
 {pkgs, config, ...}:
 {
-    httpd = import /etc/nixos/configurations/misc/raskin/httpd.nix {inherit pkgs config;};
-    bind = import /etc/nixos/configurations/misc/raskin/bind.nix {inherit pkgs config;};
+    httpd = import /home/raskin/src/nix/configurations/misc/raskin/httpd.nix {inherit pkgs config;};
+    bind = import  /home/raskin/src/nix/configurations/misc/raskin/bind.nix {inherit pkgs config;};
 
     openssh = {
       enable = true;

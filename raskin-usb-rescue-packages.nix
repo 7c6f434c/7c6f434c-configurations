@@ -6,7 +6,7 @@ with pkgs;
       freeipmi utillinux dmraid fbterm
       icewm firefox lftp monotone
       hplip pmount mc evince
-      zathura glxinfo git dhcp emacs
+      zathura glxinfo git kea emacs
       wpa_supplicant iw btrfs-progs
       htop iotop iftop qemu zsh
       xorg.xmodmap elinks lynx wget
