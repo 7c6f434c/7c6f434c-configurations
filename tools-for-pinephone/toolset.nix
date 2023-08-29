@@ -6,7 +6,7 @@ with rec {
     paths = [
       nix
       monotone git
-      screen slmenu fzf
+      screen fzf
       wlrctl wl-clipboard
       file remind strace gdb
       pv util-linux wavemon nmap curl htop powertop iotop
@@ -16,7 +16,7 @@ with rec {
           '';
         }))
       gcc11 m4 rsync gnumake zip unzip
-      sbcl pypy37
+      sbcl pypy3
       (import ../lesser-expressions/texlive-set.nix pkgs)
       dmtx-utils
       librsvg pdftk transfig graphviz
@@ -29,6 +29,8 @@ with rec {
       #tdesktop
       links2
       yt-dlp
+      gnome3.adwaita-icon-theme
+
       dict
       (dictDBCollector {
         dictlist = (with dictdDBs; map 
