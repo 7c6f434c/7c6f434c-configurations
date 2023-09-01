@@ -116,9 +116,8 @@ with rec {
                 curl wget youtube-dl jemalloc nix dehydrated netcat tcpdump
                 yt-dlp
                 alpine postfix dovecot shared-mime-info
-                (textadept.override { stdenv = gcc10Stdenv; })
                 tigervnc
-                (scite.override { stdenv = gcc10Stdenv; })
+                scite
                 gsettings-desktop-schemas gtk3
                 xorg.xinit xorg.twm icewm rxvt_unicode
                 ncdu
