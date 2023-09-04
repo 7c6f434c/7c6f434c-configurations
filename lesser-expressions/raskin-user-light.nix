@@ -87,5 +87,6 @@ fullEnv "main-light-package-set"
         p7zip mupdf librsvg
         /* xpdf vifm ffsend kitty */
         rosie latexrun moreutils gnupatch
+        shadowsocks-rust
         (aspellWithDicts (p: with p; [en ru de fr da]))
       ]      

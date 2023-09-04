@@ -42,6 +42,8 @@ with rec {
           ncp ${./dovecot.private/pointless-dovecot.crt} ./etc/dovecot
           ncp ${fontsConf} ./etc/fonts
           ncp ${./screenrc} ./etc
+          ncp ${./shadowsocks.service} ./lib/systemd/system
+          ncp ${./grab-ntp-time.service} ./lib/systemd/system
 
           sed -e 's/@@@/'"$(cat ${./domains.txt.private} | xargs)"'/' -i ./etc/postfix/main.cf
           sed -e 's^@pam@^${pam}^' -i ./etc/pam.d/dovecot
@@ -57,6 +59,8 @@ with rec {
             ./var/lib/postfix/queue ./var/spool/mail ./var/mail ./var/spool/postfix \
             ./var/cache/nginx
           ln -sfT ${dovecot}/lib/dovecot ./etc/dovecot/modules
+
+          sed -e "s/@@@addr@@@/$(cat ${./target.private})/g; s/@@@password@@@/$(cat ${./shadowsocks.private/password} | tr -d '\n' | base64)/g" -i ./lib/systemd/system/shadowsocks.service
         '';
         remoteDeploy = pkgs.writeScriptBin "remote-deploy" ''
           for u in raskin matrix; do
@@ -96,6 +100,7 @@ with rec {
           for i in ii ii-libera-chat ii-oftc \
                    openvpn openvpn-tcp \
                    nginx dehydrated.timer postfix-key-concat.timer postfix dovecot \
+                   shadowsocks grab-ntp-time \
                    ; do 
             systemctl enable $i; systemctl start $i; systemctl reload $i;
           done;
@@ -122,6 +127,7 @@ with rec {
                 xorg.xinit xorg.twm icewm rxvt_unicode
                 ncdu
                 globalLinks remoteDeploy
+                shadowsocks-rust ntp
           ];
         };
 };

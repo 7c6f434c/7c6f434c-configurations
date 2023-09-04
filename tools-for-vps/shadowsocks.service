@@ -1,0 +1,11 @@
+[Unit]
+Description=Shadowsocks proxy server
+
+[Service]
+Type=exec
+ExecStart=/root/tools/bin/ssserver --server-addr @@@addr@@@:48080 --encrypt-method chacha20-ietf-poly1305 --password @@@password@@@
+
+[Install]
+WantedBy=multi-user.target
+
+

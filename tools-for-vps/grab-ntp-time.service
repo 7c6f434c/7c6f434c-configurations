@@ -1,0 +1,7 @@
+[Unit]
+Description=Update time via NTP
+
+[Service]
+Type=oneshot
+User=root
+ExecStart=/root/tools/bin/ntpd -ddgqc /dev/null fr.pool.ntp.org
