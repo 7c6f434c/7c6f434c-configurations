@@ -36,6 +36,7 @@ pkgs.texlive.combine {
     tcolorbox tikzfill pdfcol
     gensymb placeins mdframed needspace
     sectsty
+    docmute appendixnumberbeamer moresize
     ;
 
 }
