@@ -37,6 +37,7 @@ with rec {
           ncp ${./postfix.service} ./lib/systemd/system
           ncp ${./dovecot.conf} ./etc/dovecot
           ncp ${./pam/dovecot} ./etc/pam.d
+          ncp ${./pam/auth} ./etc/pam.d
           ncp ${./dovecot.service} ./lib/systemd/system
           ncp ${./dovecot.private/pointless-dovecot.key} ./etc/dovecot
           ncp ${./dovecot.private/pointless-dovecot.crt} ./etc/dovecot
@@ -128,6 +129,7 @@ with rec {
                 ncdu
                 globalLinks remoteDeploy
                 shadowsocks-rust ntp
+                inotify-tools psmisc fatrace
           ];
         };
 };
