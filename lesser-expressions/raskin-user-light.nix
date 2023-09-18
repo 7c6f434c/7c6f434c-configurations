@@ -69,7 +69,7 @@ fullEnv "main-light-package-set"
         firefox vimHugeX evince mplayer alsaUtils xvfb_run
         xorg.xmodmap bc xdotool lftp wget unzip gnumake xcape xorg.xrandr
         xsel xclip pulseaudio ripmime xscreensaver xorg.xsetroot lsof rofi
-        fpc graphviz diffutils fontconfig compton xorg.xprop xorg.xwininfo jq
+        fpc graphviz diffutils fontconfig picom xorg.xprop xorg.xwininfo jq
         xorg.xlsclients fortune fuse3 openssl axel arping whois hping badvpn dict
         xorg.appres
         xdaliclock openvpn iftop file patchutils zip gawk perl btrfs-progs

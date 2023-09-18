@@ -101,7 +101,7 @@ linkFarm "raskin-packages" ([
                       julia_used
                       cmake hdf5 gnuplot glibc zlib
                       xorg.libXt xorg.libX11 xorg.libXrender 
-                      xorg.libXtst xorg.libXext xorg.libXi qt4];
+                      xorg.libXtst xorg.libXext xorg.libXi];
                     };
                 }
                 {name= "queryfs-deps";path = linkFarm
@@ -166,7 +166,7 @@ linkFarm "raskin-packages" ([
 (map justUse [
  "gsettings-desktop-schemas" "gtk3"
  "fuse" "mysql" "openssl" "opencv" "postgresql" "sqlite"
- "icedtea_web" "love_0_10" "love_11" "libpulseaudio"
+ "love_0_10" "love_11" "libpulseaudio"
  "wgetpaste" "gdmap" "netcat" "python3" "kdiff3" "meld"
  "gfxtablet" "keynav"
  "tigervnc" "fbvnc"
