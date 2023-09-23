@@ -1,1 +1,2 @@
 export PATH="$HOME/tools/bin:$PATH"
+export LANG=C.UTF-8

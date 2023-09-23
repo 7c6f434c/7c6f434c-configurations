@@ -114,6 +114,10 @@ with rec {
           )
 
         '';
+        cProgram = name: cfile: buildInputs: flags: pkgs.runCommandCC name { inherit buildInputs; } ''
+          mkdir -p "$out/bin"
+          cc "${cfile}" ${builtins.toString flags} -o "$out/bin/${name}" -Wall -Werror -Wpedantic
+        '';
         toolset = pkgs.buildEnv {
           name = "tools-for-vps";
           paths = [ openvpn matrix-synapse ii screen nginx less
@@ -130,6 +134,8 @@ with rec {
                 globalLinks remoteDeploy
                 shadowsocks-rust ntp
                 inotify-tools psmisc fatrace
+                (cProgram "in-pty" ../lang-os/c/in-pty.c [] "-lutil")
+                age fzf
           ];
         };
 };

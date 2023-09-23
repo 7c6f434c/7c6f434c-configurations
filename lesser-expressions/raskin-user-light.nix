@@ -89,4 +89,5 @@ fullEnv "main-light-package-set"
         rosie latexrun moreutils gnupatch
         shadowsocks-rust
         (aspellWithDicts (p: with p; [en ru de fr da]))
+        cmake
       ]      
