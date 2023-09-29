@@ -174,7 +174,8 @@ linkFarm "raskin-packages" ([
  "plan9port" "sway" "syslogng" "rsyslog"
  "xmacro" "man-pages" "posix_man_pages" "mpv" "zbar" "lsb-release"
  "pinentry" "bfs" "moreutils" "spaceFM"
- "nix-prefetch-github" "nim"
+ "nix-prefetch-github" "nim" 
+ "gedit"
 ])
 ++
 (map (justUseMult "out") [

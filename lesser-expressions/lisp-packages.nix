@@ -9,6 +9,16 @@
       ironclad local-time fare-csv trivial-utf-8
     ];
   };
+  mccme-helpers-bis = pkgs.sbcl.buildASDFSystem rec {
+    pname = "mccme-helpers";
+    version = "0.0-unstable";
+    description = "Helper code accumulated in MCCME Common Lisp projects";
+    src = /home/repos/mccme-helpers-clnet;
+    lispLibs = with pkgs.sbcl.pkgs; [
+      cl-utilities iterate clsql yason cl-ppcre parse-number cl-emb hunchentoot
+      ironclad local-time fare-csv trivial-utf-8
+    ];
+  };
   cl-mailer = pkgs.lispPackages.buildLispPackage {
     baseName = "cl-mailer";
     version = "unstable";
