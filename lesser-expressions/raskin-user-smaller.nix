@@ -8,7 +8,7 @@ let pp = import /home/raskin/src/nix/configurations/misc/raskin/private-packages
 let justUse = str: {name = str; path = builtins.getAttr str pkgs;}; in
 let justUseMult = output: str: {name = "${str}.${output}"; path = builtins.getAttr output (builtins.getAttr str pkgs);}; in
 let ppUse = str: {name = str; path = builtins.getAttr str pp;}; in
-let julia_used = julia_16-bin; in
+let julia_used = julia; in
 let myLispPackages = import ./lisp-packages.nix { inherit pkgs; }; in
 
 linkFarm "raskin-packages" ([
