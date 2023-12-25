@@ -61,6 +61,7 @@ fullEnv "main-light-package-set"
         matrix-commander
         pv lvm2 mariadb remind xterm zsh 
         (mlterm.override {enableFeatures = mlterm.enableFeatures // {ssh2 = false;};})
+        konsole
         ntp mc ncdu ltrace weechat
         htop iotop powertop mtr bind inotify-tools xorg.setxkbmap xorg.xev
         curl-impersonate
