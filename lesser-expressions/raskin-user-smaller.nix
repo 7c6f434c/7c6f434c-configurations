@@ -5,6 +5,7 @@ pkgs = import pkgsPath {}; in with pkgs;
 
 let customVim = import /home/raskin/src/nix/configurations/misc/raskin/custom-vim.nix; in
 let pp = import /home/raskin/src/nix/configurations/misc/raskin/private-packages.nix {inherit pkgs;}; in
+let konsole-profile = /home/raskin/src/rc/konsole.profile; in
 let justUse = str: {name = str; path = builtins.getAttr str pkgs;}; in
 let justUseMult = output: str: {name = "${str}.${output}"; path = builtins.getAttr output (builtins.getAttr str pkgs);}; in
 let ppUse = str: {name = str; path = builtins.getAttr str pp;}; in
@@ -161,6 +162,10 @@ linkFarm "raskin-packages" ([
                { name = "gsettings_desktop_schemas"; path = gsettings-desktop-schemas; }
                { name = "weechat-matrix-bridge"; path = weechatScripts.weechat-matrix-bridge; }
                { name = "weechat-matrix"; path = weechatScripts.weechat-matrix; }
+               { name = "konsole-launcher"; path = writeScriptBin "konsole-launcher" ''
+                 #!/bin/sh
+                 ${konsole}/bin/konsole --profile ${konsole-profile} --hide-tabbar --hide-menubar "$@"
+               ''; }
 ]
 ++ 
 (map justUse [
@@ -175,7 +180,7 @@ linkFarm "raskin-packages" ([
  "xmacro" "man-pages" "posix_man_pages" "mpv" "zbar" "lsb-release"
  "pinentry" "bfs" "moreutils" "spaceFM"
  "nix-prefetch-github" "nim" 
- "gedit"
+ "gedit" "pavucontrol"
 ])
 ++
 (map (justUseMult "out") [

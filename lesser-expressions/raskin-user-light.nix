@@ -2,23 +2,32 @@ let
 NIXPKGS_env = builtins.getEnv "NIXPKGS";
 pkgsPath = if NIXPKGS_env == "" then <nixpkgs> else NIXPKGS_env;
 pkgs = import pkgsPath { 
-  config = {
-    allowInsecurePredicate = x: (
-      (
-        (pkgs.lib.hasPrefix "curl-impersonate-" (x.name or x.pname))
-        ||
-        ("curl-impersonate" == (x.name or x.pname))
-      )
-      &&
-      (pkgs.lib.all (y: 
-        (pkgs.lib.findFirst (z: z == y) null [
-                "CVE-2023-32001"  # fopen TOCTOU race condition - https://curl.se/docs/CVE-2023-32001.html
-                "CVE-2022-43551"  # HSTS bypass - https://curl.se/docs/CVE-2022-43551.html
-                "CVE-2022-42916"  # HSTS bypass - https://curl.se/docs/CVE-2022-42916.html
-        ]) != null
-      ) x.meta.knownVulnerabilities)
-    );
-  };
+    config = {
+        allowInsecurePredicate = x: (
+            (
+             (
+              (pkgs.lib.hasPrefix "curl-impersonate-" (x.name or x.pname))
+              ||
+              ("curl-impersonate" == (x.name or x.pname))
+             )
+             &&
+             (pkgs.lib.all (y: 
+                            (pkgs.lib.findFirst (z: z == y) null [
+                             "CVE-2023-38545"  # socks5h long hostname heap overflow; I don't use that combo for impersonate
+                             "CVE-2023-32001"  # fopen TOCTOU race condition - https://curl.se/docs/CVE-2023-32001.html
+                             "CVE-2022-43551"  # HSTS bypass - https://curl.se/docs/CVE-2022-43551.html
+                             "CVE-2022-42916"  # HSTS bypass - https://curl.se/docs/CVE-2022-42916.html
+                            ]) != null
+                           ) x.meta.knownVulnerabilities)
+            ) 
+            ||
+            (
+             x.pname == "squid"
+             &&
+             x.version == "6.6"
+            )
+        );
+    };
 };
 allOutputNames = packages: builtins.attrNames
       (pkgs.lib.fold
@@ -64,7 +73,23 @@ fullEnv "main-light-package-set"
         konsole
         ntp mc ncdu ltrace weechat
         htop iotop powertop mtr bind inotify-tools xorg.setxkbmap xorg.xev
-        curl-impersonate
+        (curl-impersonate-chrome.overrideAttrs (x: {
+          preConfigure = x.preConfigure + ''
+
+            pwd
+            unzip boringssl.zip
+            mv boringssl-*/ boringssl
+            (
+              cd boringssl
+              for i in ../chrome/patches/boringssl-*.patch; do
+                patch -p1 < $i
+              done
+              touch .patched
+              sed -re 's/([ "])-Werror\>/\1-Wno-error/g' -i $(find . -name CMakeLists.txt)
+            )
+          '';
+        }))
+        curl-impersonate-ff
         xorg.xset
         xfig transfig kig
         firefox vimHugeX evince mplayer alsaUtils xvfb_run
