@@ -97,6 +97,7 @@ fullEnv "main-light-package-set"
         xsel xclip pulseaudio ripmime xscreensaver xorg.xsetroot lsof rofi
         fpc graphviz diffutils fontconfig picom xorg.xprop xorg.xwininfo jq
         xorg.xlsclients fortune fuse3 openssl axel arping whois hping badvpn dict
+        megatools
         xorg.appres
         xdaliclock openvpn iftop file patchutils zip gawk perl btrfs-progs
         man man-pages oathToolkit wavemon m4
