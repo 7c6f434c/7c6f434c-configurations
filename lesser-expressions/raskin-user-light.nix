@@ -117,4 +117,5 @@ fullEnv "main-light-package-set"
         shadowsocks-rust
         (aspellWithDicts (p: with p; [en ru de fr da]))
         cmake
+        termplay libsixel
       ]      

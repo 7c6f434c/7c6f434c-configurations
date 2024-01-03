@@ -12,12 +12,14 @@ linkFarm "raskin-packages" ([
       boot.isContainer = true;
       documentation.dev.enable = true;
       documentation.nixos.enable = true;
+      system.stateVersion = "99.99";
     };
   }).system; }
   { name = "nixos-empty-vm"; path = (import <nixpkgs/nixos> {
     configuration = {
       documentation.dev.enable = true;
       documentation.nixos.enable = true;
+      system.stateVersion = "99.99";
     };
   }).vm; }
   { name = "python-black"; path = pkgs.python3Packages.black; }
