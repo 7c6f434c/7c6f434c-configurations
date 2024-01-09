@@ -126,7 +126,7 @@ fullEnv "main-light-package-set"
         }))
         curl-impersonate-ff
         xorg.xset
-        xfig transfig kig
+        xfig transfig kig netpbm
         firefox vimHugeX evince mplayer alsaUtils xvfb_run
         xorg.xmodmap bc xdotool lftp wget wget2 unzip gnumake xcape xorg.xrandr
         xsel xclip pulseaudio ripmime xscreensaver xorg.xsetroot lsof rofi
