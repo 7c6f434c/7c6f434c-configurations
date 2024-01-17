@@ -183,6 +183,7 @@ linkFarm "raskin-packages" ([
  "pinentry" "bfs" "moreutils" "spaceFM"
  "nix-prefetch-github" "nim" 
  "gedit" "pavucontrol"
+ "ccl" "ecl" "clisp" "gcl"
 ])
 ++
 (map (justUseMult "out") [

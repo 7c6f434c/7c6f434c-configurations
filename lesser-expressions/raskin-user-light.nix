@@ -108,7 +108,7 @@ fullEnv "main-light-package-set"
         '')
         ntp mc ncdu ltrace weechat
         htop iotop powertop mtr bind inotify-tools xorg.setxkbmap xorg.xev
-        (curl-impersonate-chrome.overrideAttrs (x: {
+        (curl-impersonate-chrom.overrideAttrs (x: {
           preConfigure = x.preConfigure + ''
 
             pwd
@@ -124,7 +124,9 @@ fullEnv "main-light-package-set"
             )
           '';
         }))
-        curl-impersonate-ff
+        (curl-impersonate-ff.overrideAttrs (x: {
+          NIX_CFLAGS_COMPILE = (x.NIX_CFLAGS_COMPILE or "") + " -Wno-error ";
+        }))
         xorg.xset
         xfig transfig kig netpbm
         firefox vimHugeX evince mplayer alsaUtils xvfb_run
