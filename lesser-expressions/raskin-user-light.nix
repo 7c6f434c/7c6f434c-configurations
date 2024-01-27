@@ -44,10 +44,10 @@ fullEnv = name: packages:
       extraOutputsToInstall = (allOutputNames packages);
     };
 in with pkgs;
-let konsole-profile = /home/raskin/src/rc/konsole.profile; in
-let konsole-colorscheme = /home/raskin/src/rc/KonsoleMyLight.colorscheme; in
-let tmux-profile = /home/raskin/src/rc/tmux/tmux.conf; in
-let tmux-profile-sh = /home/raskin/src/rc/tmux/tmux.conf.sh; in
+let konsole-profile = ./rc.private/konsole.profile; in
+let konsole-colorscheme = ./rc.private/KonsoleMyLight.colorscheme; in
+let tmux-profile = ./rc.private/tmux/tmux.conf; in
+let tmux-profile-sh = ./rc.private/tmux/tmux.conf.sh; in
 let tmux-to-use = tmux.overrideAttrs (x: 
 {
   configureFlags = (x.configureFlags or []) ++ ["--enable-sixel"];
