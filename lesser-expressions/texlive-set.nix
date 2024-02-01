@@ -37,6 +37,7 @@ pkgs.texlive.combine {
     gensymb placeins mdframed needspace
     sectsty
     docmute appendixnumberbeamer moresize
+    ccicons
     ;
 
 }
