@@ -108,25 +108,7 @@ fullEnv "main-light-package-set"
         '')
         ntp mc ncdu ltrace weechat
         htop iotop powertop mtr bind inotify-tools xorg.setxkbmap xorg.xev
-        (curl-impersonate-chrom.overrideAttrs (x: {
-          preConfigure = x.preConfigure + ''
-
-            pwd
-            unzip boringssl.zip
-            mv boringssl-*/ boringssl
-            (
-              cd boringssl
-              for i in ../chrome/patches/boringssl-*.patch; do
-                patch -p1 < $i
-              done
-              touch .patched
-              sed -re 's/([ "])-Werror\>/\1-Wno-error/g' -i $(find . -name CMakeLists.txt)
-            )
-          '';
-        }))
-        (curl-impersonate-ff.overrideAttrs (x: {
-          NIX_CFLAGS_COMPILE = (x.NIX_CFLAGS_COMPILE or "") + " -Wno-error ";
-        }))
+        (callPackage ./curl-impersonate-fork {})
         xorg.xset
         xfig transfig kig netpbm
         firefox vimHugeX evince mplayer alsaUtils xvfb_run
