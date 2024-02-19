@@ -27,6 +27,16 @@ linkFarm "raskin-toy-packages" ([
         xpilot-ng liquidwar
         quantumminigolf liquidwar5 xmoto
         renpy
+        (runCommandNoCC "rpatool" {} ''
+          mkdir -p "$out"/bin
+          cp "${(fetchFromGitHub {
+            owner = "shizmob";
+            repo = "rpatool";
+            rev = "74f26d5dfdd645483e02552aa766ca447ad6b191";
+            sha256 = "sha256-S4aX+bDy3Gu5so1V2tq2kRhfmjT888hCI6g2MNVCtYE=";
+          })}"/rpatool "$out/bin"
+          chmod a+x "$out/bin/rpatool"
+        '')
       ]);}
 ])
 
