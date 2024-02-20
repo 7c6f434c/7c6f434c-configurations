@@ -38,6 +38,7 @@ pkgs.texlive.combine {
     sectsty
     docmute appendixnumberbeamer moresize
     ccicons
+    exercise
     ;
 
 }
