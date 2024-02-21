@@ -104,7 +104,7 @@ fullEnv "main-light-package-set"
           cat ${tmux-profile} > "$out"
           echo run-shell '"${tmux-profile-sh}"' >> "$out"
           ''
-        }
+        } "$@"
         '')
         ntp mc ncdu ltrace weechat
         htop iotop powertop mtr bind inotify-tools xorg.setxkbmap xorg.xev

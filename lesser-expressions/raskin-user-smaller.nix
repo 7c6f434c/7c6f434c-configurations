@@ -50,17 +50,7 @@ linkFarm "raskin-packages" ([
                 {name = "gnome_themes_standard"; path = gnome3.gnome-themes-extra;}
                 {name = "gnome-themes-standard"; path = gnome3.gnome-themes-extra;}
                 {name = "adwaita_icon_theme"; path = gnome3.adwaita-icon-theme;}
-                {name="clx-truetype"; path=lispPackages.clx-truetype;}
-                {name="xkeyboard"; path=lispPackages.xkeyboard;}
-                {name="clx-xkeyboard"; path=lispPackages.xkeyboard;}
-                {name="clwrapper"; path=lispPackages.clwrapper;}
                 {name="python-mozilla-marionette"; path=(import ../lang-os/marionette-python-packages.nix {inherit pkgs;}).marionette-harness;}
-                {name="bordeaux-threads"; path=lispPackages.bordeaux-threads;}
-                {name="lparallel"; path=lispPackages.lparallel;}
-                {name="lfarm-client"; path=lispPackages.lfarm-client;}
-                {name="lfarm-server"; path=lispPackages.lfarm-server;}
-                {name="pcall"; path=lispPackages.pcall;}
-                {name="parse-number"; path=lispPackages.parse-number;}
                 /*{name="gimp-resynthesizer"; path=gimpPlugins.resynthesizer;}*/
                 { name = "words"; path = scowl; }
                 { name = "dicts"; path = dictDBCollector {
