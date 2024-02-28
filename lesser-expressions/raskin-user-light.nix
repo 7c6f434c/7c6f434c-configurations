@@ -50,14 +50,12 @@ let tmux-profile = ./rc.private/tmux/tmux.conf; in
 let tmux-profile-sh = ./rc.private/tmux/tmux.conf.sh; in
 let tmux-to-use = tmux.overrideAttrs (x: 
 {
-  configureFlags = (x.configureFlags or []) ++ ["--enable-sixel"];
-  src = fetchFromGitHub {
-    owner = "tmux"; 
-    repo="tmux"; 
-    rev = "4266d3efc89cdf7d1af907677361caa24b58c9eb"; 
-    hash = "sha256-LliON7p1KyVucCu61sPKihYxtXsAKCvAvRBvNgoV0/g="; }; 
-    patches = []; 
-  });
+  patches = tmux.patches ++ [
+    ./tmux-sixel-fixes-issue-3839-at-2024-02-25.diff
+  ]; 
+});
+###
+### let tmux-to-use = tmux;
 in
 
 fullEnv "main-light-package-set"
