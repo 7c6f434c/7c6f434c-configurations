@@ -158,6 +158,22 @@ linkFarm "raskin-packages" ([
                  sdl2 = true;
                  quartz = false;
                }; }); }
+               { name = "gui-libs-for-binaries";
+               path = buildEnv {
+                 name = "libs";
+                 paths = [
+                   glibc zlib
+                   xorg.libXt xorg.libX11 xorg.libXrender 
+                   xorg.libXtst xorg.libXext xorg.libXi
+                   xorg.libXrandr xorg.libXScrnSaver xorg.libXxf86vm
+                   xorg.libXcursor xorg.libXinerama
+                   mesa mesa.drivers mesa.osmesa libGL libGLU
+                 ];
+                 ignoreCollisions = false;
+                 checkCollisionContents = true;
+                 pathsToLink = ["/"];
+               };
+               }
 ]
 ++ 
 (map justUse [
