@@ -24,7 +24,11 @@ pkgs = import pkgsPath {
             (
              x.pname == "squid"
              &&
-             x.version == "6.6"
+             (
+               x.version == "6.6"
+               ||
+               x.version == "6.7"
+               )
             )
         );
     };
@@ -136,4 +140,8 @@ fullEnv "main-light-package-set"
         cmake
         termplay libsixel
         nixpkgs-fmt
+        (runCommandNoCC "gcc-gcov" {} ''
+          mkdir -p "$out/bin"
+          ln -s "${gcc.cc}/bin"/gcov* "$out/bin"
+          '')
       ]      
