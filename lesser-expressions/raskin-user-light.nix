@@ -28,6 +28,8 @@ pkgs = import pkgsPath {
                x.version == "6.6"
                ||
                x.version == "6.7"
+               ||
+               x.version == "6.8"
                )
             )
         );
