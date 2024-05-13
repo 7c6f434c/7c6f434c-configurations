@@ -10,32 +10,40 @@ let justUseMult = output: str: {name = "${str}.${output}"; path = builtins.getAt
 let ppUse = str: {name = str; path = builtins.getAttr str pp;}; in
 let julia_used = julia; in
 let myLispPackages = import ./lisp-packages.nix { inherit pkgs; }; in
+let pack = path: pkgs.runCommandNoCC "source.tar.gz" {} ''
+    cd ${builtins.storeDir}
+    tar -cvzf "$out" "$(basename "${path}")"
+  ''; in
 
 linkFarm "raskin-packages" ([
                 {name="mime"; path=shared-mime-info;}
                 { name="query-fs"; 
-                path = lib.overrideDerivation lispPackages.query-fs (x: {
-                                NIX_LISP_EARLY_OPTIONS = " --dynamic-space-size 4096 ";
-                                linkedSystems = x.linkedSystems ++ ["clsql" "clsql-postgresql" "clsql-sqlite3"
-                                "ironclad" "esrap-peg" "md5" "sb-bsd-sockets"]; 
-                                buildInputs = 
-                                let
-                                cl-fuse = lispPackages.cl-fuse.override (x: {
-                                                src = /home/raskin/src/lsp/venv-cl-fuse/src/cl-fuse;
-                                                });
-                                cl-fuse-meta-fs = lispPackages.cl-fuse-meta-fs.override (x: {
-                                                src = /home/raskin/src/lsp/venv-cl-fuse/src/cl-fuse-meta-fs;
-                                                });
-                                in
-                                []
-                                ++ [ cl-fuse cl-fuse-meta-fs ]
-                                ++ x.buildInputs
-                                ++ (with lispPackages; 
-                                                [clsql ironclad md5 clsql-postgresql clsql-sqlite3])
-                                ++ (with lispPackages; [esrap-peg])
-                                ++ [ cl-fuse cl-fuse-meta-fs ]
-                                ;
-                });
+                path = pkgs.runCommandNoCC "query-fs-bin" {} ''
+                  mkdir -p "$out/bin"
+                  ${pkgs.sbcl.withPackages (p: with p; [
+                    (p.query-fs.overrideAttrs (x: {
+                      src = /home/raskin/src/lsp/venv-cl-fuse/src/query-fs;
+                    }))
+                    clsql clsql-postgresql clsql-sqlite3 ironclad esrap-peg md5
+                    (p.cl-fuse.overrideAttrs (x: {
+                      src = p.cl-fuse.src.overrideAttrs (x: { src = /home/raskin/src/lsp/venv-cl-fuse/src/cl-fuse; });
+                    }))
+                    (p.cl-fuse-meta-fs.overrideLispAttrs (x: {
+                      src = /home/raskin/src/lsp/venv-cl-fuse/src/cl-fuse-meta-fs;
+                    }))
+                  ])}/bin/sbcl --dynamic-space-size 4096 --eval '(require :asdf)' \
+                  --eval '(mapcar (function require) 
+                    (list "query-fs" 
+                          "cffi"
+                          "clsql" "clsql-postgresql" "clsql-sqlite3" 
+                          "ironclad" "esrap-peg" "md5" "sb-bsd-sockets"))' \
+                  --load '${../lang-os/lisp-os-helpers/ffi.lisp}' \
+                  --eval '(lisp-os-helpers/ffi:adjust-ffi-paths)' \
+                  --eval '(load "${../lang-os/lisp-os-helpers/ffi.lisp}")'\
+                          --eval '(sb-ext:save-lisp-and-die "${placeholder "out"}/bin/query-fs" :executable t :save-runtime-options t
+                             :toplevel (lambda () (lisp-os-helpers/ffi:adjust-ffi-paths) (format *error-output* "Arguments:~%~s~%" ()) (query-fs:run-fs-with-cmdline-args)))'
+                  test -e "$out/bin/query-fs"
+                '';
                 }
                 { name = "openai-whisper-cpp";
                   path = openai-whisper-cpp.overrideAttrs (

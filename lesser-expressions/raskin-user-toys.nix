@@ -26,7 +26,13 @@ linkFarm "raskin-toy-packages" ([
         sgt-puzzles xconq pysolfc xaos _2048-in-terminal blobby
         xpilot-ng liquidwar
         quantumminigolf liquidwar5 xmoto
-        renpy
+        (renpy.override (x: {
+          python3 = python3 // {
+            pkgs = python3.pkgs // {
+              cython = python3.pkgs.cython_0;
+            };
+          };
+        }))
         (runCommandNoCC "rpatool" {} ''
           mkdir -p "$out"/bin
           cp "${(fetchFromGitHub {
