@@ -103,6 +103,7 @@ fullEnv "main-light-package-set"
         xorg.xmodmap bc xdotool lftp wget wget2 unzip gnumake xcape xorg.xrandr
         xsel xclip pulseaudio ripmime xscreensaver xorg.xsetroot lsof rofi
         fpc graphviz diffutils fontconfig picom xorg.xprop xorg.xwininfo jq
+        cflow
         xorg.xlsclients fortune fuse3 openssl axel arping whois hping badvpn dict
         megatools
         xorg.appres
