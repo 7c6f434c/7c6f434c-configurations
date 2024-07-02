@@ -39,6 +39,7 @@ pkgs.texlive.combine {
     docmute appendixnumberbeamer moresize
     ccicons
     exercise
+    ntheorem totcount
     ;
 
 }
