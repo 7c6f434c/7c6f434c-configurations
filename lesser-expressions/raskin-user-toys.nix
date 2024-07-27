@@ -22,17 +22,13 @@ linkFarm "raskin-toy-packages" ([
   { name = "main-toy-package-set";
     path = (fullEnv "main-heavy-package-set"
       [
-        fsg kobodeluxe extremetuxracer golly lincity construo
+        fsg kobodeluxe extremetuxracer 
+        golly
+        lincity construo
         sgt-puzzles xconq pysolfc xaos _2048-in-terminal blobby
         xpilot-ng liquidwar
         quantumminigolf liquidwar5 xmoto
-        (renpy.override (x: {
-          python3 = python3 // {
-            pkgs = python3.pkgs // {
-              cython = python3.pkgs.cython_0;
-            };
-          };
-        }))
+        renpy
         (runCommandNoCC "rpatool" {} ''
           mkdir -p "$out"/bin
           cp "${(fetchFromGitHub {

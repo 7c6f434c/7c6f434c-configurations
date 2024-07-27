@@ -39,7 +39,7 @@ linkFarm "raskin-heavy-packages" ([
         gptfdisk dmidecode inkscape x11vnc 
         tigervnc
         xdummy tcpdump wireshark
-        testdisk fdupes ntfs3g lazarus icewm youtube-dl yt-dlp xorg.xwd
+        testdisk fdupes ntfs3g lazarus icewm yt-dlp xorg.xwd
         vlc sshfs dmtx-utils
         glxinfo xorg.xdpyinfo xorg.xdriinfo go-mtpfs nmap sox
         xorg.xinput usbutils wgetpaste gdb scowl xcalib /*fmbt*/ eprover glucose
