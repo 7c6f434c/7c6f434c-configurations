@@ -82,7 +82,7 @@ fullEnv "main-light-package-set"
           mkdir -p "$out/share/konsole"
           cp "${konsole-colorscheme}" "$out/share/konsole/KonsoleMy.colorscheme"
           ''
-        }/share''${XDG_DATA_DIRS:+:}$XDG_DATA_DIRS" ${konsole}/bin/konsole --profile ${konsole-profile} --hide-tabbar --hide-menubar --separate -p ColorScheme=KonsoleMy "$@";
+        }/share" ${konsole}/bin/konsole --profile ${konsole-profile} --hide-tabbar --hide-menubar --separate -p ColorScheme=KonsoleMy "$@";
         '')
         (writeScriptBin "tmux-launcher" ''
         #!/bin/sh
