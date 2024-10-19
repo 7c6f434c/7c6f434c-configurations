@@ -30,6 +30,10 @@ pkgs = import pkgsPath {
                x.version == "6.7"
                ||
                x.version == "6.8"
+               ||
+               x.version == "6.9"
+               ||
+               x.version == "6.10"
                )
             )
         );
@@ -66,11 +70,15 @@ in
 
 fullEnv "main-light-package-set"
       [
-        squid git monotone fbida fbterm postgresql_13 expect pmount fdm
+        squid git monotone fbida fbterm 
+        (symlinkJoin {
+           name = "postgresql-13"; 
+           paths = [ postgresql_13.out ];})
+        expect pmount fdm
         fzf mcabber ii irssi links2 rsync ratpoison xdummy
         elinks
         
-        matrix-commander
+        /*matrix-commander*/
         pv lvm2 mariadb remind xterm zsh 
         (mlterm.override {enableFeatures = mlterm.enableFeatures // {ssh2 = false;};})
         konsole
