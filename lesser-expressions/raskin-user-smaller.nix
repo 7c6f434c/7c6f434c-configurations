@@ -46,18 +46,11 @@ linkFarm "raskin-packages" ([
                 '';
                 }
                 { name = "openai-whisper-cpp";
-                  path = openai-whisper-cpp.overrideAttrs (
-                    x: { 
-                      makeFlags = x.makeFlags ++ ["command"]; 
-                      installPhase = x.installPhase + ''
-                        cp ./command $out/bin/whisper-cpp-command
-                      ''; 
-                      }
-                  );
+                  path = openai-whisper-cpp; 
                 }
-                {name = "gnome_themes_standard"; path = gnome3.gnome-themes-extra;}
-                {name = "gnome-themes-standard"; path = gnome3.gnome-themes-extra;}
-                {name = "adwaita_icon_theme"; path = gnome3.adwaita-icon-theme;}
+                {name = "gnome_themes_standard"; path = gnome-themes-extra;}
+                {name = "gnome-themes-standard"; path = gnome-themes-extra;}
+                {name = "adwaita_icon_theme"; path = adwaita-icon-theme;}
                 {name="python-mozilla-marionette"; path=(import ../lang-os/marionette-python-packages.nix {inherit pkgs;}).marionette-harness;}
                 /*{name="gimp-resynthesizer"; path=gimpPlugins.resynthesizer;}*/
                 { name = "words"; path = scowl; }
@@ -181,19 +174,27 @@ linkFarm "raskin-packages" ([
                  checkCollisionContents = true;
                  pathsToLink = ["/"];
                };
-               }
+             }
+             {
+               name = "mysql";
+               path = mariadb;
+             }
+             {
+               name = "posix_man_pages";
+               path = man-pages-posix;
+             }
 ]
 ++ 
 (map justUse [
  "gsettings-desktop-schemas" "gtk3"
- "fuse" "mysql" "openssl" "opencv" "postgresql" "sqlite"
+ "fuse" "mariadb" "openssl" "opencv" "postgresql" "sqlite"
  "love_0_10" "love_11" "libpulseaudio"
  "wgetpaste" "gdmap" "netcat" "python3" "kdiff3" "meld"
  "gfxtablet" "keynav"
  "tigervnc" "fbvnc"
  "glpk" "clingo" "urn"
  "plan9port" "sway" "syslogng" "rsyslog"
- "xmacro" "man-pages" "posix_man_pages" "mpv" "zbar" "lsb-release"
+ "xmacro" "man-pages" "man-pages-posix" "mpv" "zbar" "lsb-release"
  "pinentry" "bfs" "moreutils" "spaceFM"
  "nix-prefetch-github" "nim" 
  "gedit" "pavucontrol"

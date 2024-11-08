@@ -107,7 +107,7 @@ fullEnv "main-light-package-set"
         (callPackage ./curl-impersonate-fork {})
         xorg.xset
         xfig transfig kig netpbm
-        firefox vimHugeX evince mplayer alsaUtils xvfb_run
+        firefox vimHugeX evince mplayer alsa-utils xvfb-run
         xorg.xmodmap bc xdotool lftp wget wget2 unzip gnumake xcape xorg.xrandr
         xsel xclip pulseaudio ripmime xscreensaver xorg.xsetroot lsof rofi
         fpc graphviz diffutils fontconfig picom xorg.xprop xorg.xwininfo jq
