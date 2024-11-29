@@ -49,5 +49,6 @@ linkFarm "raskin-heavy-packages" ([
         /* cachix */ darcs /* petrinizer */
         /* swfdec */
         coqPackages.coqide coqPackages.coq
+        ripgrep-all
       ]);}
 ])
