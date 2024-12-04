@@ -4,3 +4,5 @@ openvpn-keys.private
 openvpn.private
 postfix.private
 target.private
+shadowsocks.private/
+target-domain.txt.private

@@ -1,0 +1,9 @@
+[Unit]
+Description=OpenDKIM mail signer
+
+[Service]
+ExecStart=/root/tools/bin/opendkim -f -x /etc/opendkim.conf
+
+[Install]
+WantedBy=multi-user.target
+

@@ -26,6 +26,7 @@ with rec {
           ncp ${./nginx.conf} ./var/nginx/conf
           ncp ${./nginx.service} ./lib/systemd/system
           ncp ${./dehydrated.conf} ./var/dehydrated
+          ncp ${./dehydrated-hook.sh} ./etc/dehydrated
           ncp ${./domains.txt.private} ./var/dehydrated
           ncp ${./dehydrated.service} ./lib/systemd/system
           ncp ${./dehydrated.timer} ./lib/systemd/system
@@ -43,10 +44,14 @@ with rec {
           ncp ${./dovecot.private/pointless-dovecot.crt} ./etc/dovecot
           ncp ${fontsConf} ./etc/fonts
           ncp ${./screenrc} ./etc
+          ncp ${./opendkim.conf} ./etc
+          ncp ${./opendkim.service} ./lib/systemd/system
           ncp ${./shadowsocks.service} ./lib/systemd/system
           ncp ${./grab-ntp-time.service} ./lib/systemd/system
 
+          sed -e 's/@@@/'"$(cat ${./domains.txt.private} | xargs | tr ' ' ,)"'/' -i ./etc/opendkim.conf
           sed -e 's/@@@/'"$(cat ${./domains.txt.private} | xargs)"'/' -i ./etc/postfix/main.cf
+          sed -e 's/@@domain@@/'"$(cat ${./target-domain.txt.private}|xargs)"'/' -i ./etc/postfix/main.cf
           sed -e 's^@pam@^${pam}^' -i ./etc/pam.d/dovecot
           for i in $(cat ${./domains.txt.private}); do
                 sed -e "s/@@@/$i/g" < ${./nginx.ssl.conf} >> ./var/nginx/conf/nginx.ssl.conf
@@ -76,10 +81,10 @@ with rec {
             find . -type f | while read i; do ln -vsfT $(readlink -f $i) /$i; done
             find . -type l | while read i; do ln -vsfT $(readlink -f $i) /$i; done
           )
-          for u in www-data postfix dovenull dovecot; do
+          for u in www-data postfix dovenull dovecot opendkim; do
             grep "^$u:" /etc/passwd || useradd -s /sbin/nologin -r $u
           done
-          for g in postfix postdrop mail; do
+          for g in postfix postdrop mail opendkim; do
             grep "^$g:" /etc/group || groupadd -r $g
           done
 
@@ -95,15 +100,27 @@ with rec {
           /root/tools/bin/newaliases
           ${postfix}/bin/postmap -c /etc/postfix -F /etc/postfix/sni
 
+          mkdir -p /var/db/dkim/
+          (
+            cd /var/db/dkim
+            test -e default.private || opendkim-genkey
+            chown -R opendkim:opendkim .
+            chmod -R 0600 .
+          )
+
           for i in nginx dovecot; do
             systemctl restart $i;
           done
           for i in ii ii-libera-chat ii-oftc \
                    openvpn openvpn-tcp \
-                   nginx dehydrated.timer postfix-key-concat.timer postfix dovecot \
+                   nginx dehydrated.timer postfix-key-concat.timer dovecot \
                    shadowsocks grab-ntp-time \
                    ; do 
             systemctl enable $i; systemctl start $i; systemctl reload $i;
+          done;
+          for i in  opendkim postfix \
+                   ; do 
+            systemctl enable $i; systemctl start $i; systemctl force-reload $i;
           done;
           (
             cd ./tools/global/lib/systemd/system
@@ -121,15 +138,16 @@ with rec {
         toolset = pkgs.buildEnv {
           name = "tools-for-vps";
           paths = [ openvpn matrix-synapse ii screen nginx less
-                rsync git monotone fossil mercurial vim strace transmission
+                rsync git monotone fossil mercurial vim strace transmission_4
                 glibcLocales host dnsutils mtr htop iotop hping socat iftop
-                curl wget youtube-dl jemalloc nix dehydrated netcat tcpdump
+                curl wget jemalloc nix dehydrated netcat tcpdump
                 yt-dlp
                 alpine postfix dovecot shared-mime-info
+                opendkim
                 tigervnc
                 scite
                 gsettings-desktop-schemas gtk3
-                xorg.xinit xorg.twm icewm rxvt_unicode
+                xorg.xinit xorg.twm icewm rxvt-unicode
                 ncdu
                 globalLinks remoteDeploy
                 shadowsocks-rust ntp

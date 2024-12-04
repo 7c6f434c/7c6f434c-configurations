@@ -29,6 +29,10 @@
       --eval '(require :cl-mailer)' \
       --load '${./prepare-libraries.lisp}' \
       --eval '(save-lisp-and-die 
+                "'"$out/bin/cl-mailer-launcher"'" 
+                :executable t)'
+      "$out/bin/cl-mailer-launcher" \
+      --eval '(save-lisp-and-die 
                 "'"$out/bin/cl-mailer-send-email"'" 
                 :executable t :toplevel 
                 (lambda () 
@@ -37,12 +41,7 @@
             (format t "~a~%"
             (cl-mailer::sendmail f))))
             )'
-      ${
-        pkgs.sbcl.withPackages (p: [cl-mailer-bis])
-      }/bin/sbcl \
-      --eval '(require :asdf)' \
-      --eval '(require :cl-mailer)' \
-      --load '${./prepare-libraries.lisp}' \
+      "$out/bin/cl-mailer-launcher" \
       --eval '(save-lisp-and-die 
                 "'"$out/bin/cl-mailer-tabulate-mail"'" 
                 :executable t :toplevel 
@@ -52,12 +51,7 @@
             (format t "~a~%"
              (cl-mailer::email-table-entry f))))
             )'
-      ${
-        pkgs.sbcl.withPackages (p: [cl-mailer-bis])
-      }/bin/sbcl \
-      --eval '(require :asdf)' \
-      --eval '(require :cl-mailer)' \
-      --load '${./prepare-libraries.lisp}' \
+      "$out/bin/cl-mailer-launcher" \
       --eval '(save-lisp-and-die 
                 "'"$out/bin/cl-mailer-make-reply-header"'" 
                 :executable t :toplevel 

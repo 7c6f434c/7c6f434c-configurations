@@ -1,11 +1,29 @@
 mydestination = @@@
+mydomain = @@domain@@
 mynetworks = 127.0.0.1/32
-smtpd_relay_restrictions = reject_unauth_destination
+smtpd_relay_restrictions = permit_sasl_authenticated, reject_unauth_destination
+
+smtpd_sasl_auth_enable = yes
+smtpd_sasl_type = dovecot
+smtpd_sasl_path = /var/lib/postfix/private/auth
+smtpd_sasl_security_options = noanonymous
+smtpd_recipient_restrictions = permit_mynetworks, permit_sasl_authenticated, reject_unauth_destination
 
 smtpd_tls_security_level = may
-smtpd_tls_cert_file = /etc/postfix/pointless-postfix.crt
+smtpd_tls_chain_files =
+  /var/dehydrated/certs/michaelraskin.top/privkey.pem,
+  /var/dehydrated/certs/michaelraskin.top/fullchain.pem
 
-indexed = ${default_database_type}:${config_directory}/
-tls_server_sni_maps = ${indexed}sni
+tls_server_sni_maps = hash:/etc/postfix/sni
+
+always_add_missing_headers = no
 
 recipient_delimiter = +
+
+smtpd_milters = inet:127.0.0.1:8891
+non_smtpd_milters = $smtpd_milters
+milter_default_action = accept
+
+smtp_tls_security_level = may
+
+compatibility_level = 3.9
