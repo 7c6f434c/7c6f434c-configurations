@@ -27,3 +27,6 @@ milter_default_action = accept
 smtp_tls_security_level = may
 
 compatibility_level = 3.9
+
+message_size_limit = 10240000
+mailbox_size_limit = 204800000
