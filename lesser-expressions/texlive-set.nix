@@ -40,6 +40,7 @@ pkgs.texlive.combine {
     ccicons
     exercise
     ntheorem totcount
+    unicode-math
     ;
 
 }
