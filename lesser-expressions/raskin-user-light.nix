@@ -74,7 +74,7 @@ fullEnv "main-light-package-set"
         (symlinkJoin {
            name = "postgresql-13"; 
            paths = [ postgresql_13.out ];})
-        expect pmount fdm
+        expect /*pmount*/ fdm
         fzf mcabber ii irssi links2 rsync ratpoison xdummy
         elinks
         
@@ -139,4 +139,5 @@ fullEnv "main-light-package-set"
           mkdir -p "$out/bin"
           ln -s "${gcc.cc}/bin"/gcov* "$out/bin"
           '')
+        colordiff
       ]      
