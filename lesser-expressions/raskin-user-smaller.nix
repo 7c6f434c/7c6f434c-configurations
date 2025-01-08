@@ -86,7 +86,7 @@ linkFarm "raskin-packages" ([
                 }
                 {
                   name = "julia-fhs-env";
-                  path = buildFHSUserEnv {
+                  path = buildFHSEnv {
                     name = "julia-fhs-env"; 
                     targetPkgs = p: with p; [
                       julia_used
@@ -189,13 +189,13 @@ linkFarm "raskin-packages" ([
  "gsettings-desktop-schemas" "gtk3"
  "fuse" "mariadb" "openssl" "opencv" "postgresql" "sqlite"
  "love_0_10" "love_11" "libpulseaudio"
- "wgetpaste" "gdmap" "netcat" "python3" "kdiff3" "meld"
+ "wgetpaste" "netcat" "python3" "kdiff3" "meld"
  "gfxtablet" "keynav"
  "tigervnc" "fbvnc"
  "glpk" "clingo" "urn"
  "plan9port" "sway" "syslogng" "rsyslog"
  "xmacro" "man-pages" "man-pages-posix" "mpv" "zbar" "lsb-release"
- "pinentry" "bfs" "moreutils" "spaceFM"
+ "pinentry" "bfs" "moreutils"
  "nix-prefetch-github" "nim" 
  "gedit" "pavucontrol"
  "ccl" "ecl" "clisp"

@@ -43,7 +43,9 @@ linkFarm "raskin-heavy-packages" ([
         vlc sshfs dmtx-utils
         glxinfo xorg.xdpyinfo xorg.xdriinfo go-mtpfs nmap sox
         xorg.xinput usbutils wgetpaste gdb scowl xcalib /*fmbt*/ eprover glucose
-        nginx cfdg /* highlight */ transmission_4 spass iprover /*cvc4*/ z3 z3-tptp prover9
+        nginx cfdg /* highlight */ transmission_4 spass iprover z3 z3-tptp 
+        cvc4 cvc5
+        /*prover9*/
         /* signal-desktop */ mustache-spec mustache-go zxing lame
         rustc xournalpp bmap-tools webcamoid
         /* cachix */ darcs /* petrinizer */
