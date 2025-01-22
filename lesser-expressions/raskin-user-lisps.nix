@@ -11,7 +11,7 @@ let ppUse = str: {name = str; path = builtins.getAttr str pp;}; in
 linkFarm "raskin-packages" (
   (map justUse [
     "sbcl"
-    "ccl" "ecl" "clisp" "gcl" "abcl" "mkcl"
+    "ccl" "ecl" "clisp" /*"gcl"*/ "abcl" "mkcl"
     "asdf"
   ])
   )
