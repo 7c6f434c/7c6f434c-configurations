@@ -41,6 +41,7 @@ pkgs.texlive.combine {
     exercise
     ntheorem totcount
     unicode-math
+    mltex breakurl
     ;
 
 }
