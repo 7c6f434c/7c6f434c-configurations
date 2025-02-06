@@ -52,5 +52,6 @@ linkFarm "raskin-heavy-packages" ([
         /* swfdec */
         coqPackages.coqide coqPackages.coq
         ripgrep-all
+        qvge
       ]);}
 ])

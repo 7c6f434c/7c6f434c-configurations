@@ -13,5 +13,6 @@ linkFarm "raskin-packages" (
     "sbcl"
     "ccl" "ecl" "clisp" /*"gcl"*/ "abcl" "mkcl"
     "asdf"
+    "racket"
   ])
   )
