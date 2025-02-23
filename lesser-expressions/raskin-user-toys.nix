@@ -1,7 +1,20 @@
 let 
 NIXPKGS_env = builtins.getEnv "NIXPKGS";
 pkgsPath = if NIXPKGS_env == "" then <nixpkgs> else NIXPKGS_env;
-pkgs = import pkgsPath {};
+pkgs = import pkgsPath {
+  config = {
+    allowInsecurePredicate = x: (
+      ("SDL_ttf" == x.pname)
+      &&
+      (pkgs.lib.all
+      (y: pkgs.lib.findFirst (z: z==y) null [
+        "CVE-2022-27470" # Corrupted font file issue
+      ] != null)
+      x.meta.knownVulnerabilities
+      )
+      );
+    };
+};
 allOutputNames = packages: builtins.attrNames
       (pkgs.lib.fold
         (a: b: b //

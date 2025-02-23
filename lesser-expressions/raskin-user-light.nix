@@ -25,17 +25,11 @@ pkgs = import pkgsPath {
              x.pname == "squid"
              &&
              (
-               x.version == "6.6"
-               ||
-               x.version == "6.7"
-               ||
-               x.version == "6.8"
-               ||
-               x.version == "6.9"
-               ||
                x.version == "6.10"
                ||
                x.version == "6.12"
+               ||
+               x.version == "6.13"
                )
             )
         );
@@ -83,7 +77,7 @@ fullEnv "main-light-package-set"
         /*matrix-commander*/
         pv lvm2 mariadb remind xterm zsh 
         (mlterm.override {enableFeatures = mlterm.enableFeatures // {ssh2 = false;};})
-        konsole
+        kdePackages.konsole
         tmux-to-use
         (writeScriptBin "konsole-launcher" ''
         #!/bin/sh
@@ -92,7 +86,7 @@ fullEnv "main-light-package-set"
           mkdir -p "$out/share/konsole"
           cp "${konsole-colorscheme}" "$out/share/konsole/KonsoleMy.colorscheme"
           ''
-        }/share" ${konsole}/bin/konsole --profile ${konsole-profile} --hide-tabbar --hide-menubar --separate -p ColorScheme=KonsoleMy "$@";
+        }/share" ${kdePackages.konsole}/bin/konsole --profile ${konsole-profile} --hide-tabbar --hide-menubar --separate -p ColorScheme=KonsoleMy "$@";
         '')
         (writeScriptBin "tmux-launcher" ''
         #!/bin/sh
@@ -108,7 +102,9 @@ fullEnv "main-light-package-set"
         htop iotop powertop mtr bind inotify-tools xorg.setxkbmap xorg.xev
         (callPackage ./curl-impersonate-fork {})
         xorg.xset
-        xfig transfig kig netpbm
+        xfig transfig 
+        libsForQt5.kig 
+        netpbm
         firefox vimHugeX evince mplayer alsa-utils xvfb-run
         xorg.xmodmap bc xdotool lftp wget wget2 unzip gnumake xcape xorg.xrandr
         xsel xclip pulseaudio ripmime xscreensaver xorg.xsetroot lsof rofi
@@ -129,13 +125,13 @@ fullEnv "main-light-package-set"
         python3Packages.pygments poppler_utils libarchive wdiff ydiff
         pass gnupg age easyrsa
         (import ./texlive-set.nix pkgs)
-        p7zip mupdf librsvg
+        p7zip mupdf librsvg sxiv
         /* xpdf vifm ffsend kitty */
         rosie latexrun moreutils gnupatch
         shadowsocks-rust
         (aspellWithDicts (p: with p; [en ru de fr da]))
         cmake
-        termplay libsixel
+        libsixel
         nixpkgs-fmt
         (runCommandNoCC "gcc-gcov" {} ''
           mkdir -p "$out/bin"
