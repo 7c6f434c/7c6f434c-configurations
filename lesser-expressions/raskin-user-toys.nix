@@ -41,6 +41,7 @@ linkFarm "raskin-toy-packages" ([
         sgt-puzzles xconq pysolfc xaos _2048-in-terminal blobby
         xpilot-ng liquidwar
         quantumminigolf liquidwar5 xmoto
+        ruffle
         (renpy.override { ffmpeg = ffmpeg_6; })
         (runCommandNoCC "rpatool" {} ''
           mkdir -p "$out"/bin

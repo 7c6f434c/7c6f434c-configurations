@@ -111,6 +111,7 @@ fullEnv "main-light-package-set"
         fpc graphviz diffutils fontconfig picom xorg.xprop xorg.xwininfo jq
         cflow
         xorg.xlsclients fortune fuse3 openssl axel arping whois hping badvpn dict
+        rdap
         megatools
         xorg.appres
         xdaliclock openvpn iftop file patchutils zip gawk perl btrfs-progs

@@ -51,6 +51,7 @@ linkFarm "raskin-packages" ([
                 {name = "gnome_themes_standard"; path = gnome-themes-extra;}
                 {name = "gnome-themes-standard"; path = gnome-themes-extra;}
                 {name = "adwaita_icon_theme"; path = adwaita-icon-theme;}
+                { name ="xcursorthemes"; path=xorg.xcursorthemes;}
                 {name="python-mozilla-marionette"; path=(import ../lang-os/marionette-python-packages.nix {inherit pkgs;}).marionette-harness;}
                 /*{name="gimp-resynthesizer"; path=gimpPlugins.resynthesizer;}*/
                 { name = "words"; path = scowl; }
