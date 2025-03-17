@@ -184,6 +184,14 @@ linkFarm "raskin-packages" ([
                name = "posix_man_pages";
                path = man-pages-posix;
              }
+             {
+               name = "netpbm-userguide";
+               path = fetchsvn { 
+                 url="https://svn.code.sf.net/p/netpbm/code/userguide"; 
+                 rev="5029";
+                 hash="sha256-SIuhP/KRAR6wcKO034TtCZlscE4eT1jmBSasTlh9QSQ=";
+               };
+             }
 ]
 ++ 
 (map justUse [

@@ -141,4 +141,5 @@ fullEnv "main-light-package-set"
         colordiff
         /* gdmap */ qdirstat
         mucommander
+        scrot
       ]      

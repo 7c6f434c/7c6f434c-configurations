@@ -42,6 +42,7 @@ pkgs.texlive.combine {
     ntheorem totcount
     unicode-math
     mltex breakurl
+    cprotect
     ;
 
 }
