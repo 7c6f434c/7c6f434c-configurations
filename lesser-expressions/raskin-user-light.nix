@@ -25,11 +25,7 @@ pkgs = import pkgsPath {
              x.pname == "squid"
              &&
              (
-               x.version == "6.10"
-               ||
-               x.version == "6.12"
-               ||
-               x.version == "6.13"
+               x.version == "7.0.1"
                )
             )
         );
