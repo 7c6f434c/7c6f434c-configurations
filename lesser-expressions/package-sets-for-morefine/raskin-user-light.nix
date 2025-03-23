@@ -96,23 +96,19 @@ fullEnv "main-light-package-set"
         '')
         ntp mc ncdu ltrace weechat
         htop iotop powertop mtr bind inotify-tools xorg.setxkbmap xorg.xev
-        #(callPackage ./curl-impersonate-fork {})
         curl-impersonate
         xorg.xset
         xfig transfig 
-        libsForQt5.kig 
         netpbm
         firefox vimHugeX evince mplayer alsa-utils xvfb-run
         xorg.xmodmap bc xdotool lftp wget wget2 unzip gnumake xcape xorg.xrandr
         xsel xclip pulseaudio ripmime xscreensaver xorg.xsetroot lsof rofi
-        fpc graphviz diffutils fontconfig picom xorg.xprop xorg.xwininfo jq
-        cflow
+        graphviz diffutils fontconfig picom xorg.xprop xorg.xwininfo jq
         xorg.xlsclients fortune fuse3 openssl axel arping whois hping badvpn dict
         rdap
-        megatools
         xorg.appres
         xdaliclock openvpn iftop file patchutils zip gawk perl btrfs-progs
-        man man-pages oathToolkit wavemon m4
+        man man-pages oathToolkit m4
         (proxychains.overrideAttrs (x: {
           postPatch = (x.postPatch or "") + ''
             sed -e '/while[(]dll_dirs\[i\])/ii=0;' -i src/main.c
@@ -122,7 +118,7 @@ fullEnv "main-light-package-set"
         /*monotoneViz*/ udftools units texinfoInteractive yap _3proxy
         python3Packages.pygments poppler_utils libarchive wdiff ydiff
         pass gnupg age easyrsa
-        (import ./texlive-set.nix pkgs)
+        (import ../texlive-set.nix pkgs)
         p7zip mupdf librsvg sxiv
         /* xpdf vifm ffsend kitty */
         rosie latexrun moreutils gnupatch
@@ -136,7 +132,6 @@ fullEnv "main-light-package-set"
           ln -s "${gcc.cc}/bin"/gcov* "$out/bin"
           '')
         colordiff
-        /* gdmap */ qdirstat
-        mucommander
+        /* gdmap */
         scrot
       ]      
