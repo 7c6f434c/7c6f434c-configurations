@@ -63,6 +63,7 @@ in
 fullEnv "main-light-package-set"
       [
         squid git monotone fbida fbterm 
+        git-lfs
         (symlinkJoin {
            name = "postgresql-13"; 
            paths = [ postgresql_13.out ];})
@@ -139,4 +140,5 @@ fullEnv "main-light-package-set"
         /* gdmap */ qdirstat
         mucommander
         scrot
+        nixfmt-rfc-style
       ]      

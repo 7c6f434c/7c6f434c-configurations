@@ -191,15 +191,14 @@ linkFarm "raskin-packages" ([
 (map justUse [
  "gsettings-desktop-schemas" "gtk3"
  "fuse" "openssl" "opencv" "postgresql" "sqlite"
- "libpulseaudio"
  "wgetpaste" "netcat" "python3"
  "keynav"
  "tigervnc" "fbvnc"
  "glpk" "clingo"
- "plan9port" "sway" "syslogng" "rsyslog"
+ "syslogng" "rsyslog"
  "xmacro" "man-pages" "man-pages-posix" "zbar" "lsb-release"
  "pinentry" "bfs" "moreutils"
- "nix-prefetch-github" "nim" 
+ "nix-prefetch-github"
  "pgcli"
 ])
 ++

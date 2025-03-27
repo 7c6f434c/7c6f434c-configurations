@@ -50,8 +50,18 @@ linkFarm "raskin-heavy-packages" ([
         rustc xournalpp bmap-tools webcamoid
         /* cachix */ darcs /* petrinizer */
         /* swfdec */
-        coqPackages.coqide coqPackages.coq
+        /* coqPackages.coqide coqPackages.coq */
         ripgrep-all
         qvge
+        (let models = callPackage ./bergamot-model.nix {
+          bergamot = callPackage ./bergamot.nix {};
+        }; in runCommand "my-bergamot-set" {} ''
+          mkdir -p "$out/bin"
+          cd "$out/bin"
+          ln -s "${models.fren.wrapperHTML}"/bin/* bergamot-fren
+          ln -s "${models.enfr.wrapperHTML}"/bin/* bergamot-enfr
+          ln -s "${models.enru.wrapperHTML}"/bin/* bergamot-enru
+          ln -s "${models.ruen.wrapperHTML}"/bin/* bergamot-ruen
+        '')
       ]);}
 ])
