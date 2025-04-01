@@ -141,4 +141,5 @@ fullEnv "main-light-package-set"
         mucommander
         scrot
         nixfmt-rfc-style
+        factor-lang
       ]      

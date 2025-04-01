@@ -62,6 +62,8 @@ linkFarm "raskin-heavy-packages" ([
           ln -s "${models.enfr.wrapperHTML}"/bin/* bergamot-enfr
           ln -s "${models.enru.wrapperHTML}"/bin/* bergamot-enru
           ln -s "${models.ruen.wrapperHTML}"/bin/* bergamot-ruen
+          ln -s "${models.ende.wrapperHTML}"/bin/* bergamot-ende
+          ln -s "${models.deen.wrapperHTML}"/bin/* bergamot-deen
         '')
       ]);}
 ])

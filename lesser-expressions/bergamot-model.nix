@@ -21,7 +21,7 @@ let
     },
     gzipped ? true,
     langDirs ? true
-  }: rec {
+  }: (lib.makeExtensible (self: {
     original = lib.mapAttrs
     (k: v: fetchurl {
       url = "${baseUrl}${if langDirs then "/${lang}/" else "/"}" + 
@@ -32,19 +32,19 @@ let
     unpacked = if gzipped then lib.mapAttrs (k : v : 
     runCommand "${lib.head ((lib.match "(.*)[.]gz" v.name)++[v.name])}" {} ''
       gunzip < "${v}" > "$out"
-    '') original else original;
+    '') self.original else self.original;
     inherit lang;
     config = writeTextFile {
       name = "bergamot-config-${lang}.yml";
       text = ''
         bergamot-mode: native
         models:
-          - ${unpacked.model}
+          - ${self.unpacked.model}
         vocabs:
-          - ${unpacked.vocab}
-          - ${unpacked.vocab}
+          - ${self.unpacked.vocab}
+          - ${self.unpacked.vocab}
         shortlist:
-          - ${unpacked.lex}
+          - ${self.unpacked.lex}
           - false
         beam-size: 1
         normalize: 1.0
@@ -63,12 +63,12 @@ let
     };
 
     wrapper = writeScriptBin "bergamot-wrapper-${lang}" ''
-      "${bergamot}/bin/bergamot" --model-config-paths "${config}" "$@"
+      "${bergamot.translator}/bin/bergamot" --model-config-paths "${self.config}" "$@"
     '';
     wrapperHTML = writeScriptBin "bergamot-wrapper-html-${lang}" ''
-      "${bergamot}/bin/bergamot-html" --model-config-paths "${config}" "$@"
+      "${bergamot.translator-html}/bin/bergamot-html" --model-config-paths "${self.config}" "$@"
     '';
-  };
+  }));
 in
   {
     inherit getModel;
@@ -103,6 +103,23 @@ in
         model = "sha256-PG4//SdclqIgrijdtVuMK4a0T/7MHutsgZXBU23krHQ=";
         vocab = "sha256-B+2QVTGfKtxQoWvH5jb+FUerdF65huQLY4SVbcH8bP0=";
         lex = "sha256-bwD12VW4slnLSnjlut8JWOX+884VP9d6beoDJFGLsbg=";
+      };
+    });
+    deen = (getModel {
+      lang = "deen";
+      hashes = {
+        model = "sha256-DCeYpqQohYd7APM3lBbkDnx0iXW55LindlurnLbStvY=";
+        vocab = "sha256-rX1BgOuYyuV2h1UYchJU6fqYh88XAuOFxj92RFpQJPo=";
+        lex = "sha256-piJfg6zKaZlKrOf0spWzHpjFebsM6S5BSG3smIHJBkc=";
+      };
+    });
+    ende = (getModel {
+      lang = "ende";
+      vocabLang = "deen";
+      hashes = {
+        model = "sha256-2iH82QpsqkCgskbSM8jl9a16qaGqmO7OCWgoINNbsqY=";
+        vocab = "sha256-mxn+WtecJZMU8du3ucvYd7qG17H7YeP6FkzJUvbPw4E=";
+        lex = "sha256-1mBq7NR2JOhnIe1HYrpHvgeusLLcAE/M0SHy6x+Yvdw=";
       };
     });
   }
