@@ -3,7 +3,7 @@
     pname = "mccme-helpers";
     version = "0.0-unstable";
     description = "Helper code accumulated in MCCME Common Lisp projects";
-    src = /home/repos/mccme-helpers-clnet;
+    src = /home/raskin/src/lsp/mccme-helpers;
     lispLibs = with pkgs.sbcl.pkgs; [
       cl-utilities iterate clsql yason cl-ppcre parse-number cl-emb hunchentoot
       ironclad local-time fare-csv trivial-utf-8

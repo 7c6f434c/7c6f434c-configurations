@@ -153,11 +153,13 @@ linkFarm "raskin-packages" ([
                #{ name = "weechat-matrix"; path = weechatScripts.weechat-matrix; }
                { name = "mlterm-fb"; path = mlterm.override (x: { enableGuis = { 
                  fb = true; 
-                 xlib = true;
-                 wayland = true;
-                 sdl2 = true;
+                 xlib = false;
+                 wayland = false;
+                 sdl2 = false;
                  quartz = false;
-               }; }); }
+               }; 
+               desktopBinary = "true";
+               }); }
                { name = "gui-libs-for-binaries";
                path = buildEnv {
                  name = "libs";
