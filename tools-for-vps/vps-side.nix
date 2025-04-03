@@ -58,13 +58,13 @@ with rec {
                 sed -e "s/@@@/$i/g" < ${./dovecot.conf.per-domain} >> ./etc/dovecot/dovecot.conf
                 sed -e "s/@@@/$i/g" < ${./postfix/sni} >> ./etc/postfix/sni
           done
-          echo "mail_plugin_dir = ${dovecot}/lib/dovecot" >> ./etc/dovecot/dovecot.conf
+          echo "mail_plugin_dir = ${dovecot}/lib/dovecot/modules" >> ./etc/dovecot/dovecot.conf
 
           mkdir -p ./var/log/nginx ./var/www ./var/www/.well-known ./var/nginx/logs \
             ./var/dehydrated/conf.d ./var/dehydrated/acme-challenge \
             ./var/lib/postfix/queue ./var/spool/mail ./var/mail ./var/spool/postfix \
             ./var/cache/nginx
-          ln -sfT ${dovecot}/lib/dovecot ./etc/dovecot/modules
+          ln -sfT ${dovecot}/lib/dovecot/modules ./etc/dovecot/modules
 
           sed -e "s/@@@addr@@@/$(cat ${./target.private})/g; s/@@@password@@@/$(cat ${./shadowsocks.private/password} | tr -d '\n' | base64)/g" -i ./lib/systemd/system/shadowsocks.service
         '';
