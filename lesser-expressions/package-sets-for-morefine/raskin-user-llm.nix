@@ -54,6 +54,9 @@ fullEnv "main-package-set"
                        rm -rf "$out/include" "$out/lib"
                      '';
                    })
-      llama-cpp 
+      (llama-cpp.override {
+        rocmSupport = false;
+        vulkanSupport = true;
+      })
       ollama
       ]      
