@@ -53,6 +53,7 @@ linkFarm "raskin-heavy-packages" ([
         /* coqPackages.coqide coqPackages.coq */
         ripgrep-all
         qvge
+        /* (libsForQt5.callPackage ./qvge {}) */
         (let models = callPackage ./bergamot-model.nix {
           bergamot = callPackage ./bergamot.nix {};
         }; in runCommand "my-bergamot-set" {} ''

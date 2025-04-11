@@ -142,4 +142,5 @@ fullEnv "main-light-package-set"
         scrot
         nixfmt-rfc-style
         factor-lang
+        img2pdf
       ]      
