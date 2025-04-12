@@ -43,6 +43,7 @@ pkgs.texlive.combine {
     unicode-math
     mltex breakurl
     cprotect
+    boxedminipage
     ;
 
 }

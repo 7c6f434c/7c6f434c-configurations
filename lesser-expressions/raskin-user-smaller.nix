@@ -153,13 +153,16 @@ linkFarm "raskin-packages" ([
                { name = "gsettings_desktop_schemas"; path = gsettings-desktop-schemas; }
                #{ name = "weechat-matrix-bridge"; path = weechatScripts.weechat-matrix-bridge; }
                #{ name = "weechat-matrix"; path = weechatScripts.weechat-matrix; }
-               { name = "mlterm-fb"; path = mlterm.override (x: { enableGuis = { 
-                 fb = true; 
-                 xlib = true;
-                 wayland = true;
-                 sdl2 = true;
-                 quartz = false;
-               }; }); }
+               { name = "mlterm-fb"; path = mlterm.override (x: {
+                 enableGuis = { 
+                   fb = true; 
+                   xlib = false;
+                   wayland = false;
+                   sdl2 = false;
+                   quartz = false;
+                 };
+                 desktopBinary = "true";
+               }); }
                { name = "gui-libs-for-binaries";
                path = buildEnv {
                  name = "libs";
@@ -209,6 +212,7 @@ linkFarm "raskin-packages" ([
  "gedit" "pavucontrol"
  "ccl" "ecl" "clisp" 
  "pgcli"
+ "mlterm-wayland"
 ])
 ++
 (map (justUseMult "out") [
