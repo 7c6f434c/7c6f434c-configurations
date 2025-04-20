@@ -54,9 +54,50 @@ fullEnv "main-package-set"
                        rm -rf "$out/include" "$out/lib"
                      '';
                    })
-      (llama-cpp.override {
+      (((llama-cpp.override {
         rocmSupport = false;
         vulkanSupport = true;
-      })
+      }).overrideAttrs (x: 
+      if (lib.versionAtLeast x.version "5155") then {} else {
+        version = "5155";
+      })).overrideAttrs (x: if x.version == "5155" then {
+        src = x.src.override { 
+          hash = "sha256-MSZUf7z4imD1ojbPbDmA/WmRZlmC0SC8j7e7mnA0MVI="; 
+        };
+      } else {}))
       ollama
+      (let ov = callPackage ../ollama-vulkan.nix {}; in
+       runCommand "ollama-vulkan" {} ''
+         mkdir -p "$out/bin"
+         for i in "${ov}/bin"/*; do 
+           ln -s "$i" "$out/bin/ollama-vulkan-$(basename "$i")";
+         done
+       '')
+      (let sd = callPackage ../stable-diffusion-cpp.nix {}; in
+       runCommand "stable-diffusion-cpp" {} ''
+         mkdir -p "$out/bin"
+         for i in "${sd}/bin"/*; do 
+           ln -s "$i" "$out/bin/stable-diffusion-cpp-$(basename "$i")";
+         done
+       '')
+      (let 
+         pp = python3Packages;
+         hf-t = pp.transformers.overridePythonAttrs (x: {
+          dependencies = x.dependencies ++ (with pp; [
+            rich torchWithVulkan 
+            (accelerate.override (y: {
+              torch = torchWithVulkan;
+            }))
+          ]);
+        });
+       in
+        runCommand "huggingface-transformers" {}
+        ''
+          mkdir -p "$out/bin"
+          ln -s "${hf-t}"/bin/* "$out/bin"
+          ln -s "${pp.python.withPackages (p: [
+            hf-t
+          ])}"/bin/python "$out/bin/python-with-transformers"
+        ''
+        )
       ]      

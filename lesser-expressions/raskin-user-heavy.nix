@@ -27,9 +27,7 @@ wrapperEnv = package:
   };
 in with pkgs;
 
-linkFarm "raskin-heavy-packages" ([
-  { name = "main-heavy-package-set";
-    path = (fullEnv "main-heavy-package-set"
+fullEnv "main-heavy-package-set"
       [
         gimp ghostscript asymptote
         qemu
@@ -66,5 +64,4 @@ linkFarm "raskin-heavy-packages" ([
           ln -s "${models.ende.wrapperHTML}"/bin/* bergamot-ende
           ln -s "${models.deen.wrapperHTML}"/bin/* bergamot-deen
         '')
-      ]);}
-])
+      ]

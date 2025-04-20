@@ -135,4 +135,5 @@ fullEnv "main-light-package-set"
         /* gdmap */
         scrot
         nix-serve
+        xorg.xauth xorg.xhost
       ]      
