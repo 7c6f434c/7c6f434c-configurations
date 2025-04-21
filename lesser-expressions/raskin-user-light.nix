@@ -143,4 +143,5 @@ fullEnv "main-light-package-set"
         nixfmt-rfc-style
         factor-lang
         img2pdf
+        xorg.xauth xorg.xhost
       ]      
