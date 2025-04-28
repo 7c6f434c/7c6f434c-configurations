@@ -24,7 +24,8 @@ linkFarm "raskin-ultraheavy-packages" ([
       [
         /* libreoffice */ /*chromium*/ /* qutebrowser */ winePackages.unstable 
         /*sage*/ /*midori*/ /* scilab-bin */ /* clasp-common-lisp */
-        eolie
+        /* eolie */
+        epiphany
         ffmpeg-full obs-studio audacity /* pitivi */
       ]);}
 ])
