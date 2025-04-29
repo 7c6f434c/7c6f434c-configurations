@@ -42,7 +42,20 @@ linkFarm "raskin-toy-packages" ([
         xpilot-ng liquidwar
         quantumminigolf liquidwar5 xmoto
         ruffle
-        (renpy.override { ffmpeg = ffmpeg_6; })
+        (renpy.override (x: {
+          ffmpeg = ffmpeg_6;
+          SDL2 = SDL2_classic;
+          python3 = x.python3 // {
+            pkgs = x.python3.pkgs // {
+              pygame-sdl2 = x.python3.pkgs.pygame-sdl2.override {
+                SDL2 = SDL2_classic;
+                SDL2_mixer = SDL2_mixer.override {
+                  SDL2 = SDL2_classic;
+                };
+              };
+            };
+          };
+        }))
         (runCommandNoCC "rpatool" {} ''
           mkdir -p "$out"/bin
           cp "${(fetchFromGitHub {
