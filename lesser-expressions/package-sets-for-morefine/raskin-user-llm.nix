@@ -58,11 +58,11 @@ fullEnv "main-package-set"
         rocmSupport = false;
         vulkanSupport = true;
       }).overrideAttrs (x: 
-      if (lib.versionAtLeast x.version "5155") then {} else {
-        version = "5155";
-      })).overrideAttrs (x: if x.version == "5155" then {
+      if (lib.versionAtLeast x.version "5269") then {} else {
+        version = "5269";
+      })).overrideAttrs (x: if x.version == "5269" then {
         src = x.src.override { 
-          hash = "sha256-MSZUf7z4imD1ojbPbDmA/WmRZlmC0SC8j7e7mnA0MVI="; 
+          hash = "sha256-bz8SGtZIctonmrJlrhuOoNrZT8L0Jtb2i47DexFErto="; 
         };
       } else {}))
       ollama
@@ -100,4 +100,13 @@ fullEnv "main-package-set"
           ])}"/bin/python "$out/bin/python-with-transformers"
         ''
         )
+      (let lv = (fetchFromGitHub {
+        owner = "ggml-org";
+        repo = "llama.vim";
+        rev = "dafa50acc4df4fe8b173c7cbfa3c5901fb7e0dec";
+        hash = "sha256-EhJjVfWAx0+q1zHFVCNJgvEe3vu4kjn5sg01pwVyehI=";
+      }); in runCommand "llama.vim" {} ''
+        mkdir -p "$out/share/vim"
+        ln -s "${lv}" "$out/share/vim/llama.vim"
+      '')
       ]      
