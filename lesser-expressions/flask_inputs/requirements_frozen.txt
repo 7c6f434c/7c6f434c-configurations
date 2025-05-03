@@ -4,5 +4,5 @@ Flask-Inputs==0.2.0
 itsdangerous==1.1.0
 Jinja2==2.10.3
 MarkupSafe==1.1.1
-Werkzeug==0.16.0
+Werkzeug==2.2.3
 WTForms==2.2.1
