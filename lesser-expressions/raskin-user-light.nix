@@ -144,4 +144,13 @@ fullEnv "main-light-package-set"
         factor-lang
         img2pdf
         xorg.xauth xorg.xhost
+        (let lv = (fetchFromGitHub {
+          owner = "ggml-org";
+          repo = "llama.vim";
+          rev = "dafa50acc4df4fe8b173c7cbfa3c5901fb7e0dec";
+          hash = "sha256-EhJjVfWAx0+q1zHFVCNJgvEe3vu4kjn5sg01pwVyehI=";
+        }); in runCommand "llama.vim" {} ''
+          mkdir -p "$out/share/vim"
+          ln -s "${lv}" "$out/share/vim/llama.vim"
+        '')
       ]      
