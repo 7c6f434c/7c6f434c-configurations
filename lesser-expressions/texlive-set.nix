@@ -44,6 +44,7 @@ pkgs.texlive.combine {
     mltex breakurl
     cprotect
     boxedminipage
+    fira
     ;
 
 }
