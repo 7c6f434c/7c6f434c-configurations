@@ -89,7 +89,7 @@ user_pref("browser.uitour.enabled", false);
 user_pref("browser.urlbar.autocomplete.enabled", false);
 user_pref("browser.urlbar.daysBeforeHidingSuggestionsPrompt", 0);
 user_pref("browser.urlbar.formatting.enabled", false);
-user_pref("browser.urlbar.suggest.bookmark", false);
+user_pref("browser.urlbar.suggest.bookmark", true);
 user_pref("browser.urlbar.suggest.openpage", false);
 user_pref("browser.urlbar.trimURLs", false);
 user_pref("captivedetect.canonicalURL", "");

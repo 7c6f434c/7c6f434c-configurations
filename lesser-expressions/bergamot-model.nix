@@ -2,8 +2,9 @@
 let 
   getModel = { 
     lang, vocabLang ? lang,
+    modelType ? "base-memory",
     baseUrl ? 
-    "https://media.githubusercontent.com/media/mozilla/firefox-translations-models/main/models/prod", 
+    "https://media.githubusercontent.com/media/mozilla/firefox-translations-models/318943910ed065517c1e26b8e0783efdc64976ab/models/${modelType}", 
     prefixes ? {
       model = "model.";
       vocab = "vocab."; 
@@ -75,22 +76,22 @@ in
     fren = (getModel {
       lang = "fren";
       hashes = {
-        model = "sha256-T1YYuT0IvYK9r8CWtc3+RZ4ksmPwpaI9z2QaBw67YLU=";
-        vocab = "sha256-6Q4OY1I0RF303vr96or/I/ig1oxzdERiwCG12/825V8=";
-        lex = "sha256-F7kz8rQlFu0NMl3YYu58UKzHT/xdKmYFmzV7kx94jfc=";
+        model = "sha256-BrHu7dOUQmDQCjk9EuxxkkkMW3yTC5chL69NX1yQou4=";
+        vocab = "sha256-jRWyGf/TIye0yr8NlKBaT+y4kjpPOGutvL5ehu3kU6c=";
+        lex = "sha256-OVqndnIg4bz8CF8rJ4f/mABdAHXlVFHx4IMohePZZCo=";
       };
     });
     enfr = (getModel {
       lang = "enfr";
-      vocabLang = "fren";
       hashes = {
-        model = "sha256-8577tqsVSWfidi98S6oP8vL6CPMr/l9tKbeHcmR26Cg=";
-        vocab = "sha256-poIqFyRU/PasugySbN5ZAi5NUlsAUt2Mift7x2oVQuA=";
-        lex = "sha256-7V6uvxmLeHtxi4GUjdsYR4ClWebu/bdBb99AXvPlBXY=";
+        model = "sha256-Is2vPcmh2m5YGLVXZzcYJGfzzZfm/W+U5Cc+t7VtHj8=";
+        vocab = "sha256-XcrarYGR+063Z3vOBwmKICId7JWXak23lvOhfMgrRUE=";
+        lex = "sha256-BVmH8LWFthxJFPtEaeI5L9oLJdP3eEJ1l0+SDntjGZc=";
       };
     });
     ruen = (getModel {
       lang = "ruen";
+      modelType = "tiny";
       hashes = {
         model = "sha256-Sop7mwfJ4GoWfsW/JUJSiBcyFRbbTt9hT9pFAR+o5dE=";
         vocab = "sha256-zXC4KOmeTQx51IzVbYV51lbIfB2yC/iIg9owhdy/73U=";
@@ -99,6 +100,7 @@ in
     });
     enru = (getModel {
       lang = "enru";
+      modelType = "base";
       hashes = {
         model = "sha256-PG4//SdclqIgrijdtVuMK4a0T/7MHutsgZXBU23krHQ=";
         vocab = "sha256-B+2QVTGfKtxQoWvH5jb+FUerdF65huQLY4SVbcH8bP0=";
@@ -108,18 +110,17 @@ in
     deen = (getModel {
       lang = "deen";
       hashes = {
-        model = "sha256-DCeYpqQohYd7APM3lBbkDnx0iXW55LindlurnLbStvY=";
-        vocab = "sha256-rX1BgOuYyuV2h1UYchJU6fqYh88XAuOFxj92RFpQJPo=";
-        lex = "sha256-piJfg6zKaZlKrOf0spWzHpjFebsM6S5BSG3smIHJBkc=";
+        model = "sha256-OLJFvPwj9tYf2YoYdDbqEyCjj0GJbfQRsQPfPoP1FoE=";
+        vocab = "sha256-iNzX/b8g3GCDfOg3JE0NVbIPcHnyy9K6jmNTBjICgxA=";
+        lex = "sha256-Ix6cr2Lg6Gd3XV9MH0z64h43xw2b8r1ij6RorusrqGk=";
       };
     });
     ende = (getModel {
       lang = "ende";
-      vocabLang = "deen";
       hashes = {
-        model = "sha256-2iH82QpsqkCgskbSM8jl9a16qaGqmO7OCWgoINNbsqY=";
-        vocab = "sha256-mxn+WtecJZMU8du3ucvYd7qG17H7YeP6FkzJUvbPw4E=";
-        lex = "sha256-1mBq7NR2JOhnIe1HYrpHvgeusLLcAE/M0SHy6x+Yvdw=";
+        model = "sha256-46dEWPq6OrJ1Ltg1XF45efEzlSecj8G9P1SjwjFuSXU=";
+        vocab = "sha256-Oy3b+sc/mU8VGomURH1rPUGrDTQ12lb3nCM/NNA+RcI=";
+        lex = "sha256-A3DXnNpv7V36j5sqAAlFm9J2aJOCW7W4tRFBadGNpsQ=";
       };
     });
   }

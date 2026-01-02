@@ -21,6 +21,10 @@ let
     # echo -e '#! /bin/sh\ntrue\n' > "$NIX_BUILD_TOP/fake-bin/git"
     # chmod a+x "$NIX_BUILD_TOP/fake-bin/git"
     # export PATH="$NIX_BUILD_TOP/fake-bin:$PATH"
+
+    sed -e \
+      's/cmake_minimum_required(VERSION .*/cmake_minimum_required(VERSION 3.5)/' \
+      -i 3rd_party/marian-dev/src/3rd_party/sentencepiece/CMakeLists.txt
   ''
  #+ (lib.optionalString enableHtmlMode
  #    ''

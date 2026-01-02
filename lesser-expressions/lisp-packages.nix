@@ -20,7 +20,7 @@
       esrap-peg unix-options net-telent-date
     ];
   };
-  cl-mailer-bis-bin = pkgs.runCommandNoCC "cl-mailer" {} ''
+  cl-mailer-bis-bin = pkgs.runCommand "cl-mailer" {} ''
       mkdir -p "$out/bin"
       ${
         pkgs.sbcl.withPackages (p: [cl-mailer-bis])
@@ -73,7 +73,7 @@
       string-case iterate cl-ppcre
     ];
   };
-  squid-url-rewrite-bis-bin = pkgs.runCommandNoCC "squid-url-rewrite" {} ''
+  squid-url-rewrite-bis-bin = pkgs.runCommand "squid-url-rewrite" {} ''
       mkdir -p "$out/bin"
       ${
         pkgs.sbcl.withPackages (p: [squid-url-rewrite-bis])
@@ -84,7 +84,7 @@
                 "'"$out/bin/squid-url-rewrite"'" 
                 :executable t :toplevel `process-rewrites)'
   '';
-  rare-words = pkgs.runCommandNoCC "" {
+  rare-words = pkgs.runCommand "" {
     buildInputs = [ (pkgs.sbcl.withPackages (p: with p; [])) ];
   } ''
     mkdir -p "$out/bin"

@@ -155,6 +155,7 @@ with rec {
                 (cProgram "in-pty" ../lang-os/c/in-pty.c [] "-lutil")
                 age fzf
                 sbcl
+                wireguard-tools
           ];
         };
 };

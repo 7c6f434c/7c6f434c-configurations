@@ -289,7 +289,7 @@ let
      then [localOverrides] else [] ) ++ commonOverrides ++ paramOverrides;
 
 in python.withPackages
-   (fix' (pkgs.lib.fold
+   (fix' (pkgs.lib.foldr
             extends
             generated
             allOverrides

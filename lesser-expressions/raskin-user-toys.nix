@@ -1,35 +1,5 @@
-let 
-NIXPKGS_env = builtins.getEnv "NIXPKGS";
-pkgsPath = if NIXPKGS_env == "" then <nixpkgs> else NIXPKGS_env;
-pkgs = import pkgsPath {
-  config = {
-    allowInsecurePredicate = x: (
-      ("SDL_ttf" == x.pname)
-      &&
-      (pkgs.lib.all
-      (y: pkgs.lib.findFirst (z: z==y) null [
-        "CVE-2022-27470" # Corrupted font file issue
-      ] != null)
-      x.meta.knownVulnerabilities
-      )
-      );
-    };
-};
-allOutputNames = packages: builtins.attrNames
-      (pkgs.lib.fold
-        (a: b: b //
-          (builtins.listToAttrs (map (x: {name = x; value = x;}) a.outputs or ["out"])))
-        {} packages);
-fullEnv = name: packages:
-  pkgs.buildEnv {
-      name = name;
-      paths = packages;
-      ignoreCollisions = false;
-      checkCollisionContents = true;
-      pathsToLink = ["/"];
-      extraOutputsToInstall = (allOutputNames packages);
-    };
-in with pkgs;
+with import ./env-defs.nix;
+with pkgs;
 
 linkFarm "raskin-toy-packages" ([
   { name = "main-toy-package-set";
@@ -42,7 +12,7 @@ linkFarm "raskin-toy-packages" ([
         xpilot-ng liquidwar
         quantumminigolf liquidwar5 xmoto
         ruffle
-        (renpy.override (x: {
+        /*(renpy.override (x: {
           ffmpeg = ffmpeg_6;
           SDL2 = SDL2_classic;
           python3 = x.python3 // {
@@ -61,8 +31,27 @@ linkFarm "raskin-toy-packages" ([
               };
             };
           };
-        }))
-        (runCommandNoCC "rpatool" {} ''
+          }))*/
+        (let 
+          py=python312; 
+          sdl2pkgs = callPackage ./sdl2 {};
+        in renpy.override {
+          inherit (sdl2pkgs) SDL2;
+          python3 = py // {
+            pkgs = py.pkgs // {
+              pygame-sdl2 = py.pkgs.pygame-sdl2.override {
+                inherit (sdl2pkgs) SDL2 SDL2_mixer SDL2_ttf SDL2_image;
+              };
+            };
+          };
+        })
+        (let py=python312;
+             rp = renpy.override { python3 = py; };
+        in runCommand "renpy-sdl2-compat" {} ''
+          mkdir "$out/bin" -p
+          ln -s "${rp}/bin/renpy" "$out/bin/renpy-sdl2-compat"
+            '')
+        (runCommand "rpatool" {} ''
           mkdir -p "$out"/bin
           cp "${(fetchFromGitHub {
             owner = "shizmob";

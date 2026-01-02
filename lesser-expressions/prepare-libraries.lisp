@@ -1,5 +1,9 @@
                #+cffi(setf cffi:*foreign-library-directories*
-                        (cffi::explode-path-environment-variable "LD_LIBRARY_PATH"))
+                           (remove
+                             ""
+                             (uiop:split-string (uiop:getenv "LD_LIBRARY_PATH") 
+                                                :separator ":")
+                             :test 'equalp))
                #+sbcl(loop
                        with libpath := (uiop:split-string (uiop:getenv "LD_LIBRARY_PATH")
                                 :separator ":")

@@ -1,55 +1,11 @@
-let
-NIXPKGS_env = builtins.getEnv "NIXPKGS";
-pkgsPath = if NIXPKGS_env == "" then <nixpkgs> else NIXPKGS_env;
-pkgs = import pkgsPath { 
-    config = {
-        allowInsecurePredicate = x: (
-            (
-             (
-              (pkgs.lib.hasPrefix "curl-impersonate-" (x.name or x.pname))
-              ||
-              ("curl-impersonate" == (x.name or x.pname))
-             )
-             &&
-             (pkgs.lib.all (y: 
-                            (pkgs.lib.findFirst (z: z == y) null [
-                             "CVE-2023-38545"  # socks5h long hostname heap overflow; I don't use that combo for impersonate
-                             "CVE-2023-32001"  # fopen TOCTOU race condition - https://curl.se/docs/CVE-2023-32001.html
-                             "CVE-2022-43551"  # HSTS bypass - https://curl.se/docs/CVE-2022-43551.html
-                             "CVE-2022-42916"  # HSTS bypass - https://curl.se/docs/CVE-2022-42916.html
-                            ]) != null
-                           ) x.meta.knownVulnerabilities)
-            ) 
-            ||
-            (
-             x.pname == "squid"
-             &&
-             (
-               x.version == "7.0.1"
-               )
-            )
-        );
-    };
-};
-allOutputNames = packages: builtins.attrNames
-      (pkgs.lib.fold
-        (a: b: b //
-          (builtins.listToAttrs (map (x: {name = x; value = x;}) a.outputs or ["out"])))
-        {} packages);
-fullEnv = name: packages:
-  pkgs.buildEnv {
-      name = name;
-      paths = packages;
-      ignoreCollisions = false;
-      checkCollisionContents = true;
-      pathsToLink = ["/"];
-      extraOutputsToInstall = (allOutputNames packages);
-    };
-in with pkgs;
+with import ./env-defs.nix; 
+with pkgs;
+
 let konsole-profile = ./rc.private/konsole.profile; in
 let konsole-colorscheme = ./rc.private/KonsoleMyLight.colorscheme; in
 let tmux-profile = ./rc.private/tmux/tmux.conf; in
 let tmux-profile-sh = ./rc.private/tmux/tmux.conf.sh; in
+
 #let tmux-to-use = tmux.overrideAttrs (x: 
 #{
 #  patches = tmux.patches ++ [
@@ -58,15 +14,16 @@ let tmux-profile-sh = ./rc.private/tmux/tmux.conf.sh; in
 #});
 ###
 let tmux-to-use = tmux;
+
 in
 
 fullEnv "main-light-package-set"
-      [
+      ([
         squid git monotone fbida fbterm 
         git-lfs
         (symlinkJoin {
-           name = "postgresql-13"; 
-           paths = [ postgresql_13.out ];})
+           name = "postgresql-18"; 
+           paths = [ postgresql_18.out ];})
         expect /*pmount*/ fdm
         fzf mcabber ii irssi links2 rsync ratpoison xdummy
         elinks
@@ -79,7 +36,7 @@ fullEnv "main-light-package-set"
         (writeScriptBin "konsole-launcher" ''
         #!/bin/sh
         XDG_DATA_DIRS="${
-          runCommandNoCC "konsole-colorscheme" {} ''
+          runCommand "konsole-colorscheme" {} ''
           mkdir -p "$out/share/konsole"
           cp "${konsole-colorscheme}" "$out/share/konsole/KonsoleMy.colorscheme"
           ''
@@ -89,7 +46,7 @@ fullEnv "main-light-package-set"
         #!/bin/sh
         export PATH="${tmux-to-use}/bin/:$PATH"
         tmux -f ${
-          runCommandNoCC "tmux.conf" {} ''
+          runCommand "tmux.conf" {} ''
           cat ${tmux-profile} > "$out"
           echo run-shell '"${tmux-profile-sh}"' >> "$out"
           ''
@@ -98,13 +55,15 @@ fullEnv "main-light-package-set"
         ntp mc ncdu ltrace weechat
         htop iotop powertop mtr bind inotify-tools xorg.setxkbmap xorg.xev
         #(callPackage ./curl-impersonate-fork {})
-        curl-impersonate
+        curl-impersonate-chrome
         xorg.xset
-        xfig transfig 
-        libsForQt5.kig 
+        xfig fig2dev 
+        kdePackages.kig 
         netpbm
-        firefox vimHugeX evince mplayer alsa-utils xvfb-run
-        xorg.xmodmap bc xdotool lftp wget wget2 unzip gnumake xcape xorg.xrandr
+        firefox (callPackage ../lang-os/user/librewolf-with-policies.nix {})
+        vim-full evince mplayer alsa-utils xvfb-run
+        xorg.xmodmap bc xdotool lftp wget /*wget2*/ unzip gnumake xcape xorg.xrandr
+        unrar-free
         xsel xclip pulseaudio ripmime xscreensaver xorg.xsetroot lsof rofi
         fpc graphviz diffutils fontconfig picom xorg.xprop xorg.xwininfo jq
         cflow
@@ -113,15 +72,15 @@ fullEnv "main-light-package-set"
         megatools
         xorg.appres
         xdaliclock openvpn iftop file patchutils zip gawk perl btrfs-progs
-        man man-pages oathToolkit wavemon m4
+        man man-pages oath-toolkit wavemon m4
         (proxychains.overrideAttrs (x: {
           postPatch = (x.postPatch or "") + ''
             sed -e '/while[(]dll_dirs\[i\])/ii=0;' -i src/main.c
           '';
         }))
         zathura
-        /*monotoneViz*/ udftools units texinfoInteractive yap _3proxy
-        python3Packages.pygments poppler_utils libarchive wdiff ydiff
+        /*monotoneViz*/ udftools units texinfoInteractive /*yap*/ _3proxy
+        python3Packages.pygments poppler-utils libarchive wdiff ydiff
         pass gnupg age easyrsa
         (import ./texlive-set.nix pkgs)
         p7zip mupdf librsvg sxiv
@@ -132,7 +91,7 @@ fullEnv "main-light-package-set"
         cmake
         libsixel
         nixpkgs-fmt
-        (runCommandNoCC "gcc-gcov" {} ''
+        (runCommand "gcc-gcov" {} ''
           mkdir -p "$out/bin"
           ln -s "${gcc.cc}/bin"/gcov* "$out/bin"
           '')
@@ -152,5 +111,13 @@ fullEnv "main-light-package-set"
         }); in runCommand "llama.vim" {} ''
           mkdir -p "$out/share/vim"
           ln -s "${lv}" "$out/share/vim/llama.vim"
-        '')
-      ]      
+          '')
+        dpic
+        xorg-rgb
+        multiplex
+        (callPackage ./difdef.nix {})
+        (callPackage ./colorexp.nix {})
+        (callPackage ./obj2hmap.nix {})
+      ] 
+      ++ texlive.circuit-macros.pkgs
+      )    

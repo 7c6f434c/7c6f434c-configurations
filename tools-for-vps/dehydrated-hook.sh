@@ -1,4 +1,4 @@
-#!/nix/store/mm0pa3z7kk6jh1i9rkxqxjqmd8h1qpxf-bash-5.2p37/bin/bash
+#!/usr/bin/env bash
 
 deploy_challenge() {
   local DOMAIN="${1}" TOKEN_FILENAME="${2}" TOKEN_VALUE="${3}"

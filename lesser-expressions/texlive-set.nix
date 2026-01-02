@@ -45,6 +45,9 @@ pkgs.texlive.combine {
     cprotect
     boxedminipage
     fira
+    circuit-macros circuitikz
+    savetrees
+    tikz-cd
     ;
 
 }

@@ -30,3 +30,5 @@ compatibility_level = 3.9
 
 message_size_limit = 10240000
 mailbox_size_limit = 204800000
+
+smtp_address_preference = ipv4

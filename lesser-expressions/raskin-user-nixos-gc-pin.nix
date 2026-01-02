@@ -1,9 +1,4 @@
-let 
-NIXPKGS_env = builtins.getEnv "NIXPKGS";
-pkgsPath = if NIXPKGS_env == "" then <nixpkgs> else NIXPKGS_env;
-pkgs = import pkgsPath {};
-
-in with pkgs;
+with import ./env-defs.nix;
 
 linkFarm "raskin-packages" ([
   { name = "nixpkgs-manual"; path = import <nixpkgs/doc> {}; }

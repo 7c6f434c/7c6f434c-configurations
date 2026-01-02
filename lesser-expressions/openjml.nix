@@ -5,7 +5,7 @@ pkgs.lib.makeExtensible (self: with self; {
     url = "https://github.com/OpenJML/OpenJML/releases/download/21-0.6/openjml-ubuntu-22.04-21-0.6.zip";
     hash = "sha256-C2nk9tcoJtyMtUzVTRrhMsafRuotHAtwfvo7q5Pi0IE=";
   };
-  openjml-binary-set = pkgs.runCommandNoCC "openjml" {} ''
+  openjml-binary-set = pkgs.runCommand "openjml" {} ''
     mkdir -p "$out/openjml"
     cd "$out/openjml"
     ${pkgs.lib.getExe pkgs.unzip} "${openjml-binary-archive}"

@@ -1,24 +1,12 @@
-let 
-NIXPKGS_env = builtins.getEnv "NIXPKGS";
-pkgsPath = if NIXPKGS_env == "" then <nixpkgs> else NIXPKGS_env;
-pkgs = import pkgsPath {}; in with pkgs;
-
-let customVim = import /home/raskin/src/nix/configurations/misc/raskin/custom-vim.nix; in
-let pp = import /home/raskin/src/nix/configurations/misc/raskin/private-packages.nix {inherit pkgs;}; in
-let justUse = str: {name = str; path = builtins.getAttr str pkgs;}; in
-let justUseMult = output: str: {name = "${str}.${output}"; path = builtins.getAttr output (builtins.getAttr str pkgs);}; in
-let ppUse = str: {name = str; path = builtins.getAttr str pp;}; in
+with import ../env-defs.nix;
+with pkgs;
 let julia_used = julia; in
 let myLispPackages = import ../lisp-packages.nix { inherit pkgs; }; in
-let pack = path: pkgs.runCommandNoCC "source.tar.gz" {} ''
-    cd ${builtins.storeDir}
-    tar -cvzf "$out" "$(basename "${path}")"
-  ''; in
 
 linkFarm "raskin-packages" ([
                 {name="mime"; path=shared-mime-info;}
                 { name="query-fs"; 
-                path = pkgs.runCommandNoCC "query-fs-bin" {} ''
+                path = pkgs.runCommand "query-fs-bin" {} ''
                   mkdir -p "$out/bin"
                   ${pkgs.sbcl.withPackages (p: with p; [
                     (p.query-fs.overrideAttrs (x: {
@@ -46,12 +34,14 @@ linkFarm "raskin-packages" ([
                 '';
                 }
                 { name = "openai-whisper-cpp";
-                  path = openai-whisper-cpp; 
+                  path = whisper-cpp; 
+                }
+                { name = "whisper-cpp";
+                  path = whisper-cpp; 
                 }
                 {name = "gnome_themes_standard"; path = gnome-themes-extra;}
                 {name = "gnome-themes-standard"; path = gnome-themes-extra;}
                 {name = "adwaita_icon_theme"; path = adwaita-icon-theme;}
-                {name="python-mozilla-marionette"; path=(import ../../lang-os/marionette-python-packages.nix {inherit pkgs;}).marionette-harness;}
                 /*{name="gimp-resynthesizer"; path=gimpPlugins.resynthesizer;}*/
                 { name = "words"; path = scowl; }
                 { name = "dicts"; path = dictDBCollector {
@@ -105,11 +95,11 @@ linkFarm "raskin-packages" ([
                with myLispPackages; [
                  cl-mailer-bis-bin squid-url-rewrite-bis-bin rare-words
                ];};}
-               /* { name = "pypy3-as-python3"; path = runCommandNoCC "pypy3-as-python3" {} ''
+               /* { name = "pypy3-as-python3"; path = runCommand "pypy3-as-python3" {} ''
                  mkdir -p "$out/bin"
                  ln -s "${pypy37}/bin/pypy3" "$out/bin/python3"
                '';}
-               { name = "cpython3-instead-of-pypy3"; path = runCommandNoCC "pypy3-as-python3" {} ''
+               { name = "cpython3-instead-of-pypy3"; path = runCommand "pypy3-as-python3" {} ''
                  mkdir -p "$out/bin"
                  ln -s "${python3}/bin/python3" "$out/bin/pypy3"
                '';} */
@@ -131,7 +121,7 @@ linkFarm "raskin-packages" ([
                                 z3 jinja2 lark
                                ])
                                ; } */
-               { name = "wordnet-data"; path = runCommandNoCC "wordnet-data" {} ''
+               { name = "wordnet-data"; path = runCommand "wordnet-data" {} ''
                  mkdir -p "$out/share/"
                  cd "$out/share"
                  tar -xf "${fetchurl {
@@ -199,7 +189,7 @@ linkFarm "raskin-packages" ([
  "glpk" "clingo"
  "syslogng" "rsyslog"
  "xmacro" "man-pages" "man-pages-posix" "zbar" "lsb-release"
- "pinentry" "bfs" "moreutils"
+ "pinentry-curses" "pinentry-gnome3" "bfs" "moreutils"
  "nix-prefetch-github"
  "pgcli"
 ])

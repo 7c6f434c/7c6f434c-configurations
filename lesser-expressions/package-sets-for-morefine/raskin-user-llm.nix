@@ -1,51 +1,10 @@
-let
-NIXPKGS_env = builtins.getEnv "NIXPKGS";
-pkgsPath = if NIXPKGS_env == "" then <nixpkgs> else NIXPKGS_env;
-pkgs = import pkgsPath { 
-    config = {
-        allowInsecurePredicate = x: (
-            (
-             (
-              (pkgs.lib.hasPrefix "curl-impersonate-" (x.name or x.pname))
-              ||
-              ("curl-impersonate" == (x.name or x.pname))
-             )
-             &&
-             (pkgs.lib.all (y: 
-                            (pkgs.lib.findFirst (z: z == y) null [
-                             "CVE-2023-38545"  # socks5h long hostname heap overflow; I don't use that combo for impersonate
-                             "CVE-2023-32001"  # fopen TOCTOU race condition - https://curl.se/docs/CVE-2023-32001.html
-                             "CVE-2022-43551"  # HSTS bypass - https://curl.se/docs/CVE-2022-43551.html
-                             "CVE-2022-42916"  # HSTS bypass - https://curl.se/docs/CVE-2022-42916.html
-                            ]) != null
-                           ) x.meta.knownVulnerabilities)
-            ) 
-            ||
-            (
-             x.pname == "squid"
-             &&
-             (
-               x.version == "7.0.1"
-               )
-            )
-        );
-    };
-};
-allOutputNames = packages: builtins.attrNames
-      (pkgs.lib.fold
-        (a: b: b //
-          (builtins.listToAttrs (map (x: {name = x; value = x;}) a.outputs or ["out"])))
-        {} packages);
-fullEnv = name: packages:
-  pkgs.buildEnv {
-      name = name;
-      paths = packages;
-      ignoreCollisions = false;
-      checkCollisionContents = true;
-      pathsToLink = ["/"];
-      extraOutputsToInstall = (allOutputNames packages);
-    };
-in with pkgs;
+with import ../env-defs.nix;
+with pkgs;
+
+let 
+  shaderc = if (lib.versionAtLeast pkgs.shaderc.version "2025.4")
+    then pkgs.shaderc else (callPackage ../shaderc-2025_4.nix {});
+in
 
 fullEnv "main-package-set"
       [
@@ -54,25 +13,29 @@ fullEnv "main-package-set"
                        rm -rf "$out/include" "$out/lib"
                      '';
                    })
-      (((llama-cpp.override {
+      shaderc
+      (let llama-target-version= "0" /*"7134"*/; in
+      ((llama-cpp.override {
         rocmSupport = false;
         vulkanSupport = true;
+        inherit shaderc;
       }).overrideAttrs (x: 
-      if (lib.versionAtLeast x.version "5269") then {} else {
-        version = "5269";
-      })).overrideAttrs (x: if x.version == "5269" then {
-        src = x.src.override { 
-          hash = "sha256-bz8SGtZIctonmrJlrhuOoNrZT8L0Jtb2i47DexFErto="; 
+      if (lib.versionAtLeast x.version llama-target-version) then {} else {
+        version = llama-target-version;
+        src = x.src.override {
+          tag = "b" + llama-target-version;
+          hash = "sha256-eIvYSPvbxIopuRg0Wzq01hGN1XxLc2FiqqacQDo3Q/Q="; 
         };
-      } else {}))
+        patches = [];
+      })))
       ollama
-      (let ov = callPackage ../ollama-vulkan.nix {}; in
+      /*(let ov = callPackage ../ollama-vulkan.nix {}; in
        runCommand "ollama-vulkan" {} ''
          mkdir -p "$out/bin"
          for i in "${ov}/bin"/*; do 
            ln -s "$i" "$out/bin/ollama-vulkan-$(basename "$i")";
          done
-       '')
+       '')*/
       (let sd = callPackage ../stable-diffusion-cpp.nix {}; in
        runCommand "stable-diffusion-cpp" {} ''
          mkdir -p "$out/bin"
@@ -109,4 +72,17 @@ fullEnv "main-package-set"
         mkdir -p "$out/share/vim"
         ln -s "${lv}" "$out/share/vim/llama.vim"
       '')
-      ]      
+      (let w = whisper-cpp; in 
+        runCommand "whisper-cpp" {} ''
+          mkdir -p "$out/bin"
+          ln -s "${w}"/bin/* "$out/bin"
+        '')
+      upscayl-ncnn
+      (python3Packages.mistral-common.overridePythonAttrs (x: {
+        dependencies = x.dependencies ++ (with python3Packages; [
+          click uvicorn fastapi pydantic pydantic-settings pycountry
+          huggingface-hub
+        ]);
+      }))
+      llama-swap
+      ]

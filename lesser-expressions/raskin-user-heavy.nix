@@ -1,37 +1,12 @@
-let
-NIXPKGS_env = builtins.getEnv "NIXPKGS";
-pkgsPath = if NIXPKGS_env == "" then <nixpkgs> else NIXPKGS_env;
-pkgs = import pkgsPath {};
-allOutputNames = packages: builtins.attrNames
-      (pkgs.lib.fold
-        (a: b: b //
-          (builtins.listToAttrs (map (x: {name = x; value = x;}) a.outputs or ["out"])))
-        {} packages);
-fullEnv = name: packages:
-  pkgs.buildEnv {
-      name = name;
-      paths = packages;
-      ignoreCollisions = false;
-      checkCollisionContents = true;
-      pathsToLink = ["/"];
-      extraOutputsToInstall = (allOutputNames packages);
-    };
-wrapperEnv = package:
-  pkgs.buildEnv {
-    name = package.name;
-    paths = [package];
-    ignoreCollisions = false;
-    checkCollisionContents = false;
-    pathsToLink = ["/"];
-    extraOutputsToInstall = [];
-  };
-in with pkgs;
+with import ./env-defs.nix;
+with pkgs;
 
 fullEnv "main-heavy-package-set"
       [
         gimp ghostscript asymptote
         qemu
-        love imagemagick openscad
+        love imagemagick 
+        openscad-unstable
         kdePackages.gwenview gthumb geeqie subversion espeak fossil mercurial djview wxmaxima
         gnuplot mozlz4a lz4 maxima valgrind pdftk lilypond timidity OVMF atop
         gptfdisk dmidecode inkscape x11vnc 
@@ -39,18 +14,21 @@ fullEnv "main-heavy-package-set"
         xdummy tcpdump wireshark
         testdisk fdupes ntfs3g lazarus icewm yt-dlp xorg.xwd
         vlc sshfs dmtx-utils
-        glxinfo xorg.xdpyinfo xorg.xdriinfo go-mtpfs nmap sox
-        xorg.xinput usbutils wgetpaste gdb scowl xcalib /*fmbt*/ eprover glucose
+        mesa-demos xorg.xdpyinfo xorg.xdriinfo go-mtpfs nmap sox
+        xorg.xinput usbutils wgetpaste gdb scowl xcalib /*fmbt*/ eprover 
+        glucose kissat
         nginx cfdg /* highlight */ transmission_4 spass iprover z3 z3-tptp 
         cvc4 cvc5
         /*prover9*/
         /* signal-desktop */ mustache-spec mustache-go zxing lame
-        rustc xournalpp bmap-tools webcamoid
+        rustc xournalpp bmaptool webcamoid
         /* cachix */ darcs /* petrinizer */
         /* swfdec */
         /* coqPackages.coqide coqPackages.coq */
         ripgrep-all
         qvge
+        meshlab
+        telegram-desktop
         /* (libsForQt5.callPackage ./qvge {}) */
         (let models = callPackage ./bergamot-model.nix {
           bergamot = callPackage ./bergamot.nix {};
