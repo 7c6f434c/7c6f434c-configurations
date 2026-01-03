@@ -1,6 +1,6 @@
 with import ../env-defs.nix;
 with pkgs;
-let julia_used = julia; in
+let julia_used = julia-bin; in
 let myLispPackages = import ../lisp-packages.nix { inherit pkgs; }; in
 
 linkFarm "raskin-packages" ([
