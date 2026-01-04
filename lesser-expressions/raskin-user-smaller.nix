@@ -2,7 +2,7 @@ with import ./env-defs.nix;
 with pkgs;
 
 let customVim = import /home/raskin/src/nix/configurations/misc/raskin/custom-vim.nix; in
-let julia_used = julia; in
+let julia_used = julia-bin; in
 let myLispPackages = import ./lisp-packages.nix { inherit pkgs; }; in
 
 linkFarm "raskin-packages" ([

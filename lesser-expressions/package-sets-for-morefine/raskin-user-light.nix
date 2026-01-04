@@ -52,7 +52,7 @@ fullEnv "main-light-package-set"
         '')
         ntp mc ncdu ltrace weechat
         htop iotop powertop mtr bind inotify-tools xorg.setxkbmap xorg.xev
-        curl-impersonate-chrome
+        curl-impersonate
         xorg.xset
         xfig fig2dev 
         netpbm

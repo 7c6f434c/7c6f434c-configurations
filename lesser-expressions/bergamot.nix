@@ -4,6 +4,14 @@ cmake, doxygen, gperftools, pcre2, openblas,
 forceDynamic ? true}:
 let 
   tcmalloc = gperftools; 
+  marian-dev = fetchFromGitHub {
+    owner = "browsermt";
+    repo = "marian-dev";
+    rev = "2781d735d4a10dca876d61be587afdab2726293c";
+    hash = "sha256-JlRwZl//HWZzMFne6uuTVGHN8M4SDQRMQ3QjA4TqnrE=";
+    fetchSubmodules = true;
+  };
+
   bergamot = stdenv.mkDerivation (finalAttrs: {
   pname = "bergamot-translator";
   version = "0.4.5-untagged-2024-05-12";
@@ -12,6 +20,10 @@ let
   buildInputs = [ tcmalloc pcre2 openblas ];
 
   postPatch = ''
+    rm -rf 3rd_party/marian-dev
+    cp -r ${marian-dev} 3rd_party/marian-dev
+    chmod u+rwX -R 3rd_party/marian-dev
+
     mkdir -p 3rd_party/marian-dev/.git/logs
     echo 'nix-package-build' > 3rd_party/marian-dev/.git/logs/HEAD
     echo '#define GIT_REVISION "nix-package-build 1970-01-01T00:00:00Z"' > 3rd_party/marian-dev/src/common/git_revision.h
@@ -23,8 +35,10 @@ let
     # export PATH="$NIX_BUILD_TOP/fake-bin:$PATH"
 
     sed -e \
-      's/cmake_minimum_required(VERSION .*/cmake_minimum_required(VERSION 3.5)/' \
+      's/cmake_minimum_required(VERSION .*/cmake_minimum_required(VERSION 3.10)/' \
       -i 3rd_party/marian-dev/src/3rd_party/sentencepiece/CMakeLists.txt
+
+    sed -e '1i#include <cstdint>' -i 3rd_party/marian-dev/src/microsoft/quicksand.h
   ''
  #+ (lib.optionalString enableHtmlMode
  #    ''
@@ -57,14 +71,11 @@ let
     cp ./src/translator/lib* "$out/lib"
   '';
 
-  # env.dontStrip = 1;
-  # env.NIX_CFLAGS_COMPILE = "-g";
-
   src = fetchFromGitHub {
     owner = "browsermt";
     repo = "bergamot-translator";
     rev = "9271618ebbdc5d21ac4dc4df9e72beb7ce644774";
-    sha256 = "sha256-VWKFSxvCH7fVSABMieBWlA0knLYWLI61MyVqoZa6Pm4=";
+    hash = "sha256-VWKFSxvCH7fVSABMieBWlA0knLYWLI61MyVqoZa6Pm4=";
     fetchSubmodules = true;
   };
 
