@@ -48,6 +48,7 @@ pkgs.texlive.combine {
     circuit-macros circuitikz
     savetrees
     tikz-cd
+    bbold
     ;
 
 }
