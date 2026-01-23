@@ -48,13 +48,19 @@ with rec {
           ncp ${./opendkim.service} ./lib/systemd/system
           ncp ${./shadowsocks.service} ./lib/systemd/system
           ncp ${./grab-ntp-time.service} ./lib/systemd/system
+          ncp ${./tuwunel.toml} ./etc/matrix-tuwunel
+          ncp ${./tuwunel.service} ./lib/systemd/system
 
           sed -e 's/@@@/'"$(cat ${./domains.txt.private} | xargs | tr ' ' ,)"'/' -i ./etc/opendkim.conf
           sed -e 's/@@@/'"$(cat ${./domains.txt.private} | xargs)"'/' -i ./etc/postfix/main.cf
           sed -e 's/@@domain@@/'"$(cat ${./target-domain.txt.private}|xargs)"'/' -i ./etc/postfix/main.cf
           sed -e 's^@pam@^${pam}^' -i ./etc/pam.d/dovecot
           for i in $(cat ${./domains.txt.private}); do
-                sed -e "s/@@@/$i/g" < ${./nginx.ssl.conf} >> ./var/nginx/conf/nginx.ssl.conf
+                if test "$i" = "$(cat ${./tuwunel.private/vps-matrix-domain})"; then
+                    sed -e "s/@@@/$i/g" < ${./nginx.matrix.ssl.conf} >> ./var/nginx/conf/nginx.ssl.conf
+                else
+                    sed -e "s/@@@/$i/g" < ${./nginx.ssl.conf} >> ./var/nginx/conf/nginx.ssl.conf
+                fi
                 sed -e "s/@@@/$i/g" < ${./dovecot.conf.per-domain} >> ./etc/dovecot/dovecot.conf
                 sed -e "s/@@@/$i/g" < ${./postfix/sni} >> ./etc/postfix/sni
           done
@@ -67,6 +73,10 @@ with rec {
           ln -sfT ${dovecot}/lib/dovecot/modules ./etc/dovecot/modules
 
           sed -e "s/@@@addr@@@/$(cat ${./target.private})/g; s/@@@password@@@/$(cat ${./shadowsocks.private/password} | tr -d '\n' | base64)/g" -i ./lib/systemd/system/shadowsocks.service
+
+          ls -la ./etc/matrix-tuwunel
+          sed -e "s/@@@server_name@@@/$(cat ${./tuwunel.private/vps-matrix-domain})/" -i ./etc/matrix-tuwunel/tuwunel.toml
+          sed -e "s/@@@registration_token@@@/$(cat ${./tuwunel.token.private})/" -i ./etc/matrix-tuwunel/tuwunel.toml
         '';
         remoteDeploy = pkgs.writeScriptBin "remote-deploy" ''
           for u in raskin matrix; do
@@ -81,10 +91,10 @@ with rec {
             find . -type f | while read i; do ln -vsfT $(readlink -f $i) /$i; done
             find . -type l | while read i; do ln -vsfT $(readlink -f $i) /$i; done
           )
-          for u in www-data postfix dovenull dovecot opendkim; do
+          for u in www-data postfix dovenull dovecot opendkim tuwunel; do
             grep "^$u:" /etc/passwd || useradd -s /sbin/nologin -r $u
           done
-          for g in postfix postdrop mail opendkim; do
+          for g in postfix postdrop mail opendkim tuwunel; do
             grep "^$g:" /etc/group || groupadd -r $g
           done
 
@@ -108,13 +118,17 @@ with rec {
             chmod -R 0600 .
           )
 
+          mkdir -p /var/db/matrix-tuwunel-2026-01
+          chown -R tuwunel:tuwunel /var/db/matrix-tuwunel-2026-01
+          chmod -R 0700 /var/db/matrix-tuwunel-2026-01
+
           for i in nginx dovecot; do
             systemctl restart $i;
           done
           for i in ii ii-libera-chat ii-oftc \
                    openvpn openvpn-tcp \
                    nginx dehydrated.timer postfix-key-concat.timer dovecot \
-                   shadowsocks grab-ntp-time \
+                   shadowsocks grab-ntp-time tuwunel \
                    ; do 
             systemctl enable $i; systemctl start $i; systemctl reload $i;
           done;
@@ -156,6 +170,7 @@ with rec {
                 age fzf
                 sbcl
                 wireguard-tools
+                matrix-tuwunel
           ];
         };
 };

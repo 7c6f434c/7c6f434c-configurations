@@ -5,6 +5,8 @@ test -n "$1" || {
         exit
 }
 
+test -e "tuwunel.token.private" || dd if=/dev/urandom bs=1 count=16  2> /dev/null | xxd -ps -c 8 | xargs | tr -d ' ' > tuwunel.token.private
+
 nix-instantiate ./vps-side.nix --add-root ~/.nix-personal/derivations/vps-tools.drv
 nix-store -r  ~/.nix-personal/derivations/vps-tools.drv --add-root ~/.nix-personal/vps-tools
 toolset="$(readlink -f ~/.nix-personal/vps-tools)"

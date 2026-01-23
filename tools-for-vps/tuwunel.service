@@ -1,0 +1,13 @@
+[Unit]
+Description=Tuwunel Matrix server
+
+[Service]
+Type=exec
+ExecStart=/opt/tools/bin/tuwunel -c /etc/matrix-tuwunel/tuwunel.toml
+User=tuwunel
+Group=tuwunel
+
+DevicePolicy=closed
+
+[Install]
+WantedBy=multi-user.target

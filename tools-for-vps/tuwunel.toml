@@ -1,0 +1,12 @@
+[global]
+server_name = "@@@server_name@@@"
+database_path = "/var/db/matrix-tuwunel-2026-01"
+new_user_displayname_suffix = ""
+port = 8888
+cache_capacity_modifier = 0.25
+
+log = "debug"
+
+allow_registration = true
+registration_token = "@@@registration_token@@@"
+
