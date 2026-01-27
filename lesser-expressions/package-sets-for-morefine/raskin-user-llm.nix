@@ -14,7 +14,7 @@ fullEnv "main-package-set"
                      '';
                    })
       shaderc
-      (let llama-target-version= "0" /*"7134"*/; in
+      (let llama-target-version= "7822" /*"7134"*/; in
       ((llama-cpp.override {
         rocmSupport = false;
         vulkanSupport = true;
@@ -24,7 +24,7 @@ fullEnv "main-package-set"
         version = llama-target-version;
         src = x.src.override {
           tag = "b" + llama-target-version;
-          hash = "sha256-eIvYSPvbxIopuRg0Wzq01hGN1XxLc2FiqqacQDo3Q/Q="; 
+          hash = "sha256-zcnfDOlXkVz4jpBPIewhrOMF/Tj5u0+yO4QsdDlWJXQ="; 
         };
         patches = [];
       })))

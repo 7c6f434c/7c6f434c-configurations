@@ -161,7 +161,7 @@ with rec {
                 tigervnc
                 scite
                 gsettings-desktop-schemas gtk3
-                xorg.xinit xorg.twm icewm rxvt-unicode
+                xorg.xinit xorg.twm icewm rxvt-unicode xauth
                 ncdu
                 globalLinks remoteDeploy
                 shadowsocks-rust ntp
