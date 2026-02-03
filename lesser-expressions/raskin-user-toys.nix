@@ -11,6 +11,7 @@ linkFarm "raskin-toy-packages" ([
         sgt-puzzles xconq pysolfc xaos _2048-in-terminal blobby
         xpilot-ng liquidwar
         quantumminigolf liquidwar5 xmoto
+        neverball
         ruffle
         /*(renpy.override (x: {
           ffmpeg = ffmpeg_6;

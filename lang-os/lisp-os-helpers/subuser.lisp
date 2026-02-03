@@ -220,7 +220,7 @@
            (home (format nil "/tmp/home.~a" uid) homep)
 	   (rlimit-as "max") (rlimit-core "0") (rlimit-cpu "max")
 	   (rlimit-fsize "max") (rlimit-nofile "max")
-	   (rlimit-nproc "max") (rlimit-stack "16384")
+	   (rlimit-nproc "max") (rlimit-stack "max")
            keep-namespaces
            enable-newprivs
            (directory "/")
@@ -228,6 +228,7 @@
            (machine-id "/etc/machine-id")
            (fhs-current-system nil)
            (fhs-from nil)
+           (nice-level "0")
 	   )
   `(,*nsjail-helper*
      ,@(unless verbose `("-q"))
@@ -239,6 +240,7 @@
      "--rlimit_nofile" ,rlimit-nofile
      "--rlimit_nproc"  ,rlimit-nproc
      "--rlimit_stack"  ,rlimit-stack
+     "--nice_level"    ,nice-level
      "-D" ,directory
      ,@(loop for ns in keep-namespaces
              do (assert (cl-ppcre:scan "^[a-z_]+$" ns))
@@ -479,6 +481,7 @@
                       "--rlimit_nproc"  "max"
                       "--rlimit_stack"  "max"
                       "--disable_no_new_privs"
+                      "--nice_level"    "0"
                       "--"
                       ,@ command))
      (inner-setup
@@ -510,6 +513,7 @@
                       "--rlimit_nofile" "max"
                       "--rlimit_nproc"  "max"
                       "--rlimit_stack"  "max"
+                      "--nice_level"    "0"
                       "--"
                       ,@ inner-setup
                       ))
