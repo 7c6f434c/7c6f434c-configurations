@@ -171,6 +171,7 @@ with rec {
                 sbcl
                 wireguard-tools
                 matrix-tuwunel
+                acl
           ];
         };
 };
