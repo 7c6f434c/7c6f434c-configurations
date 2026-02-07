@@ -229,6 +229,7 @@
            (fhs-current-system nil)
            (fhs-from nil)
            (nice-level "0")
+           (max-cpus "1")
 	   )
   `(,*nsjail-helper*
      ,@(unless verbose `("-q"))
@@ -241,6 +242,7 @@
      "--rlimit_nproc"  ,rlimit-nproc
      "--rlimit_stack"  ,rlimit-stack
      "--nice_level"    ,nice-level
+     "--max_cpus"      ,max-cpus
      "-D" ,directory
      ,@(loop for ns in keep-namespaces
              do (assert (cl-ppcre:scan "^[a-z_]+$" ns))
@@ -419,7 +421,8 @@
                                   tuntap-devices
                                   hostname verbose
                                   (proc-rw t)
-                                  (proc t))
+                                  (proc t) (nice-level "0")
+                                  (max-cpus "1"))
   (ensure-directories-exist "/tmp/subhomes/")
   (let* 
     ((*print-right-margin* (expt 10 9))
@@ -481,7 +484,8 @@
                       "--rlimit_nproc"  "max"
                       "--rlimit_stack"  "max"
                       "--disable_no_new_privs"
-                      "--nice_level"    "0"
+                      "--nice_level"    ,nice-level
+                      "--max_cpus"      ,max-cpus
                       "--"
                       ,@ command))
      (inner-setup
@@ -513,7 +517,8 @@
                       "--rlimit_nofile" "max"
                       "--rlimit_nproc"  "max"
                       "--rlimit_stack"  "max"
-                      "--nice_level"    "0"
+                      "--nice_level"    ,nice-level
+                      "--max_cpus"      ,max-cpus
                       "--"
                       ,@ inner-setup
                       ))
@@ -598,7 +603,7 @@
 			    nsjail nsjail-settings
                             chroot masking-mounts skip-masking-mounts-check
                             fake-passwd fake-groups fake-usernames
-                            clear-env)
+                            clear-env (nice-level "0") (max-cpus "1"))
   (let*
     ((uid
        (cond
@@ -623,6 +628,8 @@
            :tuntap-devices netns-tuntap-devices
 	   :uid uid :gid gid :verbose netns-verbose
            :directory directory
+           :nice-level nice-level
+           :max-cpus max-cpus
            :proc-rw netns-proc-rw :proc netns-proc)
 	 command-to-wrap))
      (command-to-wrap
@@ -632,6 +639,8 @@
 	     'add-command-nsjail
 	     command-to-wrap uid :gid gid
              :directory directory
+             :nice-level nice-level
+             :max-cpus max-cpus
 	     nsjail-settings))
 	 (t (add-command-numeric-su command-to-wrap uid :gid gid))))
      (command-to-wrap

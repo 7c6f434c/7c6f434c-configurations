@@ -60,6 +60,8 @@
     (iolib/syscalls:chmod (format nil "/tmp/.X11-unix/X~a" display) #o700))
     (format nil "~a" display)))
 
+(defun-weak boost-allowed-p (context) (declare (ignorable context)) nil)
+
 (defun socket-command-server-commands::run-as-subuser
   (context name command environment options)
   (let
@@ -95,6 +97,13 @@
                                     (intern (string-upcase opt) :keyword)))))
            if (and (listp o) (equalp (first o) "fake-groups"))
            append (list :fake-groups (second o))
+           if (and (listp o) (equalp (first o) "max-cpus"))
+           append (list :max-cpus (second o))
+           if (and (listp o) (equalp (first o) "nice-level") 
+                   (or
+                     (>= (parse-integer (second o)) 0)
+                     (boost-allowed-p context)))
+           append (list :nice-level (second o))
            if (equalp o "fake-passwd") append (list :fake-passwd t)
            if (and (listp o) (equalp (first o) "fake-usernames"))
            append (list :fake-usernames (second o))

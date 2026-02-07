@@ -853,6 +853,12 @@
   (require-presence context)
   t)
 
+(defun boost-allowed-p (context)
+  (require-or
+    "Owner request not confirmed"
+    (require-root context)
+    (assert (gethash (list (context-uid context) :owner) *user-info*))))
+
 (defun socket-command-server-commands::start-sway (context &optional config)
   (unless
     (ignore-errors (start-sway-allowed-p context))

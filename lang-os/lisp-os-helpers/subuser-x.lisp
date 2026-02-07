@@ -256,7 +256,9 @@
     mount-sys keep-namespaces
     dns http-proxy socks-proxy with-dbus with-pulseaudio with-owned-home
     x-optional skip-nsjail masking-mounts clear-env
-    (proc-rw t) (no-proc nil) (pass-input-config t))
+    (proc-rw t) (no-proc nil) (pass-input-config t)
+    (max-cpus "1") (nice-level "0")
+    )
   (let*
     ((name (or name (timestamp-usec-recent-base36)))
      (uid 
@@ -439,6 +441,8 @@
             `(
               ,@(when slay `("slay"))
               ,@(when wait `("wait"))
+              ,@(when nice-level `(("nice-level" ,(format nil "~a" nice-level))))
+              ,@(when max-cpus `(("max-cpus" ,(format nil "~a" max-cpus))))
               ,@(unless skip-nsjail `(("nsjail" "network"
                ,@(when (or with-pulseaudio full-dev) `("full-dev"))
                ,@(when fhs-current-system `("fhs-current-system"))
