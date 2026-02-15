@@ -21,7 +21,7 @@ pytest-runner==5.2
 python-dateutil==2.8.1
 python-editor==1.0.4
 python-magic==0.4.15
-rsa==4.0
+rsa==4.7
 ruamel.yaml==0.15.100
 setuptools-scm==3.3.3
 six==1.13.0
