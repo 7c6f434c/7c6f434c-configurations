@@ -11,7 +11,7 @@ buildFHSUserEnv
     atk gdk_pixbuf cairo ncurses5 mesa_glu zlib libglvnd
   ])
   ++ 
-  (with p.xorg;
+  (with p;
   [
     libX11
     libXcursor

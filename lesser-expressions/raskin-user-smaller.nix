@@ -44,7 +44,7 @@ linkFarm "raskin-packages" ([
                 {name = "gnome_themes_standard"; path = gnome-themes-extra;}
                 {name = "gnome-themes-standard"; path = gnome-themes-extra;}
                 {name = "adwaita_icon_theme"; path = adwaita-icon-theme;}
-                { name ="xcursorthemes"; path=xorg.xcursorthemes;}
+                { name ="xcursorthemes"; path=xcursorthemes;}
                 /*{name="gimp-resynthesizer"; path=gimpPlugins.resynthesizer;}*/
                 { name = "words"; path = scowl; }
                 { name = "dicts"; path = dictDBCollector {
@@ -84,8 +84,8 @@ linkFarm "raskin-packages" ([
                     targetPkgs = p: with p; [
                       julia_used
                       cmake hdf5 gnuplot glibc zlib
-                      xorg.libXt xorg.libX11 xorg.libXrender 
-                      xorg.libXtst xorg.libXext xorg.libXi];
+                      libXt libX11 libXrender 
+                      libXtst libXext libXi];
                     };
                 }
                 {name= "queryfs-deps";path = linkFarm
@@ -160,10 +160,10 @@ linkFarm "raskin-packages" ([
                  name = "libs";
                  paths = [
                    glibc zlib
-                   xorg.libXt xorg.libX11 xorg.libXrender 
-                   xorg.libXtst xorg.libXext xorg.libXi
-                   xorg.libXrandr xorg.libXScrnSaver xorg.libXxf86vm
-                   xorg.libXcursor xorg.libXinerama
+                   libXt libX11 libXrender 
+                   libXtst libXext libXi
+                   libXrandr libXScrnSaver libXxf86vm
+                   libXcursor libXinerama
                    mesa libGL libGLU libglvnd
                  ];
                  ignoreCollisions = false;

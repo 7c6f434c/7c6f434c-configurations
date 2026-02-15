@@ -38,7 +38,7 @@
   wayland,
   wayland-protocols,
   wrapGAppsHook3,
-  xorg,
+  libXdmcp,
   mimalloc,
   opencsg,
   ctestCheckHook,
@@ -106,7 +106,7 @@ clangStdenv.mkDerivation rec {
       qtmultimedia
     ]
     ++ lib.optionals clangStdenv.hostPlatform.isLinux [
-      xorg.libXdmcp
+      libXdmcp
       libICE
       libSM
       wayland

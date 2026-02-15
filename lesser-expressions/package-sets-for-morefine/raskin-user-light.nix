@@ -51,18 +51,18 @@ fullEnv "main-light-package-set"
         } "$@"
         '')
         ntp mc ncdu ltrace weechat
-        htop iotop powertop mtr bind inotify-tools xorg.setxkbmap xorg.xev
+        htop iotop powertop mtr bind inotify-tools setxkbmap xev
         curl-impersonate
-        xorg.xset
+        xset
         xfig fig2dev 
         netpbm
         firefox vim-full evince alsa-utils xvfb-run
-        xorg.xmodmap bc xdotool lftp wget unzip gnumake xcape xorg.xrandr
-        xsel xclip pulseaudio ripmime xorg.xsetroot lsof rofi
-        graphviz diffutils fontconfig picom xorg.xprop xorg.xwininfo jq
-        xorg.xlsclients fortune fuse3 openssl axel arping whois hping badvpn dict
+        xmodmap bc xdotool lftp wget unzip gnumake xcape xrandr
+        xsel xclip pulseaudio ripmime xsetroot lsof rofi
+        graphviz diffutils fontconfig picom xprop xwininfo jq
+        xlsclients fortune fuse3 openssl axel arping whois hping badvpn dict
         rdap
-        xorg.appres
+        appres
         openvpn iftop file patchutils zip gawk perl btrfs-progs
         man man-pages oath-toolkit m4
         (proxychains.overrideAttrs (x: {
@@ -91,6 +91,6 @@ fullEnv "main-light-package-set"
         /* gdmap */
         scrot
         nix-serve
-        xorg.xauth xorg.xhost
+        xauth xhost
         nixpkgs-review
       ]      

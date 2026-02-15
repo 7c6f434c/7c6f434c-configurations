@@ -10,7 +10,7 @@ rec {
   firefoxCmd = (pkgs.lib.getBin pkgs.firefox) + "/bin/" + firefoxName;
   unionfsCmd = (pkgs.lib.getBin pkgs.unionfs-fuse) + "/bin/unionfs";
   xdummyCmd = (pkgs.lib.getBin pkgs.xdummy) + "/bin/xdummy";
-  xpropCmd = (pkgs.lib.getBin pkgs.xorg.xprop) + "/bin/xprop";
+  xpropCmd = (pkgs.lib.getBin pkgs.xprop) + "/bin/xprop";
   fuserCmd = (pkgs.lib.getBin pkgs.psmisc) + "/bin/fuser";
   marionette_ = if builtins.isFunction marionette then marionette pkgs else marionette;
   marionetteEnv = pkgs.runCommand "marionette-env" { buildInputs = [ marionette_ ]; } ''

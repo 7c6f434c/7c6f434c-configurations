@@ -12,10 +12,10 @@ fullEnv "main-heavy-package-set"
         gptfdisk dmidecode inkscape x11vnc 
         tigervnc
         xdummy tcpdump wireshark
-        testdisk fdupes ntfs3g lazarus icewm yt-dlp xorg.xwd
+        testdisk fdupes ntfs3g lazarus icewm yt-dlp xwd
         vlc sshfs dmtx-utils
-        mesa-demos xorg.xdpyinfo xorg.xdriinfo go-mtpfs nmap sox
-        xorg.xinput usbutils wgetpaste gdb scowl xcalib /*fmbt*/ eprover 
+        mesa-demos xdpyinfo xdriinfo go-mtpfs nmap sox
+        xinput usbutils wgetpaste gdb scowl xcalib /*fmbt*/ eprover 
         glucose kissat
         nginx cfdg /* highlight */ transmission_4 spass iprover z3 z3-tptp 
         cvc4 cvc5

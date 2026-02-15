@@ -186,8 +186,8 @@ pkgs.lib.makeExtensible (self: with self; {
     '';
 
   swPackages = swPieces.corePackages ++ (with self.pkgs; [
-        (lib.hiPrio glibcLocales) xorg.libX11
-        vim monotone screen xterm xorg.xprop
+        (lib.hiPrio glibcLocales) libX11
+        vim monotone screen xterm xprop
         sbcl asdf
         #gerbil
         guile
@@ -293,7 +293,7 @@ pkgs.lib.makeExtensible (self: with self; {
 	    ln -Tfs "${self.pkgs.pkgsi686Linux.libglvnd}" /run/libglvnd-32
 	    export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/run/opengl-driver/lib:/run/opengl-driver-32/lib:/run/libglvnd/lib:/run/libglvnd-32/lib"
 
-	    ${self.pkgs.xorg.xorgserver}/bin/Xorg vt"$((7+''${1:-0}))" :"''${1:-0}" -logfile "/var/log/X.''${1:-0}.log" -config "${(fromNixOS.etcSelectComponent "X11/xorg.conf" NixOSXConfig)."X11/xorg.conf"}"
+	    ${self.pkgs.xorgserver}/bin/Xorg vt"$((7+''${1:-0}))" :"''${1:-0}" -logfile "/var/log/X.''${1:-0}.log" -config "${(fromNixOS.etcSelectComponent "X11/xorg.conf" NixOSXConfig)."X11/xorg.conf"}"
       '';
       "udevd" = self.pkgs.writeScript "udevd" ''
           ${self.pkgs.eudev}/bin/udevd &

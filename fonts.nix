@@ -10,10 +10,10 @@
       pkgs.dejavu_fonts
       (pkgs.dejavu_fonts + "/share/fonts/truetype/")
       (pkgs.ghostscript + "/share/ghostscript/fonts/")
-      pkgs.xorg.fontcronyxcyrillic
-      pkgs.xorg.fontadobe100dpi
-      pkgs.xorg.fontadobe75dpi
-      pkgs.xorg.fontxfree86type1
+      pkgs.fontcronyxcyrillic
+      pkgs.fontadobe100dpi
+      pkgs.fontadobe75dpi
+      pkgs.fontxfree86type1
       pkgs.mph_2b_damase
       pkgs.liberation_ttf
       pkgs.unifont

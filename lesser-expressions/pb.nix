@@ -75,7 +75,7 @@ in
   ++
   [
     (pkgs.gcc45.hostDrv)
-    (pkgs.xorg.xkbcomp.hostDrv)
+    (pkgs.xkbcomp.hostDrv)
     (pkgs.lib.overrideDerivation
       pkgs.tigervnc.hostDrv
       (p : {

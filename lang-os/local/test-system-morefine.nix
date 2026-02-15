@@ -58,7 +58,7 @@
     man
     vulkan-tools clinfo
     libcap
-    xorg.xauth xorg.xhost
+    xauth xhost
   ]);
 
   systemFonts = (import ./fonts.nix { inherit (self) pkgs; }).fonts;

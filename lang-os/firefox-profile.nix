@@ -40,7 +40,7 @@ pkgs.runCommand "firefox-initialised-profile" environment ''
    ln -s "${pkgs.makeFontsConf {fontDirectories = [];}}" /etc/fonts/fonts.conf
 
    "${pkgs.lib.getBin pkgs.xdummy}/bin/xdummy" :7 &
-   while ! DISPLAY=:7 "${pkgs.lib.getBin pkgs.xorg.xprop}/bin/xprop" -root &> /dev/null; do
+   while ! DISPLAY=:7 "${pkgs.lib.getBin pkgs.xprop}/bin/xprop" -root &> /dev/null; do
      sleep 1;
    done
 

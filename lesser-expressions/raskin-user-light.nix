@@ -53,23 +53,23 @@ fullEnv "main-light-package-set"
         } "$@"
         '')
         ntp mc ncdu ltrace weechat
-        htop iotop powertop mtr bind inotify-tools xorg.setxkbmap xorg.xev
+        htop iotop powertop mtr bind inotify-tools setxkbmap xev
         curl-impersonate
-        xorg.xset
+        xset
         xfig fig2dev 
         kdePackages.kig 
         netpbm
         firefox (callPackage ../lang-os/user/librewolf-with-policies.nix {})
         vim-full evince mplayer alsa-utils xvfb-run
-        xorg.xmodmap bc xdotool lftp wget /*wget2*/ unzip gnumake xcape xorg.xrandr
+        xmodmap bc xdotool lftp wget /*wget2*/ unzip gnumake xcape xrandr
         unrar-free
-        xsel xclip pulseaudio ripmime xscreensaver xorg.xsetroot lsof rofi
-        fpc graphviz diffutils fontconfig picom xorg.xprop xorg.xwininfo jq
+        xsel xclip pulseaudio ripmime xscreensaver xsetroot lsof rofi
+        fpc graphviz diffutils fontconfig picom xprop xwininfo jq
         cflow
-        xorg.xlsclients fortune fuse3 openssl axel arping whois hping badvpn dict
+        xlsclients fortune fuse3 openssl axel arping whois hping badvpn dict
         rdap
         megatools
-        xorg.appres
+        appres
         xdaliclock openvpn iftop file patchutils zip gawk perl btrfs-progs
         man man-pages oath-toolkit wavemon m4
         (proxychains.overrideAttrs (x: {
@@ -101,7 +101,7 @@ fullEnv "main-light-package-set"
         nixfmt-rfc-style
         factor-lang
         img2pdf
-        xorg.xauth xorg.xhost
+        xauth xhost
         (let lv = (fetchFromGitHub {
           owner = "ggml-org";
           repo = "llama.vim";

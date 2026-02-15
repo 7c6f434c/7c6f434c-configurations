@@ -9,7 +9,7 @@ rec {
   firefoxCmd = (pkgs.lib.getBin (librewolf pkgs)) + "/bin/" + librewolfName;
   unionfsCmd = (pkgs.lib.getBin pkgs.unionfs-fuse) + "/bin/unionfs";
   xdummyCmd = (pkgs.lib.getBin pkgs.xdummy) + "/bin/xdummy";
-  xpropCmd = (pkgs.lib.getBin pkgs.xorg.xprop) + "/bin/xprop";
+  xpropCmd = (pkgs.lib.getBin pkgs.xprop) + "/bin/xprop";
   fuserCmd = (pkgs.lib.getBin pkgs.psmisc) + "/bin/fuser";
   combineProfileScript = ''
     if test -n "$FIREFOX_PROFILE"; then
