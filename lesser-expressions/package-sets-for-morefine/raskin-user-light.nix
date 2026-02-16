@@ -71,12 +71,12 @@ fullEnv "main-light-package-set"
           '';
         }))
         zathura
-        /*monotoneViz*/ udftools units texinfoInteractive /*yap*/ _3proxy
+        udftools units texinfoInteractive yap _3proxy
         python3Packages.pygments poppler-utils libarchive wdiff ydiff
         pass gnupg age easyrsa
         (import ../texlive-set.nix pkgs)
         p7zip mupdf librsvg sxiv
-        /* xpdf vifm ffsend kitty */
+        /* xpdf vifm */ ffsend kitty
         latexrun moreutils gnupatch
         shadowsocks-rust
         (aspellWithDicts (p: with p; [en ru de fr da]))
@@ -88,9 +88,9 @@ fullEnv "main-light-package-set"
           ln -s "${gcc.cc}/bin"/gcov* "$out/bin"
           '')
         colordiff
-        /* gdmap */
+        gdmap
         scrot
         nix-serve
         xauth xhost
-        nixpkgs-review
+        nixpkgs-review nix-eval-jobs
       ]      

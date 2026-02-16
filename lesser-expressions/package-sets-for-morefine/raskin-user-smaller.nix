@@ -42,7 +42,7 @@ linkFarm "raskin-packages" ([
                 {name = "gnome_themes_standard"; path = gnome-themes-extra;}
                 {name = "gnome-themes-standard"; path = gnome-themes-extra;}
                 {name = "adwaita_icon_theme"; path = adwaita-icon-theme;}
-                /*{name="gimp-resynthesizer"; path=gimpPlugins.resynthesizer;}*/
+                {name="gimp-resynthesizer"; path=gimpPlugins.resynthesizer;}
                 { name = "words"; path = scowl; }
                 { name = "dicts"; path = dictDBCollector {
                         dictlist = (with dictdDBs; map 
@@ -104,23 +104,6 @@ linkFarm "raskin-packages" ([
                  ln -s "${python3}/bin/python3" "$out/bin/pypy3"
                '';} */
                { name = "julia"; path = julia_used; }
-               /* { name = "heron-python"; path = 
-                       python38.withPackages
-                               (p: with p; [
-                                (clingo.overrideAttrs
-                                 (x: { buildInputs = (x.buildInputs or []) ++ [p.python];
-                                  cmakeFlags = x.cmakeFlags ++ [
-                                  "-DPYCLINGO_USER_INSTALL=OFF"
-                                  "-DCLINGO_BUILD_WITH_PYTHON=ON"
-                                  "-DPYCLINGO_USE_INSTALL_PREFIX=${builtins.placeholder "out"}/lib/${python3.libPrefix}"
-                                  ]; 
-                                  passthru = {
-                                  pythonModule = p.python;
-                                  };
-                                  }))
-                                z3 jinja2 lark
-                               ])
-                               ; } */
                { name = "wordnet-data"; path = runCommand "wordnet-data" {} ''
                  mkdir -p "$out/share/"
                  cd "$out/share"
@@ -129,7 +112,6 @@ linkFarm "raskin-packages" ([
                    hash = "sha256:0an226fl5zpav7vmgkdxnn044wzcailxc44vsdkp3k3fxzl8nz9z";
                  }}"
                ''; }
-               /* { name = "conpra-deps"; path = (import /home/raskin/.conpra-shell.nix).env; } */
                { name = "asy-graphtheory"; 
                  path = fetchFromGitHub {
                    owner = "taoari";

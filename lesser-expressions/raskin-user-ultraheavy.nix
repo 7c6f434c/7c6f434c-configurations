@@ -5,11 +5,11 @@ linkFarm "raskin-ultraheavy-packages" ([
   { name = "main-ultraheavy-package-set";
     path = (fullEnv "main-ultraheavy-package-set"
       [
-        /* libreoffice */ /*chromium*/ /* qutebrowser */ winePackages.unstable 
-        /*sage*/ /*midori*/ /* scilab-bin */ /* clasp-common-lisp */
+        winePackages.unstable 
+        /*midori*/ /* scilab-bin */
         /* eolie */
         epiphany
-        ffmpeg-full obs-studio audacity /* pitivi */
+        ffmpeg-full obs-studio audacity pitivi
         diff-pdf
       ]);}
 ])

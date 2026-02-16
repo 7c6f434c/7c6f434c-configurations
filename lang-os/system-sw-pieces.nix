@@ -12,7 +12,7 @@
     sqlite
   ];
   allOutputNames = l: builtins.attrNames
-      (pkgs.lib.fold
+      (pkgs.lib.foldr
         (a: b: b //
           (builtins.listToAttrs (map (x: {name = x; value = x;}) a.outputs or ["out"])))
         {} l);

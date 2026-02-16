@@ -274,7 +274,7 @@ rec {
     pam kbd lynx fuse fuse3 ncurses acl eudev kmod git
   ]) ++ (maybeCall systemPackages pkgs) ++ (maybeCall firmwarePackages pkgs);
   allOutputNames = builtins.attrNames
-      (pkgs.lib.fold
+      (pkgs.lib.foldr
         (a: b: b //
           (builtins.listToAttrs (map (x: {name = x; value = x;}) a.outputs or ["out"])))
         {} _systemPackages);

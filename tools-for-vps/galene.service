@@ -1,0 +1,15 @@
+[Unit]
+Description=Galene Web Videoconference server
+
+[Service]
+Type=exec
+ExecStartPre=mkdir -p /var/galene/groups /var/galene/recordings
+ExecStartPre=cp -L /var/dehydrated/certs/@@@/fullchain.pem /var/galene/cert.pem
+ExecStartPre=cp -L /var/dehydrated/certs/@@@/privkey.pem /var/galene/key.pem
+ExecStartPre=chown galene:galene -R /var/galene
+ExecStart=su galene -s /bin/sh -c "/opt/tools/bin/galene -data /var/galene -groups /var/galene/groups -http :8443 -turn :1199 -static @@static@@/static -recordings /var/galene/recordings"
+
+LimitNOFile=65536
+
+[Install]
+WantedBy=multi-user.target

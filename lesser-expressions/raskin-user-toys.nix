@@ -38,7 +38,7 @@ linkFarm "raskin-toy-packages" ([
           sdl2pkgs = callPackage ./sdl2 {};
         in renpy.override {
           inherit (sdl2pkgs) SDL2;
-          python3 = py // {
+          python312 = py // {
             pkgs = py.pkgs // {
               pygame-sdl2 = py.pkgs.pygame-sdl2.override {
                 inherit (sdl2pkgs) SDL2 SDL2_mixer SDL2_ttf SDL2_image;
@@ -47,7 +47,7 @@ linkFarm "raskin-toy-packages" ([
           };
         })
         (let py=python312;
-             rp = renpy.override { python3 = py; };
+             rp = renpy.override { python312 = py; };
         in runCommand "renpy-sdl2-compat" {} ''
           mkdir "$out/bin" -p
           ln -s "${rp}/bin/renpy" "$out/bin/renpy-sdl2-compat"

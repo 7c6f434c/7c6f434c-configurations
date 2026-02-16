@@ -15,21 +15,18 @@ fullEnv "main-heavy-package-set"
         testdisk fdupes ntfs3g lazarus icewm yt-dlp xwd
         vlc sshfs dmtx-utils
         mesa-demos xdpyinfo xdriinfo go-mtpfs nmap sox
-        xinput usbutils wgetpaste gdb scowl xcalib /*fmbt*/ eprover 
+        xinput usbutils wgetpaste gdb scowl xcalib eprover 
         glucose kissat
-        nginx cfdg /* highlight */ transmission_4 spass iprover z3 z3-tptp 
+        nginx cfdg highlight transmission_4 spass iprover z3 z3-tptp 
         cvc4 cvc5
-        /*prover9*/
-        /* signal-desktop */ mustache-spec mustache-go zxing lame
+        prover9
+        mustache-spec mustache-go zxing lame
         rustc xournalpp bmaptool webcamoid
-        /* cachix */ darcs /* petrinizer */
-        /* swfdec */
-        /* coqPackages.coqide coqPackages.coq */
+        darcs
         ripgrep-all
         qvge
         meshlab
         telegram-desktop
-        /* (libsForQt5.callPackage ./qvge {}) */
         (let models = callPackage ./bergamot-model.nix {
           bergamot = callPackage ./bergamot.nix {};
         }; in runCommand "my-bergamot-set" {} ''

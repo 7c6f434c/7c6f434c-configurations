@@ -24,7 +24,7 @@ fullEnv "main-light-package-set"
         (symlinkJoin {
            name = "postgresql-18"; 
            paths = [ postgresql_18.out ];})
-        expect /*pmount*/ fdm
+        expect fdm
         fzf mcabber ii irssi links2 rsync ratpoison xdummy
         elinks
         
@@ -61,7 +61,7 @@ fullEnv "main-light-package-set"
         netpbm
         firefox (callPackage ../lang-os/user/librewolf-with-policies.nix {})
         vim-full evince mplayer alsa-utils xvfb-run
-        xmodmap bc xdotool lftp wget /*wget2*/ unzip gnumake xcape xrandr
+        xmodmap bc xdotool lftp wget wget2 unzip gnumake xcape xrandr
         unrar-free
         xsel xclip pulseaudio ripmime xscreensaver xsetroot lsof rofi
         fpc graphviz diffutils fontconfig picom xprop xwininfo jq
@@ -78,12 +78,12 @@ fullEnv "main-light-package-set"
           '';
         }))
         zathura
-        /*monotoneViz*/ udftools units texinfoInteractive /*yap*/ _3proxy
+        udftools units texinfoInteractive yap _3proxy
         python3Packages.pygments poppler-utils libarchive wdiff ydiff
         pass gnupg age easyrsa
         (import ./texlive-set.nix pkgs)
         p7zip mupdf librsvg sxiv
-        /* xpdf vifm ffsend kitty */
+        /* xpdf vifm */ ffsend kitty
         rosie latexrun moreutils gnupatch
         shadowsocks-rust
         (aspellWithDicts (p: with p; [en ru de fr da]))
@@ -95,10 +95,10 @@ fullEnv "main-light-package-set"
           ln -s "${gcc.cc}/bin"/gcov* "$out/bin"
           '')
         colordiff
-        /* gdmap */ qdirstat
+        gdmap qdirstat
         mucommander
         scrot
-        nixfmt-rfc-style
+        nixfmt
         factor-lang
         img2pdf
         xauth xhost
@@ -113,7 +113,7 @@ fullEnv "main-light-package-set"
           '')
         dpic
         xorg-rgb
-        multiplex
+        nix-eval-jobs
         (callPackage ./difdef.nix {})
         (callPackage ./colorexp.nix {})
         (callPackage ./obj2hmap.nix {})

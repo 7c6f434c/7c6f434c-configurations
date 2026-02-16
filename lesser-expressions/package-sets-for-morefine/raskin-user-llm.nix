@@ -14,7 +14,7 @@ fullEnv "main-package-set"
                      '';
                    })
       shaderc
-      (let llama-target-version= "7822" /*"7134"*/; in
+      (let llama-target-version= "7822"; in
       ((llama-cpp.override {
         rocmSupport = false;
         vulkanSupport = true;

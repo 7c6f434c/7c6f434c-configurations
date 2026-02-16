@@ -94,6 +94,11 @@ deploy_cert() {
 
   postmap -F hash:/etc/postfix/sni
   systemctl force-reload postfix
+
+  if test "$DOMAIN" = "$(cat /var/galene/domain.txt)"
+  cp "${KEYFILE}" /var/galene/key.pem
+  cp "${FULLCHAINFILE}" /var/galene/cert.pem
+  chown galene:galene /var/galene/*.pem
 }
 
 deploy_ocsp() {

@@ -50,6 +50,13 @@ with rec {
           ncp ${./grab-ntp-time.service} ./lib/systemd/system
           ncp ${./tuwunel.toml} ./etc/matrix-tuwunel
           ncp ${./tuwunel.service} ./lib/systemd/system
+          ncp ${./galene.service} ./lib/systemd/system
+
+          mkdir -p ./var/galene
+          head -n2 ${./domains.txt.private} | tail -n 1 | tee ./var/galene/domain.txt
+
+          sed -e 's/@@@/'"$(head -n 2 ${./domains.txt.private} | tail -n 1)"'/' -i ./lib/systemd/system/galene.service
+          sed -e 's|@@static@@|${galene.static}|' -i ./lib/systemd/system/galene.service
 
           sed -e 's/@@@/'"$(cat ${./domains.txt.private} | xargs | tr ' ' ,)"'/' -i ./etc/opendkim.conf
           sed -e 's/@@@/'"$(cat ${./domains.txt.private} | xargs)"'/' -i ./etc/postfix/main.cf
@@ -91,7 +98,7 @@ with rec {
             find . -type f | while read i; do ln -vsfT $(readlink -f $i) /$i; done
             find . -type l | while read i; do ln -vsfT $(readlink -f $i) /$i; done
           )
-          for u in www-data postfix dovenull dovecot opendkim tuwunel; do
+          for u in www-data postfix dovenull dovecot opendkim tuwunel galene; do
             grep "^$u:" /etc/passwd || useradd -s /sbin/nologin -r $u
           done
           for g in postfix postdrop mail opendkim tuwunel; do
@@ -128,7 +135,7 @@ with rec {
           for i in ii ii-libera-chat ii-oftc \
                    openvpn openvpn-tcp \
                    nginx dehydrated.timer postfix-key-concat.timer dovecot \
-                   shadowsocks grab-ntp-time tuwunel \
+                   shadowsocks grab-ntp-time tuwunel galene \
                    ; do 
             systemctl enable $i; systemctl start $i; systemctl reload $i;
           done;
@@ -172,6 +179,7 @@ with rec {
                 wireguard-tools
                 matrix-tuwunel
                 acl
+                galene
           ];
         };
 };
