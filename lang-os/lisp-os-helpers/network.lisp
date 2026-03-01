@@ -198,11 +198,17 @@
       :remote-host host :remote-port port)
     t))
 
+(defparameter *wpa-supplicant-global-sockets* "/run/wpa_supplicant-by-interface/")
+(defun wpa-supplicant-interface-parameters (interface)
+  (list "-i" interface "-g"
+        (format nil "~a/~a" *wpa-supplicant-global-sockets* interface)))
+
 (defun wpa-supplicant-status (interface)
   (let*
     ((lines
        (program-output-lines
-	 `("wpa_cli" "status" "-i" ,interface))))
+	 `("wpa_cli" "status"
+           ,@(wpa-supplicant-interface-parameters interface)))))
     (loop
       for l in lines
       for p := (cl-ppcre:split "=" l)
@@ -217,14 +223,17 @@
     t))
 
 (defun start-wpa-supplicant (interface config-file &key driver)
+  (ensure-directories-exist *wpa-supplicant-global-sockets*)
   (daemon-with-logging
     "daemon/wpa-supplicant"
-    (list "wpa_supplicant" "-i" interface "-c" config-file
-          "-D" (or driver "nl80211"))))
+    `("wpa_supplicant" "-c" ,config-file
+      "-D" ,(or driver "nl80211")
+      ,@(wpa-supplicant-interface-parameters interface))))
 
 (defun stop-wpa-supplicant (interface)
   (uiop:run-program
-    (list "wpa_cli" "-i" interface "terminate")
+    `("wpa_cli" "terminate"
+      ,@(wpa-supplicant-interface-parameters interface))
     :ignore-error-status t))
 
 (defun ensure-wpa-supplicant (interface config-file &key driver)
@@ -311,7 +320,8 @@
 
 (defun parsed-wpa-network-list (&optional (interface "wlan0"))
   (let* ((lines (program-output-lines
-                  `("wpa_cli" "list_networks" "-i" ,interface)))
+                  `("wpa_cli" "list_networks"
+                    ,@(wpa-supplicant-interface-parameters interface))))
          (data-lines (rest lines))
          (parsed-lines (mapcar 'parse-wpa-network-list-line data-lines)))
     parsed-lines))
@@ -319,7 +329,7 @@
 (defun wpa-set-network-status-by-id (id enablep &optional (interface "wlan0"))
   (uiop:run-program
     `("wpa_cli" ,(if enablep "enable_network" "disable_network")
-      "-i" ,interface ,(format nil "~a" id))))
+      ,@(wpa-supplicant-interface-parameters interface))))
 
 (defun wpa-set-network-status-by-essid (essid enablep &optional (interface "wlan0"))
   (loop for n in (parsed-wpa-network-list interface)

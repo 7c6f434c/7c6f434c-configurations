@@ -370,7 +370,7 @@
 
 (defun socket-command-server-commands::wifi-modules (context)
   context
-  (modprobe "iwlwifi")
+  (modprobe "iwlwifi" "11n_disable=1")
   (modprobe "rtl8821ae"))
 
 (defun socket-command-server-commands::reload-video-modules (context)
