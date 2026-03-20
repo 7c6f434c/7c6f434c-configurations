@@ -27,6 +27,7 @@ fullEnv "main-heavy-package-set"
         qvge
         meshlab
         telegram-desktop
+        (callPackage ./jplag.nix {})
         (let models = callPackage ./bergamot-model.nix {
           bergamot = callPackage ./bergamot.nix {};
         }; in runCommand "my-bergamot-set" {} ''
