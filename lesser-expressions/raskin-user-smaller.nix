@@ -182,6 +182,15 @@ linkFarm "raskin-packages" ([
                name = "mesa-25.2";
                path = callPackage ./mesa-25.2.nix {};
              }
+             {
+               name = "general-fhs-env-raw";
+               path = fullEnv "general-fhs-env-raw" [
+                 glibc bashNonInteractive coreutils
+                 libX11 libXfixes libXdamage libXcursor libXScrnSaver
+                 libXxf86vm libXext libXrandr libXinerama libXi
+                 vulkan-loader alsa-lib mesa libglvnd
+               ];
+             }
 ]
 ++ 
 (map justUse [

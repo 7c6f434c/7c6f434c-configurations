@@ -66,7 +66,8 @@ rec {
       ignoreCollisions = false;
       checkCollisionContents = true;
       pathsToLink = [ "/" ];
-      extraOutputsToInstall = (allOutputNames packages);
+      extraOutputsToInstall = 
+        pkgs.lib.remove "debug" (allOutputNames packages);
     };
   justUse = str: {
     name = str;
