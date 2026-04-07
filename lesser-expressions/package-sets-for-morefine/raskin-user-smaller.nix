@@ -10,14 +10,24 @@ linkFarm "raskin-packages" ([
                   mkdir -p "$out/bin"
                   ${pkgs.sbcl.withPackages (p: with p; [
                     (p.query-fs.overrideAttrs (x: {
-                      src = /home/raskin/src/lsp/venv-cl-fuse/src/query-fs;
+                      src = pathToDrv
+                        /home/raskin/src/lsp/venv-cl-fuse/src/query-fs;
                     }))
                     clsql clsql-postgresql clsql-sqlite3 ironclad esrap-peg md5
                     (p.cl-fuse.overrideAttrs (x: {
-                      src = p.cl-fuse.src.overrideAttrs (x: { src = /home/raskin/src/lsp/venv-cl-fuse/src/cl-fuse; });
+                        src = pathToDrv
+                          /home/raskin/src/lsp/venv-cl-fuse/src/cl-fuse;
+                        postUnpack = ''
+                          newsrc="$out/src";
+                          mkdir -p "$newsrc"
+                          cp -vrT "$(readlink -f "$src")" "$newsrc"
+                          chmod u+rwX -R "$newsrc"
+                          export src="$newsrc"
+                        '';
                     }))
                     (p.cl-fuse-meta-fs.overrideLispAttrs (x: {
-                      src = /home/raskin/src/lsp/venv-cl-fuse/src/cl-fuse-meta-fs;
+                      src = pathToDrv
+                        /home/raskin/src/lsp/venv-cl-fuse/src/cl-fuse-meta-fs;
                     }))
                   ])}/bin/sbcl --dynamic-space-size 4096 --eval '(require :asdf)' \
                   --eval '(mapcar (function require) 

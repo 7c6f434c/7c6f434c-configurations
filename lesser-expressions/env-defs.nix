@@ -96,4 +96,7 @@ rec {
     };
     linkFarm = pkgs.linkFarm;
     callPackage = pkgs.callPackage;
+    pathToDrv = p: pkgs.runCommand "copied-path" {} ''
+      cp -rfT "${p}" "$out"
+    '';
 }

@@ -131,6 +131,7 @@ pkgs.lib.makeExtensible (self: with self; {
           services.bind = {
                   enable = true;
                   ipv4Only = false;
+                  checkConfig = false; /* Updatable rootserver list not available inside sandbox */
                   cacheNetworks = [
                           "127.0.0.0/24"
                                   "::1/128"
