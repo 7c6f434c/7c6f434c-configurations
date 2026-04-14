@@ -111,7 +111,7 @@
           secret-key-files = /nix/var/nix/cache-key.private
     '';
     settings.trusted-users = ["nix-builder"];
-    settings.trusted-public-keys = [ "buildbox-morefine-s500plus-20250322:VYZrnhIxa7NvILYl2Lme0NfKbJrthYyhtGk5/D+O0LA=" "raskin-thinkpad-20250322:+rGdt5KlHiDySpO3fwuJtr3+MBw/C7QYvgcQrTA+1rY=" ];
+    settings.trusted-public-keys = [ "buildbox-morefine-s500plus-20250322:VYZrnhIxa7NvILYl2Lme0NfKbJrthYyhtGk5/D+O0LA=" "raskin-thinkpad-20250322:+rGdt5KlHiDySpO3fwuJtr3+MBw/C7QYvgcQrTA+1rY=" "buildbox-morefine-s500plus-20260413:XWsjdGWXcp2x/ZOou2l2Uuug8b5PJd+UbTKXrNV3mdc="];
   };
 
   grubTimeout = 3;

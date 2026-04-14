@@ -24,24 +24,28 @@
   });
 
   swPackages = super.swPackages ++ (with self.pkgs; [
-    zsh pypy2 pypy3 expect firmwareLinuxNonfree
+    zsh pypy2 pypy3 expect linux-firmware
     alsa-utils alsa-tools mplayer rxvt-unicode
-    (mlterm.override (x: { enableGuis = { 
-                 fb = true; 
-                 xlib = true;
-                 wayland = true;
-                 sdl2 = true;
-                 quartz = false;
-               }; }))
+    (mlterm.override (x: {
+      enableGuis = { 
+        fb = true; 
+        xlib = false;
+        wayland = false;
+        sdl2 = false;
+        quartz = false;
+      };
+      desktopBinary = "true";
+    }))
+    (mlterm.override {enableFeatures = mlterm.enableFeatures // {ssh2 = false;};})
     kdePackages.konsole
-    androidenv.androidPkgs.platform-tools
-    adb-sync
+    android-tools
+    (adb-sync.override { androidenv = { androidPkgs = { platform-tools = android-tools;};};})
     powertop
   ]);
 
   systemFonts = (import ./fonts.nix { inherit (self) pkgs; }).fonts;
 
-  fontconfigConfPackages = [ (self.pkgs.hiPrio (self.pkgs.runCommand
+  fontconfigConfPackages = [ (self.pkgs.lib.hiPrio (self.pkgs.runCommand
     "fontconfig-kill-conf" {} ''
       mkdir -p "$out/etc/fonts/conf.d"
       mkdir -p "$out/etc/fonts/2.11/conf.d"
@@ -68,6 +72,12 @@
     });
   };
   
-  openglPackages = with self.pkgs; [ vaapiIntel libvdpau-va-gl vaapiVdpau ];
+  systemLispSettings = ./system-lisp-settings-usb-1.lisp;
+
+  openglPackages = with self.pkgs; [ 
+    intel-vaapi-driver 
+    libvdpau-va-gl libva-vdpau-driver
+    mesa.opencl vulkan-loader libcap.lib
+  ];
 })
 

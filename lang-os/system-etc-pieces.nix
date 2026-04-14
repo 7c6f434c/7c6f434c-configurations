@@ -40,7 +40,7 @@ pkgs.lib.makeExtensible (self: with self; {
   '';
 
   udevConf = {packages ? [], extraRules ? ""}: {
-    systemd.package = pkgs.eudev;
+    systemd.package = pkgs.eudev // { withLogind = false; };
     services.udev = {
       packages = pkgs.lib.mkForce
       ([pkgs.fuse pkgs.libinput
