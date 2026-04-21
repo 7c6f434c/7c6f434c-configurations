@@ -49,6 +49,7 @@ pkgs.texlive.combine {
     savetrees
     tikz-cd
     bbold
+    tkz-tab
     ;
 
 }
