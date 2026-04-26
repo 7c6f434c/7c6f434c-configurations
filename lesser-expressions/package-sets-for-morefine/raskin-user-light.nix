@@ -22,9 +22,9 @@ fullEnv "main-light-package-set"
         (symlinkJoin {
            name = "postgresql-18"; 
            paths = [ postgresql_18.out ];})
-        expect /*pmount*/ fdm
+        expect fdm
         fzf mcabber ii irssi links2 rsync ratpoison xdummy
-        elinks
+        /*elinks*/
         
         /*matrix-commander*/
         pv lvm2 mariadb remind xterm zsh 

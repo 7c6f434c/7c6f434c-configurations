@@ -183,7 +183,7 @@ linkFarm "raskin-packages" ([
  "xmacro" "man-pages" "man-pages-posix" "zbar" "lsb-release"
  "pinentry-curses" "pinentry-gnome3" "bfs" "moreutils"
  "nix-prefetch-github"
- "pgcli"
+ /*"pgcli"*/
 ])
 ++
 (map (justUseMult "out") [
