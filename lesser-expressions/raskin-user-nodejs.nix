@@ -1,4 +1,3 @@
 with import ./env-defs.nix;
 with pkgs;
-with nodePackages;
-fullEnv "nodejs-package-set" ([ npm ])
+fullEnv "nodejs-package-set" ([ nodejs ])

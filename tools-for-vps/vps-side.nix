@@ -1,4 +1,4 @@
-with import <nixpkgs> {};
+with import <nixpkgs> { config = { permittedInsecurePackages = ["opendkim-2.11.0-Beta2"]; };};
 with rec {
         fontsConf = makeFontsConf {
           fontDirectories = [ dejavu_fonts ];

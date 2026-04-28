@@ -26,7 +26,7 @@ fullEnv "main-light-package-set"
            paths = [ postgresql_18.out ];})
         expect fdm
         fzf mcabber ii irssi links2 rsync ratpoison xdummy
-        elinks
+        /*elinks*/
         
         /*matrix-commander*/
         pv lvm2 mariadb remind xterm zsh 
