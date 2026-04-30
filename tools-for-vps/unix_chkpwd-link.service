@@ -1,0 +1,12 @@
+[Unit]
+Description=PAM unix_chkpwd link
+
+[Service]
+Type=oneshot
+User=root
+ExecStart=mkdir -p /run/wrappers/bin
+ExecStart=ln -s /usr/sbin/unix_chkpwd /run/wrappers/bin/
+
+[Install]
+WantedBy=multi-user.target
+

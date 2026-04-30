@@ -29,6 +29,7 @@ with rec {
           ncp ${./dehydrated-hook.sh} ./etc/dehydrated
           ncp ${./domains.txt.private} ./var/dehydrated
           ncp ${./dehydrated.service} ./lib/systemd/system
+          ncp ${./unix_chkpwd-link.service} ./lib/systemd/system
           ncp ${./dehydrated.timer} ./lib/systemd/system
           ncp ${./postfix-key-concat.service} ./lib/systemd/system
           ncp ${./postfix-key-concat.timer} ./lib/systemd/system
@@ -39,6 +40,7 @@ with rec {
           ncp ${./dovecot.conf} ./etc/dovecot
           ncp ${./pam/dovecot} ./etc/pam.d
           ncp ${./pam/auth} ./etc/pam.d
+          ncp ${./pam/other} ./etc/pam.d
           ncp ${./dovecot.service} ./lib/systemd/system
           ncp ${./dovecot.private/pointless-dovecot.key} ./etc/dovecot
           ncp ${./dovecot.private/pointless-dovecot.crt} ./etc/dovecot
@@ -61,7 +63,7 @@ with rec {
           sed -e 's/@@@/'"$(cat ${./domains.txt.private} | xargs | tr ' ' ,)"'/' -i ./etc/opendkim.conf
           sed -e 's/@@@/'"$(cat ${./domains.txt.private} | xargs)"'/' -i ./etc/postfix/main.cf
           sed -e 's/@@domain@@/'"$(cat ${./target-domain.txt.private}|xargs)"'/' -i ./etc/postfix/main.cf
-          sed -e 's^@pam@^${pam}^' -i ./etc/pam.d/dovecot
+          sed -e 's^@pam@^${pam}^' -i ./etc/pam.d/*
           for i in $(cat ${./domains.txt.private}); do
                 if test "$i" = "$(cat ${./tuwunel.private/vps-matrix-domain})"; then
                     sed -e "s/@@@/$i/g" < ${./nginx.matrix.ssl.conf} >> ./var/nginx/conf/nginx.ssl.conf
@@ -129,7 +131,8 @@ with rec {
           chown -R tuwunel:tuwunel /var/db/matrix-tuwunel-2026-01
           chmod -R 0700 /var/db/matrix-tuwunel-2026-01
 
-          for i in nginx dovecot; do
+          for i in unix_chkpwd-link nginx dovecot; do
+            systemctl enable $i;
             systemctl restart $i;
           done
           for i in ii ii-libera-chat ii-oftc \
