@@ -445,6 +445,30 @@
 (defun webrtc-chromium (url &rest args)
   (apply 'subuser-nsjail-x-application (list (truename "/home/raskin/.nix-personal/hydra-grab/chromium/bin/chromium") "--no-sandbox" url) :grab-sound t :netns nil :pass-stderr t :grab-dri t :grab-camera t :home t :tmp t  :full-dev t :fake-groups `("audio" "video") :with-dbus t :fake-passwd t args))
 
+(defun comm-browsers-number-tags ()
+  (loop for role in 
+        `(
+          ("my-vps-ssh" 8)
+          ("my-vps2-ssh" 990)
+          ("telegram-web" 0)
+          ("mccme-riot" 992)
+          ("nix-riot" 2)
+          ("uguu-riot" 6)
+          ("vps-riot" 1)
+          ("github-web" 3)
+          ("ub-webmail" 4)
+          ("mccme-webmail" 5)
+          ("nixpkgs-zulip"7)
+          ("ub-discord" 9)
+          ("acx-discord" 991)
+          )
+        do
+        (stumpwm-eval
+          `(act-on-matching-windows
+             (w :screen)
+             (tagged-p w ,(string-upcase (first role)))
+             (tag-window ,(format nil "~a" (second role)) w)))))
+
 (defun comm-browsers (&key (intra-sleep 5) (post-sleep 60))
   (loop for arglist in
         `(
@@ -551,29 +575,8 @@
             (ignore-errors
               (apply 'funcall (rest arglist))
               t)
-            (sleep intra-sleep))))
-  (sleep post-sleep))
-
-(defun comm-browsers-number-tags ()
-  (loop for role in 
-        `(
-          ("my-vps-ssh" 8)
-          ("my-vps2-ssh" 990)
-          ("telegram-web" 0)
-          ("mccme-riot" 992)
-          ("nix-riot" 2)
-          ("uguu-riot" 6)
-          ("vps-riot" 1)
-          ("github-web" 3)
-          ("ub-webmail" 4)
-          ("mccme-webmail" 5)
-          ("nixpkgs-zulip"7)
-          ("ub-discord" 9)
-          ("acx-discord" 991)
-          )
-        do
-        (stumpwm-eval
-          `(act-on-matching-windows
-             (w :screen)
-             (tagged-p w ,(string-upcase (first role)))
-             (tag-window ,(format nil "~a" (second role)) w)))))
+            (comm-browsers-number-tags)
+            (sleep intra-sleep)
+            (comm-browsers-number-tags))))
+  (sleep post-sleep)
+  (comm-browsers-number-tags))
