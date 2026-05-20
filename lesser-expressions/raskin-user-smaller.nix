@@ -199,6 +199,8 @@ linkFarm "raskin-packages" ([
                  libX11 libXfixes libXdamage libXcursor libXScrnSaver
                  libXxf86vm libXext libXrandr libXinerama libXi
                  vulkan-loader alsa-lib mesa libglvnd
+                 (runCommand "gcc-lib" {} ''ln -s "${gcc.cc.lib}" "$out"'')
+                 python3Packages.virtualenv 
                ];
              }
 ]

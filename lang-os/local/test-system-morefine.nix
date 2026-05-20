@@ -14,6 +14,22 @@
       modprobe usb-storage
       modprobe uas
       
+      for i in $(seq 10); do
+        if test -e /dev/sda; then 
+          break
+        else
+          sleep 1
+        fi
+      done
+
+      vgchange -ay
+      
+      udevd &> /dev/null &
+      udevadm trigger --action=add
+      udevadm settle
+
+      for i in /dev/sd?; do hdparm -B 255 $i; done
+
       sh ${./mount-partitions-morefine.sh}
     '';
     modprobeConfig = ''
