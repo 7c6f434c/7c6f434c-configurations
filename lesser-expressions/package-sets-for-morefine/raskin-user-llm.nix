@@ -14,7 +14,7 @@ fullEnv "main-package-set"
                      '';
                    })
       shaderc
-      (let llama-target-version= "7822"; in
+      (let llama-target-version= "9253"; in
       ((llama-cpp.override {
         rocmSupport = false;
         vulkanSupport = true;
@@ -24,8 +24,9 @@ fullEnv "main-package-set"
         version = llama-target-version;
         src = x.src.override {
           tag = "b" + llama-target-version;
-          hash = "sha256-zcnfDOlXkVz4jpBPIewhrOMF/Tj5u0+yO4QsdDlWJXQ="; 
+          hash = "sha256-BvG3K+NjJqCymf1zlTPK41CQeDTKgdc3qhVrv/5oPwg="; 
         };
+        npmDepsHash = "sha256-Iyg8FpcTKf2UYHuK7mA3cTAqVaLcQPcS0YCa5Qf01Gc=";
         patches = [];
       })))
       ollama
@@ -43,7 +44,7 @@ fullEnv "main-package-set"
            ln -s "$i" "$out/bin/stable-diffusion-cpp-$(basename "$i")";
          done
        '')
-      (let 
+      /*(let 
          pp = python3Packages;
          hf-t = pp.transformers.overridePythonAttrs (x: {
           dependencies = x.dependencies ++ (with pp; [
@@ -62,7 +63,7 @@ fullEnv "main-package-set"
             hf-t
           ])}"/bin/python "$out/bin/python-with-transformers"
         ''
-        )
+        )*/
       (let lv = (fetchFromGitHub {
         owner = "ggml-org";
         repo = "llama.vim";
@@ -85,4 +86,5 @@ fullEnv "main-package-set"
         ]);
       }))
       llama-swap
+      opencode
       ]
