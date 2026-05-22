@@ -5,7 +5,7 @@ linkFarm "raskin-ultraheavy-packages" ([
   { name = "main-ultraheavy-package-set";
     path = (fullEnv "main-ultraheavy-package-set"
       [
-        winePackages.unstable 
+        wine64Packages.unstable 
         /*midori*/ /* scilab-bin */
         /* eolie */
         epiphany

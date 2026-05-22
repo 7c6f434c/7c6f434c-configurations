@@ -218,9 +218,9 @@
            skip-mount-check
 	   full-dev writeable-dev dev-log-socket
            (home (format nil "/tmp/home.~a" uid) homep)
-	   (rlimit-as "max") (rlimit-core "0") (rlimit-cpu "max")
-	   (rlimit-fsize "max") (rlimit-nofile "max")
-	   (rlimit-nproc "max") (rlimit-stack "max")
+	   (rlimit-as "inf") (rlimit-core "0") (rlimit-cpu "max")
+	   (rlimit-fsize "inf") (rlimit-nofile "max")
+	   (rlimit-nproc "max") (rlimit-stack "8192")
            keep-namespaces
            enable-newprivs
            (directory "/")
@@ -422,7 +422,11 @@
                                   hostname verbose
                                   (proc-rw t)
                                   (proc t) (nice-level "0")
-                                  (max-cpus "1"))
+                                  (max-cpus "1")
+                                  (rlimit-as "inf") (rlimit-core "0") (rlimit-cpu "max")
+                                  (rlimit-fsize "inf") (rlimit-nofile "max")
+                                  (rlimit-nproc "max") (rlimit-stack "8192")
+                                  )
   (ensure-directories-exist "/tmp/subhomes/")
   (let* 
     ((*print-right-margin* (expt 10 9))
@@ -476,13 +480,13 @@
                       "--disable_clone_newnet"
                       "--disable_clone_newipc"
                       "--disable_clone_newuts"
-                      "--rlimit_as"     "max"
-                      "--rlimit_core"   "max"
-                      "--rlimit_cpu"    "max"
-                      "--rlimit_fsize"  "max"
-                      "--rlimit_nofile" "max"
-                      "--rlimit_nproc"  "max"
-                      "--rlimit_stack"  "max"
+                      "--rlimit_as"     ,rlimit-as
+                      "--rlimit_core"   ,rlimit-core
+                      "--rlimit_cpu"    ,rlimit-cpu
+                      "--rlimit_fsize"  ,rlimit-fsize
+                      "--rlimit_nofile" ,rlimit-nofile
+                      "--rlimit_nproc"  ,rlimit-nproc
+                      "--rlimit_stack"  ,rlimit-stack
                       "--disable_no_new_privs"
                       "--nice_level"    ,nice-level
                       "--max_cpus"      ,max-cpus
@@ -510,13 +514,13 @@
                       "--disable_no_new_privs"
                       ,@(when proc-rw `("--proc_rw"))
                       ,@(unless proc `("--disable_proc"))
-                      "--rlimit_as"     "max"
-                      "--rlimit_core"   "max"
-                      "--rlimit_cpu"    "max"
-                      "--rlimit_fsize"  "max"
-                      "--rlimit_nofile" "max"
-                      "--rlimit_nproc"  "max"
-                      "--rlimit_stack"  "max"
+                      "--rlimit_as"     ,rlimit-as
+                      "--rlimit_core"   ,rlimit-core
+                      "--rlimit_cpu"    ,rlimit-cpu
+                      "--rlimit_fsize"  ,rlimit-fsize
+                      "--rlimit_nofile" ,rlimit-nofile
+                      "--rlimit_nproc"  ,rlimit-nproc
+                      "--rlimit_stack"  ,rlimit-stack
                       "--nice_level"    ,nice-level
                       "--max_cpus"      ,max-cpus
                       "--"
