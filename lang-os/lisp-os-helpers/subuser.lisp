@@ -219,7 +219,7 @@
 	   full-dev writeable-dev dev-log-socket
            (home (format nil "/tmp/home.~a" uid) homep)
 	   (rlimit-as "inf") (rlimit-core "0") (rlimit-cpu "max")
-	   (rlimit-fsize "inf") (rlimit-nofile "max")
+	   (rlimit-fsize "1099511627776") (rlimit-nofile "max")
 	   (rlimit-nproc "max") (rlimit-stack "8192")
            keep-namespaces
            enable-newprivs
@@ -230,10 +230,12 @@
            (fhs-from nil)
            (nice-level "0")
            (max-cpus "1")
+           (time-limit "999999999")
 	   )
   `(,*nsjail-helper*
      ,@(unless verbose `("-q"))
      "-u" , (format nil "~a:~a" internal-uid uid)
+     "--time_limit"    ,time-limit
      "--rlimit_as"     ,rlimit-as
      "--rlimit_core"   ,rlimit-core
      "--rlimit_cpu"    ,rlimit-cpu
@@ -424,8 +426,9 @@
                                   (proc t) (nice-level "0")
                                   (max-cpus "1")
                                   (rlimit-as "inf") (rlimit-core "0") (rlimit-cpu "max")
-                                  (rlimit-fsize "inf") (rlimit-nofile "max")
+                                  (rlimit-fsize "1099511627776") (rlimit-nofile "max")
                                   (rlimit-nproc "max") (rlimit-stack "8192")
+                                  (time-limit "999999999")
                                   )
   (ensure-directories-exist "/tmp/subhomes/")
   (let* 
@@ -480,6 +483,7 @@
                       "--disable_clone_newnet"
                       "--disable_clone_newipc"
                       "--disable_clone_newuts"
+                      "--time_limit"    ,time-limit
                       "--rlimit_as"     ,rlimit-as
                       "--rlimit_core"   ,rlimit-core
                       "--rlimit_cpu"    ,rlimit-cpu
@@ -514,6 +518,7 @@
                       "--disable_no_new_privs"
                       ,@(when proc-rw `("--proc_rw"))
                       ,@(unless proc `("--disable_proc"))
+                      "--time_limit"    ,time-limit
                       "--rlimit_as"     ,rlimit-as
                       "--rlimit_core"   ,rlimit-core
                       "--rlimit_cpu"    ,rlimit-cpu

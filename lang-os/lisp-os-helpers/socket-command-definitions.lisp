@@ -145,6 +145,8 @@
                       append (list :keep-namespaces (second oo))
                       if (and (listp oo) (equalp (first oo) "home"))
                       append (list :home (second oo))
+                      if (and (listp oo) (equalp (first oo) "time-limit"))
+                      append (list :time-limit (second oo))
                       ))
            if (and (listp o) (equalp (first o) "netns"))
            append (list :netns t
