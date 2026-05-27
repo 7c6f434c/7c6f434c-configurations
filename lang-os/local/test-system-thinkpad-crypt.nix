@@ -59,6 +59,7 @@
       cp ${./ru-en.map} "$out/share/keymaps/local/ru-en.map"
     '')
     /* self.stumpwmWithConfig */ self.stumpwmWithDepsRunnable
+    pciutils
   ]);
 
   systemFonts = (import ./fonts.nix { inherit (self) pkgs; }).fonts;
