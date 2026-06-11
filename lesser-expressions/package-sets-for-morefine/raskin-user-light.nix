@@ -71,7 +71,7 @@ fullEnv "main-light-package-set"
           '';
         }))
         zathura
-        udftools units texinfoInteractive yap _3proxy
+        udftools units texinfoInteractive /*yap*/ _3proxy
         python3Packages.pygments poppler-utils libarchive wdiff ydiff
         pass gnupg age easyrsa
         (import ../texlive-set.nix pkgs)

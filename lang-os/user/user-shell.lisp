@@ -293,6 +293,14 @@
   `(with-firefox-launcher-packed 
      ((gethash ,(string-downcase variant) *firefox-variants*)) ,@body))
 
+(defun update-firefox-extensions ()
+  (nix-build 
+    (format 
+      nil "callPackage ~a/src/nix/lang-os/ff-upstream-extension-set.nix {}" 
+      ($ :home))
+    :drv-link (format nil "~a/.nix-personal/derivations/firefox-extensions" ($ :home))
+    :out-link (format nil "~a/.nix-personal/firefox-extensions" ($ :home))))
+
 (defun update-firefox-launcher (&key variant fast (browser "firefox") set-default)
   (let ((variant-string (if variant (string-downcase (format nil "-~a" variant)) "")))
     (with-firefox-launcher
@@ -331,6 +339,7 @@
               *firefox-launcher* (third pack))))))
 
 (defun update-firefox-variants (&key fast)
+  (update-firefox-extensions)
   (update-firefox-launcher :variant 'ffde :fast fast :browser "ffde" :set-default t)
   (update-firefox-launcher :variant 'ffesr :fast fast :browser "ffesr" :set-default nil)
   (update-firefox-launcher :variant 'firefox :fast fast)
@@ -494,6 +503,11 @@
                           "about:config?/*|dom.security.https_only_mode$"
                           "about:config?/*|privacy.resistFingerprinting.letterboxing$"
                           "about:debugging#/runtime/this-firefox"
+                          (,(format 
+                              nil "file://~a" 
+                              (namestring (truename 
+                                            "~/.nix-personal/firefox-extensions")))
+                            "Firefox extension xpi files")
                           ))
            :grab-dri grab-dri
            :allow-other-keys t)

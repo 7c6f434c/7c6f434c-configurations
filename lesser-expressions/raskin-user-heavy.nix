@@ -28,6 +28,7 @@ fullEnv "main-heavy-package-set"
         meshlab
         telegram-desktop
         kdePackages.okular
+        comaps
         (callPackage ./jplag.nix {})
         (let models = callPackage ./bergamot-model.nix {
           bergamot = callPackage ./bergamot.nix {};

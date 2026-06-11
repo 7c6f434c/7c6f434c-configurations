@@ -5,8 +5,8 @@ stdenv.mkDerivation (finalAttrs: {
 
   src = fetchgit {
     url = "https://github.com/leejet/stable-diffusion.cpp";
-    rev = "bd17f53b7386fb5f60e8587b75e73c4b2fed3426";
-    hash = "sha256-4s7JtUOtST8SS4trvVZXAtHoq1/ktAkydqLSQlwqU74=";
+    rev = "b3d56d0ba1bd437886079e339118e8e75bb79ee7";
+    hash = "sha256-vdILCnrpRXg/cXoasENjjTTjpN3Z0B+6pSmmLKsKNzM=";
     fetchSubmodules = true;
   };
 

@@ -219,9 +219,9 @@ linkFarm "raskin-packages" ([
  "nix-prefetch-github" "nim" 
  "gedit" "pavucontrol"
  "ccl" "ecl" "clisp" 
- /*"pgcli"*/
+ "pgcli"
  "mlterm-wayland"
- "openscad"
+ /*"openscad"*/
  "postgresql_18"
 ])
 ++
