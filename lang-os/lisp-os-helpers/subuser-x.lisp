@@ -255,7 +255,8 @@
     (path "/var/current-system/sw/bin") verbose-errors verbose-nsjail
     mount-sys keep-namespaces
     dns http-proxy socks-proxy with-dbus with-pulseaudio with-owned-home
-    x-optional skip-nsjail masking-mounts clear-env
+    x-optional x-forbidden
+    skip-nsjail masking-mounts clear-env
     (proc-rw t) (no-proc nil) (pass-input-config t)
     (max-cpus "1") (nice-level "0")
     )
@@ -392,6 +393,7 @@
             :setup setup
             :display display :name name
             :x-optional x-optional
+            :x-forbidden x-forbidden
             :environment
             `(
               ,@(when grab-dri

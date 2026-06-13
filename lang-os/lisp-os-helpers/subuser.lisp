@@ -273,7 +273,7 @@
                      (list "chown" (format nil "~a" uid) tmpdir))
                    (uiop:launch-program
                      (add-command-numeric-su
-                       `("socat"
+                       `("socat" "-d0"
                          ,(format nil "unix-listen:~a,mode=0666,fork" socket)
                          "stdio")
                        uid))
@@ -407,10 +407,10 @@
                       (format nil "unix-connect:~a~{,~a~}" cpn (third cp)))
                      (t (error "Unknown protocol: ~a" cpp)))
     for listen-command :=
-    (list "socat" (format nil "~a,fork" listen)
+    (list "socat" "-d0" (format nil "~a,fork" listen)
           (format nil "unix-connect:~a" socket))
     for connect-command :=
-    (list "socat" 
+    (list "socat" "-d0"
           (format nil "unix-listen:~a,forever,fork" socket)
           connect)
     do (push connect-command connect-commands)

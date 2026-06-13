@@ -339,7 +339,7 @@
               *firefox-launcher* (third pack))))))
 
 (defun update-firefox-variants (&key fast)
-  (update-firefox-extensions)
+  (unless fast (update-firefox-extensions))
   (update-firefox-launcher :variant 'ffde :fast fast :browser "ffde" :set-default t)
   (update-firefox-launcher :variant 'ffesr :fast fast :browser "ffesr" :set-default nil)
   (update-firefox-launcher :variant 'firefox :fast fast)
