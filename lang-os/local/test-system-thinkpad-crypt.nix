@@ -11,6 +11,8 @@
       modprobe mac-hid
       modprobe xhci-hcd
       modprobe ehci-hcd
+
+      modprobe thinkpad-acpi fan-control=1
       
       sh ${./mount-partitions-thinkpad-crypt.sh}
     '';

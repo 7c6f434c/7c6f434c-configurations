@@ -203,6 +203,22 @@ linkFarm "raskin-packages" ([
                  python3Packages.virtualenv 
                ];
              }
+             {
+               name="firefox";
+               path = firefox;
+             }
+             {
+               name="librewolf-with-policies";
+               path = (callPackage ../lang-os/user/librewolf-with-policies.nix {});
+             }
+             {
+               name="ffde-with-policies";
+               path = (callPackage ../lang-os/user/ffde-with-policies.nix {});
+             }
+             {
+               name="ffesr-with-policies";
+               path = (callPackage ../lang-os/user/ffesr-with-policies.nix {});
+             }
 ]
 ++ 
 (map justUse [

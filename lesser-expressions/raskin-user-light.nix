@@ -59,7 +59,6 @@ fullEnv "main-light-package-set"
         xfig fig2dev 
         kdePackages.kig 
         netpbm
-        firefox (callPackage ../lang-os/user/librewolf-with-policies.nix {})
         vim-full evince mplayer alsa-utils xvfb-run
         xmodmap bc xdotool lftp wget wget2 unzip gnumake xcape xrandr
         unrar-free
