@@ -1333,7 +1333,7 @@
      (ws (apply '+ we))
      (wa (/ ws tw))
      (waf (* 1.0 wa)))
-    waf))
+    (values waf tw)))
 
 (defvar *shell-init-hooks* nil)
 (defun lisp-shell-init () (mapcar 'funcall *shell-init-hooks*))
