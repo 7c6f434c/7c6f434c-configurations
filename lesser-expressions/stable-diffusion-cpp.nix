@@ -1,12 +1,12 @@
 { stdenv, fetchgit, cmake, git, vulkan-headers, vulkan-loader, shaderc }:
 stdenv.mkDerivation (finalAttrs: {
   pname = "stable-diffusion-cpp";
-  version = "0.0-unnamed-2026-05-16-master-bd17f53";
+  version = "0.0-unnamed-2026-06-29-master-737-3b6c9ca";
 
   src = fetchgit {
     url = "https://github.com/leejet/stable-diffusion.cpp";
-    rev = "b3d56d0ba1bd437886079e339118e8e75bb79ee7";
-    hash = "sha256-vdILCnrpRXg/cXoasENjjTTjpN3Z0B+6pSmmLKsKNzM=";
+    rev = "3b6c9ca97cfcda8e68e719e6670d06379fcbe943";
+    hash = "sha256-TQLCsbHpJlpi7o8SOXh3wogCqNeOHf+SNq+tkW/977E=";
     fetchSubmodules = true;
   };
 
