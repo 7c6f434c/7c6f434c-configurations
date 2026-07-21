@@ -62,6 +62,7 @@
     '')
     /* self.stumpwmWithConfig */ self.stumpwmWithDepsRunnable
     pciutils
+    wakeonlan
   ]);
 
   systemFonts = (import ./fonts.nix { inherit (self) pkgs; }).fonts;
