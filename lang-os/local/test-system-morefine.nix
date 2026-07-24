@@ -75,6 +75,7 @@
     vulkan-tools clinfo
     libcap
     xauth xhost
+    ethtool
   ]);
 
   systemFonts = (import ./fonts.nix { inherit (self) pkgs; }).fonts;
@@ -102,6 +103,10 @@
     services = self.etcPieces.deeplinkAttrset "systemServices"
     (super.systemParts.services.entries // {
       "from-nixos/cups" = null;
+      "wake-on-lan-enable" = self.pkgs.writeScript "wake-on-lan-enable" ''
+        ${self.pkgs.ethtool}/bin/ethtool -s eth0 wol g
+        ${self.pkgs.ethtool}/bin/ethtool -s eth1 wol g
+      '';
     });
   };
   

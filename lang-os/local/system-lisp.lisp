@@ -122,6 +122,9 @@
       (grant-to-group "lp" "/var/lib/cups/")
       (ensure-daemon-user "dhcpcd")
 
+      (ignore-errors
+	(system-service "" "wake-on-lan-enable"))
+
       (unless
         (port-open-p 22)
         (system-service "" "from-nixos/openssh"))

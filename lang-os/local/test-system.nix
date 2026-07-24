@@ -201,6 +201,7 @@ pkgs.lib.makeExtensible (self: with self; {
         sway swaybg tunctl
         wireguard-tools
         xauth
+        smartmontools dd_rescue
         (swPieces.cProgram "vtlock" ../c/vtlock.c [] [])
         (swPieces.cProgram "file-lock" ../c/file-lock.c [] [])
         (swPieces.cProgram "in-pty" ../c/in-pty.c [] ["-lutil"])
