@@ -81,7 +81,6 @@ fullEnv "main-light-package-set"
         /*yap*/ swi-prolog
         python3Packages.pygments poppler-utils libarchive wdiff ydiff
         pass gnupg age easyrsa
-        (import ./texlive-set.nix pkgs)
         p7zip mupdf librsvg sxiv
         /* xpdf vifm */ ffsend kitty
         rosie latexrun moreutils gnupatch
@@ -119,5 +118,4 @@ fullEnv "main-light-package-set"
         (callPackage ./colorexp.nix {})
         (callPackage ./obj2hmap.nix {})
       ] 
-      ++ texlive.circuit-macros.pkgs
       )    

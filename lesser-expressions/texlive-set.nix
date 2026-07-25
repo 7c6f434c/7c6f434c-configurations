@@ -1,7 +1,6 @@
 pkgs:
 
-pkgs.texlive.combine {
-  inherit(pkgs.texlive)
+pkgs.texliveSmall.withPackages (p: with p; [
     scheme-medium
     collection-langcyrillic 
     cm-super cm-unicode xcolor pgf beamer moderncv tipa disser urlbst
@@ -15,7 +14,7 @@ pkgs.texlive.combine {
     enumitem cutwin moreverb mparhack bbding thmtools csquotes stmaryrd
     cleveref cancel ncctools changebar tocbibind shadow datetime fmtcount
     bussproofs l3kernel cclicenses xifthen ifmtarg blindtext changepage
-    lstaddons import fancyvrb tocloft tikz-qtree ellipsis nag tkz-euclide
+    lstaddons p."import" fancyvrb tocloft tikz-qtree ellipsis nag tkz-euclide
     tkz-base numprint tkz-graph a4wide inconsolata newtx upquote acmart
     minted fvextra framed titling units siunitx colortbl xpatch prooftrees
     lkproof acronym listings listingsutf8 pgfplots csvsimple fourier
@@ -51,6 +50,5 @@ pkgs.texlive.combine {
     bbold
     tkz-tab
     doi
-    ;
-
-}
+    circuit-macros
+])
