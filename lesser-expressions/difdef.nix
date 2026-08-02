@@ -9,7 +9,7 @@ stdenv.mkDerivation (finalAttrs: {
   #   rev = "8259e871e3c5a4f5c7663a4584a7bfa8b86a93cd";
   #   hash = "sha256-PyI0DhZyODwwFfr6mT3CwaG2aTtLWIRaL0joWsCDdW8=";
   # };
-  src = /home/repos/difdef;
+  src = <repos/difdef>;
 
   doCheck = true;
 

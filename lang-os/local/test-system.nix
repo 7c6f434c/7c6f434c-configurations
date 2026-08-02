@@ -197,6 +197,7 @@ pkgs.lib.makeExtensible (self: with self; {
         stumpwmWithDepsRunnable
         unionfs-fuse
         xdummy pv mercurial fossil lvm2 rsync gawk ntp mtr host iotop syslogng
+        htop
         btrfs-progs
         sway swaybg tunctl
         wireguard-tools

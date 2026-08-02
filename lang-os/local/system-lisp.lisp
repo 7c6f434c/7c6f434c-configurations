@@ -381,7 +381,7 @@
     "Owner user not confirmed"
     (require-root context)
     (assert (gethash (list (context-uid context) :owner) *user-info*)))
-  (loop for m in `("i915" "nouveau" "radeon")
+  (loop for m in `("xe" "i915" "nouveau" "radeon" "amdgpu")
         do (ignore-errors (module-remove m))
         do (modprobe m)))
 
@@ -735,6 +735,7 @@
   (declare (ignorable context))
   (modprobe "uas")
   (modprobe "usb-storage")
+  (modprobe "sd-mod")
   (modprobe "mmc-block"))
 
 (defun socket-command-server-commands::usb-eth-modules (context)
