@@ -114,6 +114,7 @@ fullEnv "main-light-package-set"
         xorg-rgb
         nix-eval-jobs
         k2pdfopt
+        patchelf
         (callPackage ./difdef.nix {})
         (callPackage ./colorexp.nix {})
         (callPackage ./obj2hmap.nix {})
