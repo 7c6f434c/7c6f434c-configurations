@@ -162,5 +162,7 @@
   setupScript = super.setupScript + ''
     ln -sf /var/current-system/graphics-drivers/* /run/
   '';
+
+  systemLispSettings = ./system-lisp-settings-precision.lisp;
 })
 

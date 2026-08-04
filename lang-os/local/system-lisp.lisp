@@ -942,6 +942,16 @@
     (list "cp" "-f"
           "/var/lib/bind/root-servers.new" "/var/lib/bind/root-servers")))
 
+(defun socket-command-server-commands::wake-on-lan
+  (context target)
+  (require-or
+    "Owner user presence not confirmed"
+    (require-root context)
+    (progn
+      (assert (gethash (list (context-uid context) :owner) *user-info*))
+      (require-presence context)))
+  (uiop:run-program (list "/var/current-system/sw/bin/wakeonlan" target)))
+
 (defvar *auto-wifi* nil)
 (defvar *auto-interfaces* nil)
 (defvar *dhcp-hostname-interfaces* nil)
