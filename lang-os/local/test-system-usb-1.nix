@@ -79,5 +79,10 @@
     libvdpau-va-gl libva-vdpau-driver
     mesa.opencl vulkan-loader libcap.lib
   ];
+
+  nixOptions = super.nixOptions // {
+    settings.trusted-users = ["nix-builder"];
+    settings.trusted-public-keys = import ./nix-public-keys.nix;
+  };
 })
 
