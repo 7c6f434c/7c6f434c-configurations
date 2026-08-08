@@ -70,7 +70,7 @@
       desktopBinary = "true";
       }))
     kdePackages.konsole
-    powertop
+    powertop cryptsetup
     man
     vulkan-tools clinfo
     libcap

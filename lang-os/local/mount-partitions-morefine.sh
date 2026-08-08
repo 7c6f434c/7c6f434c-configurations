@@ -14,7 +14,20 @@ mount /dev/mapper/BuildBox--NVMe2--Main-Var /new-root/var
 mount /dev/mapper/BuildBox--NVMe2--Main-VarDb /new-root/var/db
 mount /dev/mapper/BuildBox--NVMe2--Main-VarLog /new-root/var/log
 
-mount /dev/mapper/BuildBox--HDD--Aux-ExperimentsData /new-root/media/ExperimentsData/
+cryptsetup open --allow-discards \
+	--key-file /new-root/var/db/luks/ExtHDD-2026-08-LUKS \
+	/dev/disk/by-partlabel/ExtHDD-2026-08-LUKS \
+	ExtHDD-2026-08-LUKS-Content
+
+pvscan
+vgscan
+vgchange -ay
+
+udevadm trigger --action=add
+udevadm settle
+
+mount /dev/mapper/ExtHDD--2026--08-ExperimentsData /new-root/media/ExperimentsData/
+mount /dev/mapper/BuildBox--HDD--Aux-ExperimentsData /new-root/media/ExperimentsData-dup/
 
 yes y | mkfs.ext4 /dev/mapper/BuildBox--NVMe2--Main-Tmp
 

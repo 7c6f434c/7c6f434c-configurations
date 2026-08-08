@@ -4,4 +4,5 @@ with pkgs;
 fullEnv "main-package-set"
 [
   imagemagickBig
+  ffmpeg-full
 ]

@@ -8,7 +8,7 @@ in
 
 fullEnv "main-package-set"
       [
-      (symlinkJoin { name = "whisper-cpp" ; paths = [ whisper-cpp.out ]; 
+      (symlinkJoin { name = "whisper-cpp" ; paths = [ whisper-cpp-vulkan.out ]; 
                      postBuild = ''
                        rm -rf "$out/include" "$out/lib"
                      '';
@@ -73,7 +73,7 @@ fullEnv "main-package-set"
         mkdir -p "$out/share/vim"
         ln -s "${lv}" "$out/share/vim/llama.vim"
       '')
-      (let w = whisper-cpp; in 
+      (let w = whisper-cpp-vulkan; in 
         runCommand "whisper-cpp" {} ''
           mkdir -p "$out/bin"
           ln -s "${w}"/bin/* "$out/bin"
